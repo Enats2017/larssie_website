@@ -1,0 +1,25 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Add your existing table here
+model Brand {
+  brand_id   Int    @id @default(autoincrement())
+  brand_name String @db.VarChar(255)
+  sort_order Int    @default(0)
+
+  @@map("oc_brand") // exact table name in your DB
+}
+
+// =============================================
+// Tables already exist in your DB!
+// Run: npm run db:pull
+// Prisma will auto fill this file from your DB
+// =============================================

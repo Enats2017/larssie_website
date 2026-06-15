@@ -1,0 +1,60 @@
+/* app/globals.css */
+/* These 3 lines import all of Tailwind! */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Add your global styles below */
+
+@keyframes heroZoomOut {
+  0%   { transform: scale(1.15); }
+  100% { transform: scale(1.0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%      { transform: translateY(-8px); }
+}
+
+@keyframes sponsors {
+  0% {
+    transform: translateX(-50%);
+  }
+
+  50% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-sponsors {
+  animation: sponsors 18s linear infinite;
+}
+
+
+/* =========================
+   SWIPER PAGINATION DOTS
+========================= */
+
+.statsSwiper .swiper-pagination {
+  bottom: 0 !important;
+}
+
+.statsSwiper .swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: #cbd5e1;
+  opacity: 1;
+}
+
+.statsSwiper .swiper-pagination-bullet-active {
+  background: #36a5dd;
+}
+
+.statsSwiper .swiper-slide {
+  height: auto;
+}
