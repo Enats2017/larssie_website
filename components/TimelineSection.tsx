@@ -1,7 +1,18 @@
 'use client'
-
-import heroBg from '@/assets/herosection.png'
+import { useState } from "react";
+import Image from "next/image";
+import rectangle1 from '@/assets/rectangle1.png'
+import rectangle2 from '@/assets/rectangle2.png'
 import rectangle from '@/assets/rectangle.png'
+
+import support from '@/assets/support.png'
+import shield from '@/assets/shield.png'
+import water from '@/assets/water.png'
+import road1 from '@/assets/road1.png'
+import mountain from '@/assets/mountain.png'
+import temp from '@/assets/temp.png'
+
+import star1 from '@/assets/star1.png'
 
 const timelineData = [
   { x: 40, y: 425, textY: 215, title: 'FRIDAY', time: '14:00 - 20:00', text: 'Bib pick-up', sub: 'Le markstein',},
@@ -19,7 +30,17 @@ const CURVE_PATH = `
  C 950,480 1050,510 1200,430
 `
 
+const cards = [
+  { image: rectangle1, alt: 'Summer at Val Thorens', title: ['Summer at', 'Val Thorens'] },
+  { image: rectangle2, alt: 'Documentation and Brochures', title: ['Documentation', 'and Brochures'] },
+  { image: rectangle1, alt: 'Frequently Asked Questions', title: ['Frequently', 'Asked Questions'] },
+]
+
 export default function TimelineSection() {
+  const [cardIndex, setCardIndex] = useState(0);
+  const prevCard = () => setCardIndex((i) => (i - 1 + cards.length) % cards.length);
+  const nextCard = () => setCardIndex((i) => (i + 1) % cards.length);
+
   return (
     <section
       className="relative w-full overflow-hidden"
@@ -27,89 +48,146 @@ export default function TimelineSection() {
         background: 'linear-gradient(to bottom, #d7edf8 0%, #edf7fd 100%)',
       }}
     >
-      <svg
-        viewBox="0 0 1200 550"
-        className="relative z-10 w-full h-auto block"
-        preserveAspectRatio="xMidYMid meet"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <linearGradient id="bgGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#d7edf8" />
-            <stop offset="100%" stopColor="#edf7fd" />
-          </linearGradient>
-        </defs>
+      {/* ============ DESKTOP TIMELINE (horizontal SVG curve) ============ */}
+      <div className="hidden md:block">
+        <svg
+          viewBox="0 0 1200 550"
+          className="relative z-10 w-full h-auto block"
+          preserveAspectRatio="xMidYMid meet"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <linearGradient id="bgGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#d7edf8" />
+              <stop offset="100%" stopColor="#edf7fd" />
+            </linearGradient>
+          </defs>
 
-        {/* Mask above the curve — gradient fill matches section background */}
-        <path
-          d={`
-            M 0,0
-            L 1200,0
-            L 1200,430
-            C 1050,510 950,480 800,440
-            C 650,400 550,420 400,470
-            C 250,520 150,530 0,390
-            Z
-          `}
-          fill="url(#bgGradient)"
-        />
-
-        {/* Header Titles */}
-        <text x="600" y="85" textAnchor="middle" fontSize="44" fontWeight="900" fill="#08264a" letterSpacing="4">
-          TIMELINE
-        </text>
-
-        <text x="600" y="122" textAnchor="middle" fontSize="28" fill="#23a8f2" style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
-          50k distance
-        </text>
-
-        {/* Curve stroke on top */}
-        <path
-          d={CURVE_PATH}
-          fill="none"
-          stroke="#35a8eb"
-          strokeWidth="7"
-          strokeLinecap="round"
+          {/* Mask above the curve — gradient fill matches section background */}
+          <path
+            d={`
+              M 0,0
+              L 1200,0
+              L 1200,430
+              C 1050,510 950,480 800,440
+              C 650,400 550,420 400,470
+              C 250,520 150,530 0,390
+              Z
+            `}
+            fill="url(#bgGradient)"
           />
 
-        {/* Timeline Nodes */}
-        {timelineData.map((item, index) => (
-          <g key={index}>
-            <line
-              x1={item.x}
-              y1={item.textY + 38}
-              x2={item.x}
-              y2={item.y - 12}
-              stroke="#6ca9d6"
-              strokeWidth="1.5"
+          {/* Header Titles */}
+          <text x="600" y="85" textAnchor="middle" fontSize="44" fontWeight="900" fill="#08264a" letterSpacing="4">
+            TIMELINE
+          </text>
+
+          <text x="600" y="122" textAnchor="middle" fontSize="28" fill="#23a8f2" style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
+            50k distance
+          </text>
+
+          {/* Curve stroke on top */}
+          <path
+            d={CURVE_PATH}
+            fill="none"
+            stroke="#35a8eb"
+            strokeWidth="7"
+            strokeLinecap="round"
             />
-            <circle cx={item.x} cy={item.y} r="11" fill="#fff" stroke="#35a8eb" strokeWidth="4" />
-            <circle cx={item.x} cy={item.y} r="4" fill="#35a8eb" />
-            <text x={item.x} y={item.textY} fontSize="20" fontWeight="800" fill="#08264a">
-              {item.title}
-            </text>
-            <text x={item.x} y={item.textY + 26} fontSize="20" fontWeight="800" fill="#08264a">
-              {item.time}
-            </text>
-            <text x={item.x + 20} y={item.textY + 56} fontSize="15" fontWeight="700" fill="#08264a">
-              {item.text}
-            </text>
-            <text x={item.x + 20} y={item.textY + 76} fontSize="15" fontWeight="700" fill="#23a8f2">
-              {item.sub}
-            </text>
-            {item.km && (
-              <text x={item.x + 20} y={item.textY + 96} fontSize="15" fontWeight="700" fill="#23a8f2">
-                {item.km}
+
+          {/* Timeline Nodes */}
+          {timelineData.map((item, index) => (
+            <g key={index}>
+              <line
+                x1={item.x}
+                y1={item.textY + 38}
+                x2={item.x}
+                y2={item.y - 12}
+                stroke="#6ca9d6"
+                strokeWidth="1.5"
+              />
+              <circle cx={item.x} cy={item.y} r="11" fill="#fff" stroke="#35a8eb" strokeWidth="4" />
+              <circle cx={item.x} cy={item.y} r="4" fill="#35a8eb" />
+              <text x={item.x} y={item.textY} fontSize="20" fontWeight="800" fill="#08264a">
+                {item.title}
               </text>
-            )}
-          </g>
-        ))}
-      </svg>
+              <text x={item.x} y={item.textY + 26} fontSize="20" fontWeight="800" fill="#08264a">
+                {item.time}
+              </text>
+              <text x={item.x + 20} y={item.textY + 56} fontSize="15" fontWeight="700" fill="#08264a">
+                {item.text}
+              </text>
+              <text x={item.x + 20} y={item.textY + 76} fontSize="15" fontWeight="700" fill="#23a8f2">
+                {item.sub}
+              </text>
+              {item.km && (
+                <text x={item.x + 20} y={item.textY + 96} fontSize="15" fontWeight="700" fill="#23a8f2">
+                  {item.km}
+                </text>
+              )}
+            </g>
+          ))}
+        </svg>
+      </div>
+
+      {/* ============ MOBILE TIMELINE (vertical step list) ============ */}
+      {/* ============ MOBILE TIMELINE (vertical zigzag list) ============ */}
+      <div className="md:hidden">
+        <div className="text-center pt-12 pb-8 px-6">
+          <h2 className="text-[34px] font-black text-[#08264a] tracking-[4px]">TIMELINE</h2>
+          <p className="text-[18px] text-[#23a8f2] italic mt-1" style={{ fontFamily: 'Georgia, serif' }}>
+            50k distance
+          </p>
+        </div>
+
+        <div className="relative px-6 pb-14">
+          {/* connecting vertical line */}
+          <div className="absolute left-1/2 top-2 bottom-2 w-[2px] bg-[#6ca9d6] -translate-x-1/2 z-0" />
+
+          {timelineData.map((item, index) => {
+            const isRight = index % 2 === 0;
+            const content = (
+              <>
+                <div className="font-extrabold text-[#08264a] text-[17px] leading-tight">{item.title}</div>
+                <div className="font-extrabold text-[#08264a] text-[17px] leading-tight mb-2">{item.time}</div>
+                <div className="font-bold text-[#08264a] text-[14px] leading-snug">{item.text}</div>
+                <div className="font-bold text-[#23a8f2] text-[14px] leading-snug">
+                  {item.km ? `${item.sub} ${item.km}` : item.sub}
+                </div>
+              </>
+            );
+
+            return (
+              <div
+                key={index}
+                className="relative z-10 grid grid-cols-2 gap-x-8 items-start mb-10 last:mb-0"
+              >
+                <div className={isRight ? "" : "text-right"}>
+                  {!isRight && content}
+                </div>
+                <div>
+                  {isRight && content}
+                </div>
+
+                {/* dot */}
+                <div className="absolute left-1/2 top-0 -translate-x-1/2 w-5 h-5 rounded-full bg-white border-[4px] border-[#35a8eb] z-10" />
+              </div>
+            );
+          })}
+        </div>
+
+        {/* decorative wave cap */}
+        <svg viewBox="0 0 400 60" preserveAspectRatio="none" className="block w-full" style={{ height: '40px' }}>
+          <path d="M0,30 C100,55 200,5 400,30 L400,60 L0,60 Z" fill="#061831" />
+        </svg>
+      </div>
 
       {/* Mountain Section Container */}
+      {/* marginTop: 0 on mobile (wave SVG above already transitions to
+          #061831), -13.3333vw on md+ (derived ratio for the horizontal
+          curve seam — see earlier explanation) */}
       <div 
-        className="relative z-0 w-full text-white bg-[#061831]" 
-        style={{ marginTop: '-220px' }}
+        className="relative z-0 w-full text-white bg-[#061831] -mt-px md:-mt-[13.3333vw]"
       >
         {/* Background Image & Ambient Blur Overlays */}
         <div className="absolute inset-0 z-0 overflow-hidden">
@@ -122,149 +200,181 @@ export default function TimelineSection() {
         </div>
 
         {/* Main Content Wrapper */}
-        <div className="relative z-10 w-full px-[70px] xl:px-[90px] pt-44 pb-24 flex flex-col gap-16">
-          
-          {/* Top Half: Course Details & Stats Grid */}
-          {/* Top Half: Course Details & Stats Grid */}
-          {/* Top Half: Course Details & Stats Grid */}
-          <div className="relative top-24 flex flex-col lg:flex-row justify-between items-start w-full">
+        <div className="relative z-10 max-w-[1280px] mx-auto px-6 md:px-10 pt-12 md:pt-44 pb-16 md:pb-24 flex flex-col gap-10 md:gap-16">
 
-            {/* LEFT SIDE */}
-            <div className="w-full lg:w-[360px]">
+          {/* Top Half: Course Details & Stats Grid */}
+          <div className="flex flex-col lg:flex-row justify-between items-start w-full pt-0 md:pt-12 lg:pt-24">
+
+            {/* LEFT SIDE — centered on mobile, left-aligned from lg up */}
+            <div className="w-full lg:w-[360px] text-center lg:text-left">
               <h2 className="leading-[0.85]">
-                <span className="block text-[64px] font-black uppercase text-white">
+                <span className="block text-[40px] md:text-[64px] font-black uppercase text-white">
                   COURSE
                 </span>
 
                 <span
-                  className="block text-[48px] text-[#2ea9ec] italic normal-case"
+                  className="block text-[32px] md:text-[48px] text-[#2ea9ec] italic normal-case"
                   style={{ fontFamily: 'Georgia, serif' }}
                 >
                   details
                 </span>
               </h2>
 
-              <p className="mt-8 text-white/80 text-[20px] leading-[1.4] max-w-[320px]">
+              <p className="mt-6 md:mt-8 text-white/80 text-[16px] md:text-[20px] leading-[1.4] max-w-[320px] mx-auto lg:mx-0">
                 Explore the course metrics and essential information to help you
                 prepare for your adventure
               </p>
             </div>
 
-            {/* RIGHT SIDE */}
-            <div className="relative -top-10 grid grid-cols-[280px_280px] gap-x-0 gap-y-6 ml-auto">
+            {/* RIGHT SIDE — 2-col grid full width on mobile, fixed 280/280 grid from md up */}
+            <div className="grid grid-cols-2 gap-x-6 gap-y-8 w-full mt-10 lg:mt-0 md:w-auto md:grid-cols-[280px_280px] md:gap-x-0 md:gap-y-6 md:ml-auto">
 
               {/* Technical */}
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full border border-[#2ea9ec] flex items-center justify-center shrink-0">
-                  {/* icon */}
+              <div className="flex items-start gap-3 md:gap-4">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-[#2ea9ec] flex items-center justify-center shrink-0">
+                  <Image
+                    src={support}
+                    alt="Technical"
+                    className="w-5 h-5 md:w-6 md:h-6 object-contain"
+                  />
                 </div>
 
                 <div>
-                  <h4 className="text-white font-bold text-[15px] uppercase">
+                  <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase">
                     TECHNICAL
                   </h4>
 
-                  <div className="flex gap-1 mt-1">
+                  <div className="flex items-center mt-1">
                     {[...Array(4)].map((_, i) => (
-                      <span key={i} className="text-yellow-400">★</span>
+                      <Image
+                        key={i}
+                        src={star1}
+                        alt="star"
+                        className="w-6 h-6 md:w-8 md:h-8 object-contain -mr-1"
+                      />
                     ))}
-                    <span className="text-white/20">★</span>
+
+                    <Image
+                      src={star1}
+                      alt="star"
+                      className="w-6 h-6 md:w-8 md:h-8 object-contain opacity-20"
+                    />
                   </div>
 
-                  <p className="text-white/70 text-sm mt-1">
+                  <p className="text-white/70 text-xs md:text-sm mt-1">
                     very technical
                   </p>
                 </div>
               </div>
 
               {/* Terrains */}
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full border border-[#2ea9ec] flex items-center justify-center shrink-0">
-                  {/* icon */}
+              <div className="flex items-start gap-3 md:gap-4">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-[#2ea9ec] flex items-center justify-center shrink-0">
+                  <Image
+                    src={shield}
+                    alt="Terrains"
+                    className="w-5 h-5 md:w-6 md:h-6 object-contain"
+                  />
                 </div>
 
                 <div>
-                  <h4 className="text-white font-bold text-[15px] uppercase">
+                  <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase">
                     TERRAINS
                   </h4>
 
-                  <p className="text-white text-sm mt-1">
+                  <p className="text-white text-xs md:text-sm mt-1">
                     Mountain trails & singletrack
                   </p>
 
-                  <p className="text-white/70 text-sm">
+                  <p className="text-white/70 text-xs md:text-sm">
                     Snow, rocks, forest
                   </p>
                 </div>
               </div>
 
               {/* Wet */}
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full border border-[#2ea9ec] flex items-center justify-center shrink-0">
-                  {/* icon */}
+              <div className="flex items-start gap-3 md:gap-4">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-[#2ea9ec] flex items-center justify-center shrink-0">
+                  <Image
+                    src={water}
+                    alt="Wet Conditions"
+                    className="w-5 h-5 md:w-6 md:h-6 object-contain"
+                  />
                 </div>
 
                 <div>
-                  <h4 className="text-white font-bold text-[15px] uppercase leading-tight">
+                  <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase leading-tight">
                     SPEED FACTOR
                     <br />
                     WET CONDITIONS
                   </h4>
 
-                  <p className="text-[#2ea9ec] text-[42px] font-black leading-none mt-2">
+                  <p className="text-[#2ea9ec] text-[26px] md:text-[42px] font-black leading-none mt-2">
                     1.2
                   </p>
                 </div>
               </div>
 
               {/* Offroad */}
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full border border-[#2ea9ec] flex items-center justify-center shrink-0">
-                  {/* icon */}
+              <div className="flex items-start gap-3 md:gap-4">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-[#2ea9ec] flex items-center justify-center shrink-0">
+                  <Image
+                    src={road1}
+                    alt="Offroad"
+                    className="w-5 h-5 md:w-6 md:h-6 object-contain"
+                  />
                 </div>
 
                 <div>
-                  <h4 className="text-white font-bold text-[15px] uppercase">
+                  <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase">
                     OFFROAD RATIO
                   </h4>
 
-                  <p className="text-[#2ea9ec] text-[42px] font-black leading-none mt-2">
+                  <p className="text-[#2ea9ec] text-[26px] md:text-[42px] font-black leading-none mt-2">
                     85%
                   </p>
                 </div>
               </div>
 
               {/* Vertical */}
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full border border-[#2ea9ec] flex items-center justify-center shrink-0">
-                  {/* icon */}
+              <div className="flex items-start gap-3 md:gap-4">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-[#2ea9ec] flex items-center justify-center shrink-0">
+                  <Image
+                    src={mountain}
+                    alt="Terrains"
+                    className="w-5 h-5 md:w-6 md:h-6 object-contain"
+                  />
                 </div>
 
                 <div>
-                  <h4 className="text-white font-bold text-[15px] uppercase">
+                  <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase">
                     VERTICAL INDEX
                   </h4>
 
-                  <p className="text-[#2ea9ec] text-[42px] font-black leading-none mt-2">
+                  <p className="text-[#2ea9ec] text-[26px] md:text-[42px] font-black leading-none mt-2">
                     100K
                   </p>
                 </div>
               </div>
 
               {/* Dry */}
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full border border-[#2ea9ec] flex items-center justify-center shrink-0">
-                  {/* icon */}
+              <div className="flex items-start gap-3 md:gap-4">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-[#2ea9ec] flex items-center justify-center shrink-0">
+                  <Image
+                    src={temp}
+                    alt="Dry Conditions"
+                    className="w-5 h-5 md:w-6 md:h-6 object-contain"
+                  />
                 </div>
 
                 <div>
-                  <h4 className="text-white font-bold text-[15px] uppercase leading-tight">
+                  <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase leading-tight">
                     SPEED FACTOR
                     <br />
                     DRY CONDITIONS
                   </h4>
 
-                  <p className="text-[#2ea9ec] text-[42px] font-black leading-none mt-2">
+                  <p className="text-[#2ea9ec] text-[26px] md:text-[42px] font-black leading-none mt-2">
                     1.1
                   </p>
                 </div>
@@ -273,128 +383,92 @@ export default function TimelineSection() {
             </div>
           </div>
 
-          {/* MODIFIED OVERLAP ROW:
-            Added 'relative z-20 translate-y-[140px] -mb-[140px]' 
-            This forces the cards down seamlessly through the color divider.
-          */}
-          {/* Cards Section */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 relative z-30 translate-y-[110px] -mb-[110px]">
+          {/* ============ DESKTOP CARDS — 3-col grid ============ */}
+          <div className="hidden md:grid md:grid-cols-3 gap-4 mt-4 relative z-30 translate-y-[110px] -mb-[110px]">
+            {cards.map((card, i) => (
+              <div key={i} className="group relative overflow-hidden rounded-[24px] aspect-[1.8/1] bg-slate-800 shadow-xl cursor-pointer">
+                <img
+                  src={card.image.src}
+                  alt={card.alt}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
 
-            {/* Card 1 */}
-            <div className="group relative overflow-hidden rounded-[24px] aspect-[1.8/1] bg-slate-800 shadow-xl cursor-pointer">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
+
+                <div className="absolute inset-x-0 bottom-5 px-6 flex items-end justify-between">
+                  <h3 className="text-[18px] leading-[1.05] font-bold text-white max-w-[75%]">
+                    {card.title[0]}
+                    <br />
+                    {card.title[1]}
+                  </h3>
+
+                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-md transition-transform duration-300 group-hover:translate-x-1">
+                    <svg
+                      className="w-4 h-4 text-[#2ea9ec]"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* ============ MOBILE CARDS — single-card carousel ============ */}
+          <div className="md:hidden relative z-30 mt-2">
+            <div className="relative overflow-hidden rounded-[24px] aspect-[1.6/1] bg-slate-800 shadow-xl">
               <img
-                src={heroBg.src}
-                alt="Summer at Val Thorens"
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                src={cards[cardIndex].image.src}
+                alt={cards[cardIndex].alt}
+                className="w-full h-full object-cover"
               />
 
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
 
-              <div className="absolute inset-x-0 bottom-5 px-6 flex items-end justify-between">
-                <h3 className="text-[18px] leading-[1.05] font-bold text-white max-w-[70%]">
-                  Summer at
+              <div className="absolute inset-x-0 bottom-5 px-6">
+                <h3 className="text-[18px] leading-[1.05] font-bold text-white">
+                  {cards[cardIndex].title[0]}
                   <br />
-                  Val Thorens
+                  {cards[cardIndex].title[1]}
                 </h3>
-
-                <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-md transition-transform duration-300 group-hover:translate-x-1">
-                  <svg
-                    className="w-4 h-4 text-[#2ea9ec]"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                    />
-                  </svg>
-                </div>
               </div>
             </div>
 
-            {/* Card 2 */}
-            <div className="group relative overflow-hidden rounded-[24px] aspect-[1.8/1] bg-slate-800 shadow-xl cursor-pointer">
-              <img
-                src={heroBg.src}
-                alt="Documentation and Brochures"
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
+            {/* prev / next controls */}
+            <div className="flex items-center justify-center gap-4 mt-6">
+              <button
+                onClick={prevCard}
+                aria-label="Previous card"
+                className="w-10 h-10 rounded-full bg-white/10 border border-white/30 flex items-center justify-center"
+              >
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                </svg>
+              </button>
 
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
-
-              <div className="absolute inset-x-0 bottom-5 px-6 flex items-end justify-between">
-                <h3 className="text-[18px] leading-[1.05] font-bold text-white max-w-[75%]">
-                  Documentation
-                  <br />
-                  and Brochures
-                </h3>
-
-                <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-md transition-transform duration-300 group-hover:translate-x-1">
-                  <svg
-                    className="w-4 h-4 text-[#2ea9ec]"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                    />
-                  </svg>
-                </div>
-              </div>
+              <button
+                onClick={nextCard}
+                aria-label="Next card"
+                className="w-10 h-10 rounded-full bg-[#2ea9ec] flex items-center justify-center"
+              >
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </button>
             </div>
-
-            {/* Card 3 */}
-            <div className="group relative overflow-hidden rounded-[24px] aspect-[1.8/1] bg-slate-800 shadow-xl cursor-pointer">
-              <img
-                src={heroBg.src}
-                alt="Frequently Asked Questions"
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
-
-              <div className="absolute inset-x-0 bottom-5 px-6 flex items-end justify-between">
-                <h3 className="text-[18px] leading-[1.05] font-bold text-white max-w-[75%]">
-                  Frequently
-                  <br />
-                  Asked Questions
-                </h3>
-
-                <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-md transition-transform duration-300 group-hover:translate-x-1">
-                  <svg
-                    className="w-4 h-4 text-[#2ea9ec]"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
           </div>
 
         </div>
-        <div className="bg-white w-full h-56 relative" style={{ zIndex: 1 }} /> 
+        <div className="bg-white w-full h-40 md:h-56 relative" style={{ zIndex: 1 }} /> 
       </div>
-
-      {/* ADDED WHITE SPACE CONTAINER BELOW:
-        This generates the clean white block beneath the mountain block so 
-        the shifted cards have a stark, bright layout section to sit across.
-      */}
     </section>
   )
 }

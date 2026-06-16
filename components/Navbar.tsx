@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useState, useRef } from 'react'
 import Image from 'next/image'
 import logo from '@/assets/logo.png'
+import { useScrollDirection } from '@/hooks/useScrollDirection'
 
 const BASE_URL = 'http://localhost'
 
@@ -269,14 +270,23 @@ export default function Navbar({ tabs, brand_logo }: Props) {
     leaveTimer.current = setTimeout(() => setMegaOpen(false), 120)
   }
 
+  const visible = useScrollDirection(10)
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 px-4 py-3">
-      {/* Main bar */}
-      <div className="max-w-7xl mx-auto flex items-center justify-between
-                      rounded-full px-5 py-2.5
-                      bg-white/10 backdrop-blur-md
-                      border border-white/20
-                      shadow-[0_4px_24px_rgba(0,0,0,0.25)]">
+    <nav
+      className={`
+        fixed top-0 left-0 right-0 z-50 px-4 py-3
+        transition-transform duration-300 ease-in-out
+        ${visible ? 'translate-y-0' : '-translate-y-full'}
+      `}
+    >
+      <div
+        className="max-w-7xl mx-auto flex items-center justify-between
+                   rounded-full px-5 py-2.5
+                   bg-white/10 backdrop-blur-md
+                   border border-white/20
+                   shadow-[0_4px_24px_rgba(0,0,0,0.25)]"
+      >
 
         {/* Logo */}
         <Link href="/" className="flex items-center select-none">

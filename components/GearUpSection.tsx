@@ -1,6 +1,6 @@
 import Image from 'next/image'
-import summerImg from '@/assets/Rectangle 192.png'
-import docsImg from '@/assets/Rectangle 193.png'
+import summerImg from '@/assets/rectangle1.png'
+import docsImg from '@/assets/rectangle2.png'
 import jacketIcon from '@/assets/cloths.png'
 import pantsIcon from '@/assets/pant.png'
 import glovesIcon from '@/assets/gloves.png'
@@ -12,7 +12,7 @@ import polesIcon from '@/assets/sticks.png'
 import gelsIcon from '@/assets/nutrition.png'
 import creamIcon from '@/assets/antich.png'
 import checkIcon from '@/assets/rightsign.png'
-import shieldIcon from '@/assets/logo.png'
+import shieldIcon from '@/assets/shield.png'
 
 type GearItem = {
   id: number

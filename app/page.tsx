@@ -1,12 +1,14 @@
 import { prisma } from '@/lib/prisma'
-import HeroSection from '@/components/HeroSection'
+import SideDock from '@/components/SideDock'
 import Navbar from '@/components/Navbar'
+import HeroSection from '@/components/HeroSection'
 import TerritorySection from '@/components/TerritorySection'
 import InfoSection from '@/components/InfoSection'
 import GearUpSection from '@/components/GearUpSection'
 import AidStations from '@/components/AidStation'
 import TimelineSection from '@/components/TimelineSection'
 import Footer from '@/components/Footer'
+import BrandsList from '@/components/BrandsList'
 
 export default async function Page() {
   const [brands] = await Promise.all([
@@ -52,16 +54,21 @@ export default async function Page() {
   if (!hero) return <div>No hero found</div>
 
   return (
-    <>
+    <div>
+      <SideDock />
       <Navbar tabs={menu.tabs} brand_logo={menu.brand_logo} />
       <HeroSection menu={menu} hero={hero} />
       <TerritorySection />
-      <InfoSection />
+      <InfoSection brands={brands} />
       <GearUpSection />
       <AidStations />
       <TimelineSection />
       <Footer />
-
-    </>
+      <main >
+        <div className="hidden md:block">
+          {/* <BrandsList brands={brands} /> */}
+        </div>
+      </main>
+    </div>
   )
 }

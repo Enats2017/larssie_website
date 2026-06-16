@@ -29,7 +29,8 @@ const Footer = () => {
         <footer className="w-full font-['Metropolis',sans-serif]">
 
             {/* ── MAIN FOOTER ── */}
-            <div className="bg-white pl-[68px] pr-[20px] py-10 md:py-12">
+            <div className="bg-white py-10 md:py-12">
+              <div className="max-w-[1280px] mx-auto px-6 md:px-10">
 
                 {/* ── DESKTOP GRID (lg+) ── */}
                 <div className="hidden lg:grid w-full grid-cols-[auto_1px_auto_1px_auto_auto] gap-y-10 gap-x-6 items-start">
@@ -172,10 +173,12 @@ const Footer = () => {
                     ))}
 
                 </div>
+              </div>
             </div>
 
             {/* ── CTA BAR ── */}
-            <div className="bg-[#36A5DD] lg:bg-white lg:border-t lg:border-gray-200 pl-[68px] pr-[20px] py-6 mx-4 lg:mx-0 rounded-2xl lg:rounded-none mb-4 lg:mb-0">
+            <div className="bg-[#36A5DD] lg:bg-white lg:border-t lg:border-gray-200 py-6 mx-4 lg:mx-0 rounded-2xl lg:rounded-none mb-4 lg:mb-0">
+              <div className="max-w-[1280px] mx-auto px-6 md:px-10">
                 <div className="w-full grid grid-cols-1 lg:grid-cols-[auto_1px_auto_1px_auto_auto] lg:items-center gap-x-6 gap-y-4 lg:gap-y-6">
 
                     <p className="text-white lg:text-[#36A5DD] font-black uppercase leading-tight text-[clamp(22px,3vw,36px)] text-left">
@@ -211,6 +214,7 @@ const Footer = () => {
                     </div>
 
                 </div>
+              </div>
             </div>
 
             {/* ── COPYRIGHT BAR ── */}
