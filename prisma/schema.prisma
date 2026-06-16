@@ -9,17 +9,377 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Add your existing table here
+// ── Brand ─────────────────────────────────────────────────────────────────────
 model Brand {
-  brand_id   Int    @id @default(autoincrement())
-  brand_name String @db.VarChar(255)
-  sort_order Int    @default(0)
+  brand_id     Int           @id @default(autoincrement())
+  brand_name   String        @db.VarChar(255)
+  sort_order   Int           @default(0)
 
-  @@map("oc_brand") // exact table name in your DB
+  menus        Menu[]
+  products     Product[]
+  heroBuilders HeroBuilder[]
+
+  @@map("oc_brand")
 }
 
-// =============================================
-// Tables already exist in your DB!
-// Run: npm run db:pull
-// Prisma will auto fill this file from your DB
-// =============================================
+// ── Menu ──────────────────────────────────────────────────────────────────────
+model Menu {
+  menu_id    Int      @id @default(autoincrement())
+  brand_id   Int
+  brand_name String   @db.VarChar(255)
+  brand_logo String   @db.VarChar(255)
+  event_id   Int?
+  event_name String?  @db.VarChar(255)
+  event_logo String?  @db.VarChar(255)
+
+  brand        Brand         @relation(fields: [brand_id], references: [brand_id])
+  tabs         MenuTab[]
+  fields       MenuField[]
+  heroBuilders HeroBuilder[]
+
+  @@map("oc_menu")
+}
+
+enum NavType {
+  brand
+  event
+}
+
+// ── MenuTab ───────────────────────────────────────────────────────────────────
+model MenuTab {
+  id        Int     @id @default(autoincrement())
+  tab_name  String  @db.VarChar(255)
+  tab_icon  String? @db.VarChar(255)
+  tab_image String? @db.VarChar(255)
+  menu_id   Int
+  nav_type  NavType
+  num_cols  Int     @default(4)
+
+  menu   Menu        @relation(fields: [menu_id], references: [menu_id])
+  fields MenuField[]
+
+  @@index([menu_id])
+  @@map("oc_menu_tab")
+}
+
+enum oc_menu_2_field_nav_type {
+  brand
+  event
+}
+
+enum oc_menu_2_field_type {
+  text
+  image
+  icon
+}
+
+enum oc_menu_2_field_col_type {
+  text
+  image
+  icon
+}
+
+enum oc_menu_2_field_icon_sub_type {
+  vertical
+  horizontal
+  contact
+}
+
+enum oc_menu_2_field_extra_type {
+  social
+  text_block
+}
+
+// ── MenuField ─────────────────────────────────────────────────────────────────
+model MenuField {
+  id                 Int                            @id @default(autoincrement())
+  menu_id            Int
+  tab_id             Int
+  nav_type           oc_menu_2_field_nav_type       @default(brand)
+  column             Int?
+  label              String?                        @db.VarChar(255)
+  link_en            String?                        @db.VarChar(255)
+  link_fr            String?                        @db.VarChar(255)
+  link_nl            String?                        @db.VarChar(255)
+  type               oc_menu_2_field_type?
+  icon_color         String?                        @db.VarChar(20)
+  icon_background    String?                        @db.VarChar(20)
+  language_id        Int?
+  image              String?                        @db.VarChar(500)
+  icon               String?                        @db.VarChar(100)
+  section_heading_en String?                        @db.VarChar(255)
+  section_heading_nl String?                        @db.VarChar(255)
+  section_heading_fr String?                        @db.VarChar(255)
+  section_link_en    String?                        @db.VarChar(500)
+  section_link_nl    String?                        @db.VarChar(500)
+  section_link_fr    String?                        @db.VarChar(500)
+  col_type           oc_menu_2_field_col_type?
+  icon_sub_type      oc_menu_2_field_icon_sub_type?
+  contact_title      String?                        @db.VarChar(255)
+  contact_body       String?                        @db.Text
+  contact_link_label String?                        @db.VarChar(255)
+  contact_link_url   String?                        @db.VarChar(500)
+  extra_type         oc_menu_2_field_extra_type?
+  social_fb          String?                        @db.VarChar(500)
+  social_tt          String?                        @db.VarChar(500)
+  social_ig          String?                        @db.VarChar(500)
+  text_block_title   String?                        @db.VarChar(255)
+  text_block_body    String?                        @db.Text
+  sort_order         Int                            @default(0)
+  num_cols           Int                            @default(1)
+
+  menu Menu    @relation(fields: [menu_id], references: [menu_id])
+  tab  MenuTab @relation(fields: [tab_id], references: [id])
+
+  @@index([menu_id])
+  @@index([tab_id])
+  @@index([column])
+  @@map("oc_menu_2_field")
+}
+
+// ── HeroBuilder ───────────────────────────────────────────────────────────────
+model HeroBuilder {
+  hero_id         Int       @id @default(autoincrement())
+  brand_id        Int
+  event_id        Int
+  distance_id     Int?
+  distance_name   String?   @db.VarChar(100)
+  bg_img          String?   @db.LongText
+  race_photo      String?   @db.LongText
+  badge_img       String?   @db.LongText
+  brand_logo_img  String?   @db.LongText
+  overlay_color   String?   @default("#0D1F35") @db.VarChar(20)
+  overlay_opacity Int?      @default(40)
+  event_name      String?   @db.VarChar(255)
+  breadcrumb      String?   @db.Text
+  distance        String?   @db.VarChar(100)
+  elevation       String?   @db.VarChar(100)
+  description     String?   @db.Text
+  tagline         String?   @db.Text
+  badge_bg        String?   @default("#F5C300") @db.VarChar(20)
+  show_brand_logo Boolean?  @default(true) @db.TinyInt
+  dist_color      String?   @default("#FFFFFF") @db.VarChar(20)
+  sidebar_stats   String?   @db.LongText
+  bottom_stats    String?   @db.LongText
+  cta_buttons     String?   @db.LongText
+  race_date       DateTime? @db.Date
+  race_time       String?   @db.VarChar(10)
+  race_waves      Int       @default(1) @db.TinyInt
+  sold_out        Boolean   @default(false) @db.TinyInt
+  created_at      DateTime? @default(now()) @db.Timestamp(0)
+  updated_at      DateTime? @default(now()) @updatedAt @db.Timestamp(0)
+  menu_id         Int?
+
+  brand Brand  @relation(fields: [brand_id], references: [brand_id])
+  event Product @relation(fields: [event_id], references: [product_id])
+  menu  Menu?  @relation(fields: [menu_id], references: [menu_id])
+
+  @@index([event_id])
+  @@map("hero_builder")
+}
+
+// ── Product ───────────────────────────────────────────────────────────────────
+model Product {
+  product_id     Int      @id @default(autoincrement())
+  model          String   @db.VarChar(64)
+  date_reg_close DateTime @db.Date
+  date_race      DateTime @db.Date
+  date_reg_change DateTime @db.Date
+  password       String   @db.VarChar(255)
+  facebook_url   String   @db.VarChar(255)
+  hide_qty_for_option String @db.VarChar(255)
+  type           String   @db.VarChar(255)
+  reg_list_url   String   @db.VarChar(255)
+  last_min_reg_list_url String @db.VarChar(255)
+  sku            String   @db.VarChar(64)
+  upc            String   @db.VarChar(12)
+  ean            String   @db.VarChar(14)
+  jan            String   @db.VarChar(13)
+  isbn           String   @db.VarChar(17)
+  mpn            String   @db.VarChar(64)
+  location       String   @db.VarChar(128)
+  quantity       Int      @default(0)
+  stock_status_id Int
+  image          String?  @db.VarChar(255)
+  header_image   String   @db.VarChar(255)
+  image1         String   @default("") @db.VarChar(500)
+  header_image1  String   @default("") @db.VarChar(500)
+  sponsor_image  String   @db.VarChar(255)
+  link           String   @db.VarChar(255)
+  manufacturer_id Int
+  shipping       Boolean  @default(true) @db.TinyInt
+  price          Decimal  @default(0.0000) @db.Decimal(15, 4)
+  points         Int      @default(0)
+  tax_class_id   Int
+  date_available DateTime @db.Date
+  start_hour     Int      @default(0)
+  weight         Decimal  @default(0) @db.Decimal(15, 8)
+  weight_class_id Int     @default(0)
+  length         Decimal  @default(0) @db.Decimal(15, 8)
+  width          Decimal  @default(0) @db.Decimal(15, 8)
+  height         Decimal  @default(0) @db.Decimal(15, 8)
+  length_class_id Int     @default(0)
+  subtract       Boolean  @default(true) @db.TinyInt
+  minimum        Int      @default(1)
+  sort_order     Int      @default(0)
+  status         Boolean  @default(false) @db.TinyInt
+  viewed         Int      @default(0)
+  date_added     DateTime @db.DateTime(0)
+  date_modified  DateTime @db.DateTime(0)
+  archive_status Int
+  live_result_url String  @default("") @db.VarChar(255)
+  category_page_image String @default("") @db.VarChar(255)
+  participant_list Int
+  affiliate_link Int
+  medical_waiver Int      @default(0)
+  medical_waiver_upload_date DateTime @db.Date
+  separate_telephone Int  @default(0)
+  acti_annulation Int     @default(0)
+  no_participant Int      @default(0)
+  product_country_id Int  @default(0)
+  product_zone_id Int     @default(0)
+  product_country_manager_id Int @default(0)
+  medical_waiver_accept_reject Int @default(11)
+  handling_fee_discount Decimal @default(0) @db.Decimal(15, 4)
+  handling_fee_fixed Decimal @default(0) @db.Decimal(15, 4)
+  custom_mail_type Int    @default(0)
+  group_registration Int  @default(0)
+  who_can_create_group Int @default(0)
+  payment_method Int      @default(0)
+  is_used        Int      @default(0)
+  date_is_used   DateTime @db.DateTime(0)
+  is_used_user_id Int     @default(0)
+  annulation_updated Int  @default(0)
+  old_product_id Int      @default(0)
+  product_name   String   @default("") @db.VarChar(255)
+  generate_qr_codes Int   @default(0)
+  start_date_reg_members DateTime @db.Date
+  end_date_members DateTime @db.Date
+  change_date_members DateTime @db.Date
+  refund_module_for_this_event Int @default(0)
+  refund_method  Int      @default(0)
+  handling_fee_per_cash_refund Decimal @default(0) @db.Decimal(15, 4)
+  handling_fee_refund_will_be_paid Int @default(0)
+  refund_start_date DateTime @db.Date
+  refund_end_date DateTime @db.Date
+  refund_admin_fee Int     @default(0)
+  refund_acti    Int       @default(0)
+  refund_rules   String    @db.Text
+  custom_start_date DateTime @db.Date
+  last_day_participants_cancel_registration DateTime @db.Date
+  last_day_members_cancel_registration DateTime @db.Date
+  race_result_api_status Int @default(0)
+  start_bib_number Int    @default(0)
+  api_url        String   @db.Text
+  start_bib_number_used Int @default(0)
+  label_1        String   @default("") @db.VarChar(255)
+  label_2        String   @default("") @db.VarChar(255)
+  value_1        String   @default("") @db.VarChar(255)
+  send_warning_mail_member Int @default(0)
+  rate_annulation_type Int @default(0)
+  rate_handling_fee_paid Int @default(0)
+  rate_handling_fee_for_refund Int @default(0)
+  generate_friend_code Int @default(0)
+  gallery_short_code String @default("") @db.VarChar(255)
+  approval_status Int     @default(0)
+  allow_donation Int      @default(0)
+  charities_id   Int      @default(0)
+  linked_to_activity_ranking String @default("") @db.VarChar(255)
+  upload_rank_file_name String @default("") @db.VarChar(255)
+  upload_rank_file_source String @default("") @db.VarChar(255)
+  hours_ranking  Int      @default(0)
+  minutes_ranking Int     @default(0)
+  seconds_ranking Int     @default(0)
+  hide_date_race Int      @default(0)
+  advance_features Int    @default(0)
+  quantity_updated_order_id Int @default(0)
+  logo_series    String   @default("") @db.VarChar(500)
+  logo_image     String   @default("") @db.VarChar(500)
+  logo_image_mobile String @default("") @db.VarChar(500)
+  downgrade_distance_credits DateTime @db.Date
+  hide_title_date Int     @default(1)
+  premium_data   String   @db.Text
+  premium_data_big String @db.LongText
+  show_premium_suggestion Int @default(0)
+  premium_conditions_valid Int @default(0)
+  last_minute    Int      @default(0)
+  last_minute_fields String @default("") @db.VarChar(255)
+  register_url   String   @default("") @db.VarChar(255)
+  display_status Int      @default(0)
+  manufacturer   String   @default("") @db.VarChar(255)
+  product_show_reviews Int @default(0)
+  is_room_reservation Int @default(0)
+  product_allow_reviews Int @default(0)
+  is_new_edition Int      @default(0)
+  participant_list_open Int @default(0)
+  fundraising_mandatory Int @default(0)
+  minimumn_amt_charity Decimal @default(0) @db.Decimal(15, 4)
+  formation_term Int      @default(0)
+  individual_target_charity Int @default(0)
+  refund_credit_fee_charity Int @default(0)
+  end_date_charity DateTime @db.Date
+  hide_admin_configure_charity Decimal @default(0) @db.Decimal(15, 4)
+  hide_admin_configure_charity_percentage Decimal @default(0) @db.Decimal(15, 4)
+  name_charity_id Int     @default(0)
+  show_charity   Int      @default(0)
+  charity_type   Int      @default(0)
+  is_free_registration_donation Int @default(0)
+  compensate_admin_fee Int @default(0)
+  event_goal     Int      @default(0)
+  combine_donation Int    @default(0)
+  show_tombola   Int      @default(0)
+  donation_amount_cal Decimal @default(0.00) @db.Decimal(10, 2)
+  fast_checkout  Int      @default(0)
+  auto_start_amount Decimal @default(0.00) @db.Decimal(10, 2)
+  design         Int      @default(0)
+  acti_v2_status Int      @default(0)
+
+  acti_lite_price_type    String?  @db.VarChar(255)
+  acti_lite_price         Decimal? @db.Decimal(10, 2)
+  acti_lite_min_amount    Decimal? @db.Decimal(10, 2)
+  acti_lite_refund_with_justification    String? @db.VarChar(255)
+  acti_lite_refund_without_justification String? @db.VarChar(255)
+  acti_lite_deadline_for_refund_with_justification    String? @db.VarChar(255)
+  acti_lite_deadline_for_refund_without_justification String? @db.VarChar(255)
+
+  acti_basic_price_type    String?  @db.VarChar(255)
+  acti_basic_price         Decimal? @db.Decimal(10, 2)
+  acti_basic_min_amount    Decimal? @db.Decimal(10, 2)
+  acti_basic_refund_with_justification    String? @db.VarChar(255)
+  acti_basic_refund_without_justification String? @db.VarChar(255)
+  acti_basic_deadline_for_refund_with_justification    String? @db.VarChar(255)
+  acti_basic_deadline_for_refund_without_justification String? @db.VarChar(255)
+
+  acti_premium_price_type    String?  @db.VarChar(255)
+  acti_premium_price         Decimal? @db.Decimal(10, 2)
+  acti_premium_min_amount    Decimal? @db.Decimal(10, 2)
+  acti_premium_refund_with_justification    String? @db.VarChar(255)
+  acti_premium_refund_without_justification String? @db.VarChar(255)
+  acti_premium_deadline_for_refund_with_justification    String? @db.VarChar(255)
+  acti_premium_deadline_for_refund_without_justification String? @db.VarChar(255)
+
+  acti_gold_price_type    String?  @db.VarChar(255)
+  acti_gold_price         Decimal? @db.Decimal(10, 2)
+  acti_gold_min_amount    Decimal? @db.Decimal(10, 2)
+  acti_gold_refund_with_justification    String? @db.VarChar(255)
+  acti_gold_refund_without_justification String? @db.VarChar(255)
+  acti_gold_deadline_for_refund_with_justification    String? @db.VarChar(255)
+  acti_gold_deadline_for_refund_without_justification String? @db.VarChar(255)
+
+  sub_option_show Int?
+  event_type     Int?     @default(0)
+  event_gift_card Int?    @default(0)
+  membership_quantity Int @default(0)
+  minimum_amt_one_time_charity Decimal @default(0) @db.Decimal(10, 4)
+  review_done    Boolean  @default(false) @db.TinyInt
+  is_marketplace_activated Int @default(0)
+  sell_registration_status Int @default(0)
+
+  brand_id       Int      @default(0)
+  brand          Brand?   @relation(fields: [brand_id], references: [brand_id])
+
+  heroBuilders   HeroBuilder[]
+
+  @@index([live_result_url])
+  @@map("oc_product")
+}
