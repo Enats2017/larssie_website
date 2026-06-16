@@ -138,12 +138,17 @@ export default function HeroSection() {
               <Image
                 src={heroBg1}
                 alt="20K Marathon"
-                className="w-full block object-cover"
-                style={{ marginTop: '-10px' }}
+                width={180}
+                // height={120}
+                className="block object-cover mx-auto"
+                style={{ marginTop: '10px' }}
               />
 
+              {/* Divider after image */}
+              <div className="mx-6 h-px bg-white/20 my-3" />
+
               {/* Stats */}
-              <div className="px-6 py-5">
+              <div className="px-6 py-0">
                 {[
                   { icon: starIcon, title: '4.7/5',  subtitle: '350 Reviews' },
                   { icon: handIcon, title: '2,250+', subtitle: 'Participants in 2024' },
@@ -241,215 +246,215 @@ export default function HeroSection() {
     </section>
 
     {/* Stats Bar */}
-{/* Stats Bar */}
-<div className="bg-white py-10">
-  <div className="max-w-7xl mx-auto">
+    {/* Stats Bar */}
+    <div className="bg-white py-10">
+      <div className="max-w-7xl mx-auto">
 
-    {/* Desktop */}
-    <div className="hidden md:grid md:grid-cols-4">
+        {/* Desktop */}
+        <div className="hidden md:grid md:grid-cols-4">
 
-      {/* START */}
-      <div className="flex items-start justify-between pr-10 border-r border-[#8ED9EE]">
-        <div>
-          <h4 className="text-[#0A2A4A] text-[18px] font-extrabold uppercase">
-            START
-          </h4>
-
-          <h2 className="text-[#0A2A4A] text-[54px] font-black leading-none mt-1">
-            06:00
-          </h2>
-
-          <div className="w-[110px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
-
-          <p className="text-[#0A2A4A] text-[16px]">
-            May 24, 2025
-          </p>
-        </div>
-
-        <Image src={time} alt="" width={64} height={64} />
-      </div>
-
-      {/* CUT OFF */}
-      <div className="flex items-start justify-between px-10 border-r border-[#8ED9EE]">
-        <div className="pt-8">
-          <h4 className="text-[#0A2A4A] text-[18px] font-extrabold uppercase">
-            CUT-OFF
-          </h4>
-
-          <h2 className="text-[#0A2A4A] text-[54px] font-black leading-none mt-1">
-            14:00
-          </h2>
-
-          <div className="w-[110px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
-
-          <p className="text-[#0A2A4A] text-[16px]">
-            8 Checkpoints
-          </p>
-        </div>
-
-        <Image src={stopwatch} alt="" width={64} height={64} />
-      </div>
-
-      {/* AID STATION */}
-      <div className="flex items-start justify-between px-10 border-r border-[#8ED9EE]">
-        <div className="pt-8">
-          <h4 className="text-[#0A2A4A] text-[18px] font-extrabold uppercase">
-            AID STATION
-          </h4>
-
-          <h2 className="text-[#0A2A4A] text-[54px] font-black leading-none mt-1">
-            05
-          </h2>
-
-          <div className="w-[110px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
-
-          <p className="text-[#0A2A4A] text-[16px]">
-            Incl. Finish
-          </p>
-        </div>
-
-        <Image src={heroicon} alt="" width={64} height={64} />
-      </div>
-
-      {/* PARTICIPANTS */}
-      <div className="flex items-start justify-between pl-10">
-        <div>
-          <h4 className="text-[#0A2A4A] text-[18px] font-extrabold uppercase">
-            MAXIMUM
-            <br />
-            PARTICIPANTS
-          </h4>
-
-          <h2 className="text-[#0A2A4A] text-[54px] font-black leading-none mt-1">
-            600
-          </h2>
-
-          <div className="w-[110px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
-
-          <p className="text-[#0A2A4A] text-[16px]">
-            Two Waves
-          </p>
-        </div>
-
-        <Image src={group} alt="" width={64} height={64} />
-      </div>
-    </div>
-
-    {/* Mobile Slider */}
-    <div className="md:hidden px-4">
-
-      <Swiper
-        modules={[Pagination, Autoplay]}
-        slidesPerView={1}
-        spaceBetween={20}
-        pagination={{ clickable: true }}
-        autoplay={{
-          delay: 3000,
-          disableOnInteraction: false,
-        }}
-        loop={true}
-        className="statsSwiper pb-12"
-      >
-
-        {/* START */}
-        <SwiperSlide>
-          <div className="flex items-start justify-between rounded-2xl border border-[#8ED9EE] p-6">
+          {/* START */}
+          <div className="flex items-start justify-between pr-10 border-r border-[#8ED9EE]">
             <div>
-              <h4 className="text-[#0A2A4A] text-[16px] font-extrabold uppercase">
+              <h4 className="text-[#0A2A4A] text-[18px] font-extrabold uppercase">
                 START
               </h4>
 
-              <h2 className="text-[#0A2A4A] text-[42px] font-black leading-none mt-1">
+              <h2 className="text-[#0A2A4A] text-[54px] font-black leading-none mt-1">
                 06:00
               </h2>
 
-              <div className="w-[90px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
+              <div className="w-[110px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
 
-              <p className="text-[#0A2A4A] text-sm">
+              <p className="text-[#0A2A4A] text-[16px]">
                 May 24, 2025
               </p>
             </div>
 
-            <Image src={time} alt="" width={52} height={52} />
+            <Image src={time} alt="" width={64} height={64} />
           </div>
-        </SwiperSlide>
 
-        {/* CUT OFF */}
-        <SwiperSlide>
-          <div className="flex items-start justify-between rounded-2xl border border-[#8ED9EE] p-6">
-            <div>
-              <h4 className="text-[#0A2A4A] text-[16px] font-extrabold uppercase">
+          {/* CUT OFF */}
+          <div className="flex items-start justify-between px-10 border-r border-[#8ED9EE]">
+            <div className="pt-8">
+              <h4 className="text-[#0A2A4A] text-[18px] font-extrabold uppercase">
                 CUT-OFF
               </h4>
 
-              <h2 className="text-[#0A2A4A] text-[42px] font-black leading-none mt-1">
+              <h2 className="text-[#0A2A4A] text-[54px] font-black leading-none mt-1">
                 14:00
               </h2>
 
-              <div className="w-[90px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
+              <div className="w-[110px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
 
-              <p className="text-[#0A2A4A] text-sm">
+              <p className="text-[#0A2A4A] text-[16px]">
                 8 Checkpoints
               </p>
             </div>
 
-            <Image src={stopwatch} alt="" width={52} height={52} />
+            <Image src={stopwatch} alt="" width={64} height={64} />
           </div>
-        </SwiperSlide>
 
-        {/* AID STATION */}
-        <SwiperSlide>
-          <div className="flex items-start justify-between rounded-2xl border border-[#8ED9EE] p-6">
-            <div>
-              <h4 className="text-[#0A2A4A] text-[16px] font-extrabold uppercase">
+          {/* AID STATION */}
+          <div className="flex items-start justify-between px-10 border-r border-[#8ED9EE]">
+            <div className="pt-8">
+              <h4 className="text-[#0A2A4A] text-[18px] font-extrabold uppercase">
                 AID STATION
               </h4>
 
-              <h2 className="text-[#0A2A4A] text-[42px] font-black leading-none mt-1">
+              <h2 className="text-[#0A2A4A] text-[54px] font-black leading-none mt-1">
                 05
               </h2>
 
-              <div className="w-[90px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
+              <div className="w-[110px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
 
-              <p className="text-[#0A2A4A] text-sm">
+              <p className="text-[#0A2A4A] text-[16px]">
                 Incl. Finish
               </p>
             </div>
 
-            <Image src={heroicon} alt="" width={52} height={52} />
+            <Image src={heroicon} alt="" width={64} height={64} />
           </div>
-        </SwiperSlide>
 
-        {/* PARTICIPANTS */}
-        <SwiperSlide>
-          <div className="flex items-start justify-between rounded-2xl border border-[#8ED9EE] p-6">
+          {/* PARTICIPANTS */}
+          <div className="flex items-start justify-between pl-10">
             <div>
-              <h4 className="text-[#0A2A4A] text-[16px] font-extrabold uppercase">
+              <h4 className="text-[#0A2A4A] text-[18px] font-extrabold uppercase">
                 MAXIMUM
                 <br />
                 PARTICIPANTS
               </h4>
 
-              <h2 className="text-[#0A2A4A] text-[42px] font-black leading-none mt-1">
+              <h2 className="text-[#0A2A4A] text-[54px] font-black leading-none mt-1">
                 600
               </h2>
 
-              <div className="w-[90px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
+              <div className="w-[110px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
 
-              <p className="text-[#0A2A4A] text-sm">
+              <p className="text-[#0A2A4A] text-[16px]">
                 Two Waves
               </p>
             </div>
 
-            <Image src={group} alt="" width={52} height={52} />
+            <Image src={group} alt="" width={64} height={64} />
           </div>
-        </SwiperSlide>
+        </div>
 
-      </Swiper>
+        {/* Mobile Slider */}
+        <div className="md:hidden px-4">
 
+          <Swiper
+            modules={[Pagination, Autoplay]}
+            slidesPerView={1}
+            spaceBetween={20}
+            pagination={{ clickable: true }}
+            autoplay={{
+              delay: 3000,
+              disableOnInteraction: false,
+            }}
+            loop={true}
+            className="statsSwiper pb-12"
+          >
+
+            {/* START */}
+            <SwiperSlide>
+              <div className="flex items-start justify-between rounded-2xl border border-[#8ED9EE] p-6">
+                <div>
+                  <h4 className="text-[#0A2A4A] text-[16px] font-extrabold uppercase">
+                    START
+                  </h4>
+
+                  <h2 className="text-[#0A2A4A] text-[42px] font-black leading-none mt-1">
+                    06:00
+                  </h2>
+
+                  <div className="w-[90px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
+
+                  <p className="text-[#0A2A4A] text-sm">
+                    May 24, 2025
+                  </p>
+                </div>
+
+                <Image src={time} alt="" width={52} height={52} />
+              </div>
+            </SwiperSlide>
+
+            {/* CUT OFF */}
+            <SwiperSlide>
+              <div className="flex items-start justify-between rounded-2xl border border-[#8ED9EE] p-6">
+                <div>
+                  <h4 className="text-[#0A2A4A] text-[16px] font-extrabold uppercase">
+                    CUT-OFF
+                  </h4>
+
+                  <h2 className="text-[#0A2A4A] text-[42px] font-black leading-none mt-1">
+                    14:00
+                  </h2>
+
+                  <div className="w-[90px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
+
+                  <p className="text-[#0A2A4A] text-sm">
+                    8 Checkpoints
+                  </p>
+                </div>
+
+                <Image src={stopwatch} alt="" width={52} height={52} />
+              </div>
+            </SwiperSlide>
+
+            {/* AID STATION */}
+            <SwiperSlide>
+              <div className="flex items-start justify-between rounded-2xl border border-[#8ED9EE] p-6">
+                <div>
+                  <h4 className="text-[#0A2A4A] text-[16px] font-extrabold uppercase">
+                    AID STATION
+                  </h4>
+
+                  <h2 className="text-[#0A2A4A] text-[42px] font-black leading-none mt-1">
+                    05
+                  </h2>
+
+                  <div className="w-[90px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
+
+                  <p className="text-[#0A2A4A] text-sm">
+                    Incl. Finish
+                  </p>
+                </div>
+
+                <Image src={heroicon} alt="" width={52} height={52} />
+              </div>
+            </SwiperSlide>
+
+            {/* PARTICIPANTS */}
+            <SwiperSlide>
+              <div className="flex items-start justify-between rounded-2xl border border-[#8ED9EE] p-6">
+                <div>
+                  <h4 className="text-[#0A2A4A] text-[16px] font-extrabold uppercase">
+                    MAXIMUM
+                    <br />
+                    PARTICIPANTS
+                  </h4>
+
+                  <h2 className="text-[#0A2A4A] text-[42px] font-black leading-none mt-1">
+                    600
+                  </h2>
+
+                  <div className="w-[90px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
+
+                  <p className="text-[#0A2A4A] text-sm">
+                    Two Waves
+                  </p>
+                </div>
+
+                <Image src={group} alt="" width={52} height={52} />
+              </div>
+            </SwiperSlide>
+
+          </Swiper>
+
+        </div>
+      </div>
     </div>
-  </div>
-</div>
   </>
   )
 }
