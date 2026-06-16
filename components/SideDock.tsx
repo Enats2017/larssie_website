@@ -2,6 +2,7 @@
 
 import { Home, Map, Calendar, User } from 'lucide-react'
 import Link from 'next/link'
+import { useScrollDirection } from '@/hooks/useScrollDirection'
 
 const items = [
   { icon: Home, href: '/', label: 'Home', active: true },
@@ -11,8 +12,16 @@ const items = [
 ]
 
 export default function SideDock() {
+  const visible = useScrollDirection(10)
+
   return (
-    <div className="fixed left-4 top-1/2 -translate-y-1/2 flex flex-col gap-4 z-50">
+    <div
+      className={`
+        fixed left-4 top-1/2 -translate-y-1/2 flex flex-col gap-4 z-50
+        transition-all duration-300 ease-in-out
+        ${visible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-full'}
+      `}
+    >
       {items.map(({ icon: Icon, href, label, active }, i) => (
         <Link
           key={label}

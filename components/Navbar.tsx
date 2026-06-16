@@ -3,7 +3,8 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import Image from 'next/image'
-import logo  from '@/assets/logo.png'
+import logo from '@/assets/logo.png'
+import { useScrollDirection } from '@/hooks/useScrollDirection'
 
 const navLinks = [
   { label: 'Discover', href: '/discover', highlight: true },
@@ -15,9 +16,16 @@ const navLinks = [
 export default function Navbar() {
   const [lang, setLang] = useState('NL')
   const [menuOpen, setMenuOpen] = useState(false)
+  const visible = useScrollDirection(10)
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 px-4 py-3">
+    <nav
+      className={`
+        fixed top-0 left-0 right-0 z-50 px-4 py-3
+        transition-transform duration-300 ease-in-out
+        ${visible ? 'translate-y-0' : '-translate-y-full'}
+      `}
+    >
       <div
         className="max-w-7xl mx-auto flex items-center justify-between
                    rounded-full px-5 py-2.5
@@ -177,33 +185,33 @@ export default function Navbar() {
                          text-white text-sm font-bold px-5 py-2.5 rounded-full
                          transition-colors w-full"
             >
-            <span className="text-base lg:text-lg">
-              Become Member
-            </span>
+              <span className="text-base lg:text-lg">
+                Become Member
+              </span>
 
-            <span
-              className="
-                flex items-center justify-center
-                w-10 h-5
-                bg-white
-                rounded-full
-                shrink-0
-              "
-            >
-              <svg
-                className="w-5 h-5 text-[#36A5DD]"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2.5}
+              <span
+                className="
+                  flex items-center justify-center
+                  w-10 h-5
+                  bg-white
+                  rounded-full
+                  shrink-0
+                "
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M13 7l5 5-5 5M6 12h12"
-                />
-              </svg>
-            </span>
+                <svg
+                  className="w-5 h-5 text-[#36A5DD]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13 7l5 5-5 5M6 12h12"
+                  />
+                </svg>
+              </span>
             </Link>
           </div>
         </div>

@@ -28,7 +28,7 @@ export default async function HomePage() {
       <Footer />
       <main >
         <div className="hidden md:block">
-          <BrandsList brands={brands} />
+          {/* <BrandsList brands={brands} /> */}
         </div>
       </main>
     </div>

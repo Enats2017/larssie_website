@@ -72,12 +72,12 @@ const AidStations = () => {
         >
             {/* Dark overlay */}
             <div
-                className="w-full px-6 md:px-10 py-12 pb-16"
-                style={{
-                    background:
-                        "linear-gradient(to bottom, rgba(5,20,50,0.55) 0%, rgba(5,20,50,0.85) 30%, rgba(5,20,50,0.97) 55%)",
-                }}
+              style={{
+                background:
+                  "linear-gradient(to bottom, rgba(5,20,50,0.55) 0%, rgba(5,20,50,0.85) 30%, rgba(5,20,50,0.97) 55%)",
+              }}
             >
+              <div className="max-w-[1280px] mx-auto px-6 md:px-10 py-12 pb-16">
                 {/* TITLE */}
                 <div className="text-center mb-10">
                     <h2
@@ -101,10 +101,7 @@ const AidStations = () => {
                 {/* TABLE */}
                 <div
                     ref={scrollRef}
-                    className="w-full overflow-x-auto pl-16 md:pl-20 aid-scroll"
-                    style={{
-                        scrollbarWidth: "none",
-                    }}
+                    className="w-full overflow-x-auto aid-scroll"
                 >
                     <style>{`
                         /* Hide native scrollbar on all devices */
@@ -310,6 +307,7 @@ const AidStations = () => {
                         <Image src={arrowImg} alt="arrow" width={22} height={22} />
                     </a>
                 </div>
+              </div>
             </div>
 
             {/* Small centered down-arrow — 46x23px as per Figma, color #002248 */}

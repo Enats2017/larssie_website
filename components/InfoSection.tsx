@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import territoryImg from '@/assets/Trek.png'
+import territoryImg from '@/assets/trek.png'
 import mountainIcon from '@/assets/Mask group.png'
 import amazonLogo from '@/assets/amazon.png'
 import facebookLogo from '@/assets/facebook.png'
@@ -78,7 +78,7 @@ export default function InfoSection({ brands }: Props) {
             >
               Explore The Territory
               <span className="bg-white rounded-full p-1 flex items-center justify-center">
-                <svg className="w-7 h-3.5 text-[#0f7587]" fill="none" viewBox="0 0 32 24" stroke="currentColor" strokeWidth={2.5}>
+                <svg className="w-7 h-3.5 text-[#36A5DD]" fill="none" viewBox="0 0 32 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 7l5 5-5 5M6 12h21" />
                 </svg>
               </span>
