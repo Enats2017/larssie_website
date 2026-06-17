@@ -10,6 +10,9 @@ import TimelineSection from '@/components/TimelineSection'
 import Footer from '@/components/Footer'
 import BrandsList from '@/components/BrandsList'
 
+
+
+
 export default async function Page() {
   const [brands] = await Promise.all([
     prisma.brand.findMany({ orderBy: { sort_order: 'asc' } }),
@@ -52,7 +55,19 @@ export default async function Page() {
   if (!hero) return <div>No hero found</div>
 
   if (!hero) return <div>No hero found</div>
+  const course = await prisma.courseBuilder.findFirst({
+    where: {
+      event_id: 71,
+      distance_id: '49',
+    },
+  })
 
+const courseLinkCards = course
+  ? await prisma.courseLinkCards.findMany({
+      where: { course_id: course.course_id },
+      orderBy: { sort_order: 'asc' },
+    })
+  : []
   return (
     <div>
       <SideDock />
@@ -62,7 +77,7 @@ export default async function Page() {
       <InfoSection brands={brands} />
       <GearUpSection />
       <AidStations />
-      <TimelineSection />
+      <TimelineSection course={course} linkCards={courseLinkCards} />
       <Footer />
       <main >
         <div className="hidden md:block">
@@ -72,3 +87,6 @@ export default async function Page() {
     </div>
   )
 }
+
+
+

@@ -231,18 +231,18 @@ export default function HeroSection({ menu, hero }: Props) {
                 {/* CTA Buttons */}
                 <div className="flex flex-col sm:flex-row gap-3 mt-8 justify-center lg:justify-start">
                   {ctaButtons.length > 0 ? ctaButtons.map((btn, i) => {
-                    const isPrimary = (btn.style ?? btn.type) === 'primary'
+                    const isPrimary = i === 0 || (btn.style ?? btn.type) === 'primary'
                     const href = btn.url ?? btn.link ?? '#'
                     return (
                       <a key={i} href={href}
                          className={`flex items-center justify-center gap-2 font-bold px-6 py-3 rounded-full transition-colors shadow-lg ${
                            isPrimary
                              ? 'bg-sky-500 hover:bg-sky-400 text-white'
-                             : 'bg-[#36A5DD] hover:bg-[#2b94cc] text-white'
+                             : 'bg-white hover:bg-sky-50 text-sky-500'
                          }`}>
                         {btn.label}
-                        <span className={`rounded-full p-1.5 flex items-center justify-center ${isPrimary ? 'bg-white' : 'bg-white'}`}>
-                          <svg className={`w-10 h-4 ${isPrimary ? 'text-[#36A5DD]' : 'text-[#36A5DD]'}`}
+                        <span className={`rounded-full p-1.5 flex items-center justify-center ${isPrimary ? 'bg-white' : 'bg-sky-500'}`}>
+                          <svg className={`w-10 h-4 ${isPrimary ? 'text-[#36A5DD]' : 'text-white'}`}
                                fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5-5 5M6 12h12" />
                           </svg>

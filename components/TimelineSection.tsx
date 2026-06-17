@@ -30,16 +30,68 @@ const CURVE_PATH = `
  C 950,480 1050,510 1200,430
 `
 
-const cards = [
-  { image: rectangle1, alt: 'Summer at Val Thorens', title: ['Summer at', 'Val Thorens'] },
-  { image: rectangle2, alt: 'Documentation and Brochures', title: ['Documentation', 'and Brochures'] },
-  { image: rectangle1, alt: 'Frequently Asked Questions', title: ['Frequently', 'Asked Questions'] },
+const UPLOAD_BASE = process.env.NEXT_PUBLIC_UPLOAD_BASE_URL || 'http://localhost'
+
+// Fallback cards used only when no course_link_cards rows exist for this course
+const defaultCards = [
+  { src: rectangle1.src, alt: 'Summer at Val Thorens', title: 'Summer at Val Thorens', url: '#' },
+  { src: rectangle2.src, alt: 'Documentation and Brochures', title: 'Documentation and Brochures', url: '#' },
+  { src: rectangle1.src, alt: 'Frequently Asked Questions', title: 'Frequently Asked Questions', url: '#' },
 ]
 
-export default function TimelineSection() {
+type CourseData = {
+  course_id: number
+  title_word: string | null
+  title_script: string | null
+  tech_name: string | null
+  tech_icon: string | null
+  tech_stars: number | null
+  tech_label: string | null
+  terrain_name: string | null
+  terrain_icon: string | null
+  terrain_line1: string | null
+  terrain_line2: string | null
+  metric1_name: string | null
+  metric1_sub_label: string | null
+  metric1_value: string | null
+  metric2_name: string | null
+  metric2_sub_label: string | null
+  metric2_value: string | null
+  metric3_name: string | null
+  metric3_sub_label: string | null
+  metric3_value: string | null
+  metric4_name: string | null
+  metric4_sub_label: string | null
+  metric4_value: string | null
+} | null
+
+type CourseLinkCard = {
+  card_title: string | null
+  card_image: string | null
+  card_url: string | null
+}
+
+type Props = {
+  course?: CourseData
+  linkCards?: CourseLinkCard[]
+}
+
+export default function TimelineSection({ course, linkCards = [] }: Props) {
   const [cardIndex, setCardIndex] = useState(0);
+
+  const cards = linkCards.length > 0
+    ? linkCards.map((c) => ({
+        src: c.card_image ? `${UPLOAD_BASE}${c.card_image}` : rectangle1.src,
+        alt: c.card_title || 'Course link card',
+        title: c.card_title || '',
+        url: c.card_url || '#',
+      }))
+    : defaultCards;
+
   const prevCard = () => setCardIndex((i) => (i - 1 + cards.length) % cards.length);
   const nextCard = () => setCardIndex((i) => (i + 1) % cards.length);
+
+  const techStars = course?.tech_stars ?? 4;
 
   return (
     <section
@@ -130,7 +182,6 @@ export default function TimelineSection() {
         </svg>
       </div>
 
-      {/* ============ MOBILE TIMELINE (vertical step list) ============ */}
       {/* ============ MOBILE TIMELINE (vertical zigzag list) ============ */}
       <div className="md:hidden">
         <div className="text-center pt-12 pb-8 px-6">
@@ -183,9 +234,6 @@ export default function TimelineSection() {
       </div>
 
       {/* Mountain Section Container */}
-      {/* marginTop: 0 on mobile (wave SVG above already transitions to
-          #061831), -13.3333vw on md+ (derived ratio for the horizontal
-          curve seam — see earlier explanation) */}
       <div 
         className="relative z-0 w-full text-white bg-[#061831] -mt-px md:-mt-[13.3333vw]"
       >
@@ -209,14 +257,14 @@ export default function TimelineSection() {
             <div className="w-full lg:w-[360px] text-center lg:text-left">
               <h2 className="leading-[0.85]">
                 <span className="block text-[40px] md:text-[64px] font-black uppercase text-white">
-                  COURSE
+                  {course?.title_word ?? 'COURSE'}
                 </span>
 
                 <span
                   className="block text-[32px] md:text-[48px] text-[#2ea9ec] italic normal-case"
                   style={{ fontFamily: 'Georgia, serif' }}
                 >
-                  details
+                  {course?.title_script ?? 'details'}
                 </span>
               </h2>
 
@@ -241,28 +289,22 @@ export default function TimelineSection() {
 
                 <div>
                   <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase">
-                    TECHNICAL
+                    {course?.tech_name ?? 'TECHNICAL'}
                   </h4>
 
                   <div className="flex items-center mt-1">
-                    {[...Array(4)].map((_, i) => (
+                    {[...Array(5)].map((_, i) => (
                       <Image
                         key={i}
                         src={star1}
                         alt="star"
-                        className="w-6 h-6 md:w-8 md:h-8 object-contain -mr-1"
+                        className={`w-6 h-6 md:w-8 md:h-8 object-contain -mr-1 ${i < techStars ? '' : 'opacity-20'}`}
                       />
                     ))}
-
-                    <Image
-                      src={star1}
-                      alt="star"
-                      className="w-6 h-6 md:w-8 md:h-8 object-contain opacity-20"
-                    />
                   </div>
 
                   <p className="text-white/70 text-xs md:text-sm mt-1">
-                    very technical
+                    {course?.tech_label ?? 'very technical'}
                   </p>
                 </div>
               </div>
@@ -279,15 +321,15 @@ export default function TimelineSection() {
 
                 <div>
                   <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase">
-                    TERRAINS
+                    {course?.terrain_name ?? 'TERRAINS'}
                   </h4>
 
                   <p className="text-white text-xs md:text-sm mt-1">
-                    Mountain trails & singletrack
+                    {course?.terrain_line1 ?? 'Mountain trails & singletrack'}
                   </p>
 
                   <p className="text-white/70 text-xs md:text-sm">
-                    Snow, rocks, forest
+                    {course?.terrain_line2 ?? 'Snow, rocks, forest'}
                   </p>
                 </div>
               </div>
@@ -303,14 +345,12 @@ export default function TimelineSection() {
                 </div>
 
                 <div>
-                  <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase leading-tight">
-                    SPEED FACTOR
-                    <br />
-                    WET CONDITIONS
+                  <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase leading-tight" style={{ whiteSpace: 'pre-line' }}>
+                    {course?.metric1_name ?? 'SPEED FACTOR\nWET CONDITIONS'}
                   </h4>
 
                   <p className="text-[#2ea9ec] text-[26px] md:text-[42px] font-black leading-none mt-2">
-                    1.2
+                    {course?.metric1_value ?? '1.2'}
                   </p>
                 </div>
               </div>
@@ -327,11 +367,11 @@ export default function TimelineSection() {
 
                 <div>
                   <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase">
-                    OFFROAD RATIO
+                    {course?.metric2_name ?? 'OFFROAD RATIO'}
                   </h4>
 
                   <p className="text-[#2ea9ec] text-[26px] md:text-[42px] font-black leading-none mt-2">
-                    85%
+                    {course?.metric2_value ?? '85%'}
                   </p>
                 </div>
               </div>
@@ -348,11 +388,11 @@ export default function TimelineSection() {
 
                 <div>
                   <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase">
-                    VERTICAL INDEX
+                    {course?.metric3_name ?? 'VERTICAL INDEX'}
                   </h4>
 
                   <p className="text-[#2ea9ec] text-[26px] md:text-[42px] font-black leading-none mt-2">
-                    100K
+                    {course?.metric3_value ?? '100K'}
                   </p>
                 </div>
               </div>
@@ -368,14 +408,12 @@ export default function TimelineSection() {
                 </div>
 
                 <div>
-                  <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase leading-tight">
-                    SPEED FACTOR
-                    <br />
-                    DRY CONDITIONS
+                  <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase leading-tight" style={{ whiteSpace: 'pre-line' }}>
+                    {course?.metric4_name ?? 'SPEED FACTOR\nDRY CONDITIONS'}
                   </h4>
 
                   <p className="text-[#2ea9ec] text-[26px] md:text-[42px] font-black leading-none mt-2">
-                    1.1
+                    {course?.metric4_value ?? '1.1'}
                   </p>
                 </div>
               </div>
@@ -386,9 +424,13 @@ export default function TimelineSection() {
           {/* ============ DESKTOP CARDS — 3-col grid ============ */}
           <div className="hidden md:grid md:grid-cols-3 gap-4 mt-4 relative z-30 translate-y-[110px] -mb-[110px]">
             {cards.map((card, i) => (
-              <div key={i} className="group relative overflow-hidden rounded-[24px] aspect-[1.8/1] bg-slate-800 shadow-xl cursor-pointer">
+              <a
+                key={i}
+                href={card.url}
+                className="group relative overflow-hidden rounded-[24px] aspect-[1.8/1] bg-slate-800 shadow-xl cursor-pointer block"
+              >
                 <img
-                  src={card.image.src}
+                  src={card.src}
                   alt={card.alt}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
@@ -396,10 +438,8 @@ export default function TimelineSection() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
 
                 <div className="absolute inset-x-0 bottom-5 px-6 flex items-end justify-between">
-                  <h3 className="text-[18px] leading-[1.05] font-bold text-white max-w-[75%]">
-                    {card.title[0]}
-                    <br />
-                    {card.title[1]}
+                  <h3 className="text-[18px] leading-[1.05] font-bold text-white max-w-[75%]" style={{ whiteSpace: 'pre-line' }}>
+                    {card.title}
                   </h3>
 
                   <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-md transition-transform duration-300 group-hover:translate-x-1">
@@ -418,15 +458,15 @@ export default function TimelineSection() {
                     </svg>
                   </div>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
 
           {/* ============ MOBILE CARDS — single-card carousel ============ */}
           <div className="md:hidden relative z-30 mt-2">
-            <div className="relative overflow-hidden rounded-[24px] aspect-[1.6/1] bg-slate-800 shadow-xl">
+            <a href={cards[cardIndex].url} className="relative overflow-hidden rounded-[24px] aspect-[1.6/1] bg-slate-800 shadow-xl block">
               <img
-                src={cards[cardIndex].image.src}
+                src={cards[cardIndex].src}
                 alt={cards[cardIndex].alt}
                 className="w-full h-full object-cover"
               />
@@ -434,13 +474,11 @@ export default function TimelineSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
 
               <div className="absolute inset-x-0 bottom-5 px-6">
-                <h3 className="text-[18px] leading-[1.05] font-bold text-white">
-                  {cards[cardIndex].title[0]}
-                  <br />
-                  {cards[cardIndex].title[1]}
+                <h3 className="text-[18px] leading-[1.05] font-bold text-white" style={{ whiteSpace: 'pre-line' }}>
+                  {cards[cardIndex].title}
                 </h3>
               </div>
-            </div>
+            </a>
 
             {/* prev / next controls */}
             <div className="flex items-center justify-center gap-4 mt-6">

@@ -383,3 +383,122 @@ model Product {
   @@index([live_result_url])
   @@map("oc_product")
 }
+
+model GearupBuilder {
+  gearup_id         Int      @id @default(autoincrement())
+  brand_id          Int
+  event_id          Int
+  distance_id       Int?
+  title_word        String?  @db.VarChar(100)
+  title_script      String?  @db.VarChar(100)
+  mandatory_title   String?  @db.VarChar(255)
+  mandatory_desc    String?  @db.Text
+  mandatory_icon    String?  @db.VarChar(255)
+  recommended_title String?  @db.VarChar(255)
+  recommended_desc  String?  @db.Text
+  recommended_icon  String?  @db.VarChar(255)
+  mandatory_items   String?  @db.LongText
+  recommended_items String?  @db.LongText
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+
+  link_cards GearupLinkCard[]
+
+  @@map("gearup_builder")
+}
+
+model GearupLinkCard {
+  card_id    Int      @id @default(autoincrement())
+  gearup_id  Int
+  card_title String?  @db.VarChar(255)
+  card_image String?  @db.LongText
+  card_url   String?  @db.Text
+  sort_order Int      @default(0)
+  created_at DateTime @default(now())
+
+  gearup GearupBuilder @relation(fields: [gearup_id], references: [gearup_id])
+
+  @@map("gearup_link_cards")
+}
+
+model InfoBuilder {
+  info_id     Int      @id @default(autoincrement())
+  brand_id    Int
+  event_id    Int
+  distance_id Int?
+  sort_order  Int      @default(0)
+  tagline     String   @db.VarChar(150)
+  title       String   @db.VarChar(150)
+  alt_label   String   @db.VarChar(100)
+  altitude    String   @db.VarChar(100)
+  description String?  @db.Text
+  cta_text    String   @db.VarChar(150)
+  cta_link    String   @db.VarChar(500)
+  faq_link    String   @db.VarChar(500)
+  faq_icon    String   @db.VarChar(100)
+  media_type  String   @db.VarChar(10)
+  image_path  String   @db.VarChar(500)
+  video_path  String   @db.VarChar(500)
+  video_url   String   @db.VarChar(500)
+
+  @@map("info_builder")
+}
+model CourseBuilder {
+  course_id         Int      @id @default(autoincrement())
+  brand_id          Int
+  event_id          Int
+  distance_id       String?  @db.VarChar(100)
+
+  title_word        String?  @db.VarChar(100)
+  title_script      String?  @db.VarChar(100)
+
+  tech_name         String?  @db.VarChar(100)
+  tech_icon         String?  @db.VarChar(255)
+  tech_stars        Int?     @default(0) @db.TinyInt
+  tech_label        String?  @db.VarChar(255)
+
+  terrain_name      String?  @db.VarChar(100)
+  terrain_icon      String?  @db.VarChar(255)
+  terrain_line1     String?  @db.VarChar(255)
+  terrain_line2     String?  @db.VarChar(255)
+
+  metric1_name      String?  @db.VarChar(255)
+  metric1_icon      String?  @db.VarChar(255)
+  metric1_sub_label String?  @db.VarChar(255)
+  metric1_value     String?  @db.VarChar(255)
+
+  metric2_name      String?  @db.VarChar(255)
+  metric2_icon      String?  @db.VarChar(255)
+  metric2_sub_label String?  @db.VarChar(255)
+  metric2_value     String?  @db.VarChar(255)
+
+  metric3_name      String?  @db.VarChar(255)
+  metric3_icon      String?  @db.VarChar(255)
+  metric3_sub_label String?  @db.VarChar(255)
+  metric3_value     String?  @db.VarChar(255)
+
+  metric4_name      String?  @db.VarChar(255)
+  metric4_icon      String?  @db.VarChar(255)
+  metric4_sub_label String?  @db.VarChar(255)
+  metric4_value     String?  @db.VarChar(255)
+
+  created_at        DateTime? @default(now())
+  updated_at        DateTime? @updatedAt
+
+  @@index([brand_id])
+  @@index([event_id])
+  @@map("course_builder")
+}
+
+model CourseLinkCards {
+  card_id    Int       @id @default(autoincrement())
+  course_id  Int
+  card_title String?   @db.VarChar(255)
+  card_image String?   @db.LongText
+  card_url   String?   @db.Text
+  sort_order Int?      @default(0)
+  created_at DateTime? @default(now())
+
+  @@index([course_id])
+  @@map("course_link_cards")
+}
