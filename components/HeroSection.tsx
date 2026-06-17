@@ -1,6 +1,12 @@
 'use client'
 
 import Image from 'next/image'
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Autoplay } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/pagination";
+
 import heroBg    from '@/assets/herosection.png'
 import heroBg1   from '@/assets/20K_bg.png'
 import trail     from '@/assets/trail.png'
@@ -235,10 +241,10 @@ export default function HeroSection({ menu, hero }: Props) {
                     const href = btn.url ?? btn.link ?? '#'
                     return (
                       <a key={i} href={href}
-                         className={`flex items-center justify-center gap-2 font-bold px-6 py-3 rounded-full transition-colors shadow-lg ${
+                         className={`flex items-center justify-center gap-2 font-bold px-6 py-3 rounded-full transition-colors ${
                            isPrimary
-                             ? 'bg-sky-500 hover:bg-sky-400 text-white'
-                             : 'bg-white hover:bg-sky-50 text-sky-500'
+                             ? 'bg-sky-500 hover:bg-sky-400 text-white shadow-lg'
+                             : 'border border-white/60 text-white hover:bg-white/10'
                          }`}>
                         {btn.label}
                         <span className={`rounded-full p-1.5 flex items-center justify-center ${isPrimary ? 'bg-white' : 'bg-sky-500'}`}>
@@ -254,12 +260,12 @@ export default function HeroSection({ menu, hero }: Props) {
                       <a href="/register" className="flex items-center justify-center gap-2 bg-sky-500 hover:bg-sky-400 text-white font-bold px-6 py-3 rounded-full transition-colors shadow-lg">
                         Register Now
                         <span className="bg-white rounded-full p-1.5 flex items-center justify-center">
-                          <svg className="w-10 h-4 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                          <svg className="w-10 h-4 text-[#36A5DD]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5-5 5M6 12h12" />
                           </svg>
                         </span>
                       </a>
-                      <a href="/race-guide" className="flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-sky-500 font-bold px-6 py-3 rounded-full transition-colors shadow-lg">
+                      <a href="/race-guide" className="flex items-center justify-center gap-2 border border-white/60 text-white font-bold px-6 py-3 rounded-full hover:bg-white/10 transition-colors">
                         Download Race Guide
                         <span className="bg-sky-500 rounded-full p-1.5 flex items-center justify-center">
                           <svg className="w-10 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -278,9 +284,9 @@ export default function HeroSection({ menu, hero }: Props) {
 
                   {/* Badge image */}
                   {badgeImgUrl ? (
-                    <img src={badgeImgUrl} alt={hero.event_name ?? 'Badge'} className="w-full block object-cover" />
+                    <img src={badgeImgUrl} alt={hero.event_name ?? 'Badge'} width={180} className="block object-cover mx-auto" style={{ marginTop: '10px' }} />
                   ) : (
-                    <Image src={heroBg1} alt="Race" className="w-full block object-cover" style={{ marginTop: '-10px' }} />
+                    <Image src={heroBg1} alt="Race" width={180} className="block object-cover mx-auto" style={{ marginTop: '10px' }} />
                   )}
 
                        <div className="mx-6 h-px bg-white/20 my-3" />
@@ -333,32 +339,123 @@ export default function HeroSection({ menu, hero }: Props) {
         </div>
       </section>
 
-      {/* ── Bottom Stats Bar ── */}
-      <div className="bg-white py-8 px-5">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-0">
-            {bottomStats.map((stat, index) => {
-              const label     = stat.title ?? stat.label ?? ''
-              const iconInfo  = resolveBottomIcon(label, stat.icon)
-              const isFirst   = index === 0
-              const isLast    = index === bottomStats.length - 1
+      {/* ── Stats Bar (ported from static, now data-driven) ── */}
+      <div className="bg-white py-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          {/* Desktop (lg and up — this row needs real width to avoid overlap) */}
+          <div className="hidden lg:grid lg:grid-cols-4">
+            {bottomStats.map((stat, index, arr) => {
+              const label    = stat.title ?? stat.label ?? ''
+              const iconInfo = resolveBottomIcon(label, stat.icon)
+              const isFirst  = index === 0
+              const isLast   = index === arr.length - 1
+
               return (
-                <div key={index} className={`flex items-center gap-4 ${isFirst ? 'lg:pr-8' : isLast ? 'lg:pl-8' : 'lg:px-8'}`}>
-                  <div className={`w-[2px] self-stretch rounded-full ${isFirst ? '' : 'bg-gradient-to-b from-[#0d2a4a] to-[#7ec8e3]'}`} />
-                  <div className="flex-1">
-                    <p className="text-[#0d2a4a] text-xs font-bold tracking-widest uppercase">{label}</p>
-                    <p className="text-[#0d2a4a] text-4xl font-black">{stat.value}</p>
-                    <div className="w-full h-[1.5px] bg-gradient-to-r from-[#0d2a4a] to-[#7ec8e3] my-2 rounded-full" />
-                    <p className="text-[#0d2a4a]/60 text-sm">{stat.sub}</p>
+                <div
+                  key={index}
+                  className={`flex items-center justify-between gap-3 ${
+                    isFirst
+                      ? 'pr-6 xl:pr-10 border-r border-[#8ED9EE]'
+                      : isLast
+                        ? 'pl-6 xl:pl-10'
+                        : 'px-6 xl:px-10 border-r border-[#8ED9EE]'
+                  }`}
+                >
+                  <div className="min-w-0">
+                    <h4 className="text-[#0A2A4A] text-sm xl:text-[18px] font-extrabold uppercase whitespace-nowrap">
+                      {label}
+                    </h4>
+
+                    <h2 className="text-[#0A2A4A] text-4xl xl:text-[54px] font-black leading-none mt-1">
+                      {stat.value}
+                    </h2>
+
+                    <div className="w-[80px] xl:w-[110px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
+
+                    <p className="text-[#0A2A4A] text-sm xl:text-[16px] whitespace-nowrap">
+                      {stat.sub}
+                    </p>
                   </div>
+
                   {iconInfo.type === 'fa' ? (
-                    <i className={`${iconInfo.src} text-[#0d2a4a] text-3xl opacity-80`} />
+                    <i className={`${iconInfo.src} text-[#0A2A4A] text-3xl xl:text-4xl flex-shrink-0`} />
                   ) : (
-                    <Image src={iconInfo.src} alt={label} width={48} height={48} className="opacity-80" />
+                    <Image
+                      src={iconInfo.src}
+                      alt=""
+                      width={64}
+                      height={64}
+                      className="w-10 h-10 xl:w-16 xl:h-16 object-contain flex-shrink-0"
+                    />
                   )}
                 </div>
               )
             })}
+          </div>
+
+          {/* Mobile + Tablet Slider (covers the range the 4-col row can't fit in) */}
+          <div className="lg:hidden">
+
+            <style jsx global>{`
+              .statsSwiper {
+                padding-bottom: 44px;
+              }
+              .statsSwiper .swiper-pagination {
+                position: static;
+                margin-top: 20px;
+              }
+            `}</style>
+
+            <Swiper
+              modules={[Pagination, Autoplay]}
+              slidesPerView={1}
+              spaceBetween={20}
+              breakpoints={{
+                640: { slidesPerView: 2 },
+              }}
+              pagination={{ clickable: true }}
+              autoplay={{
+                delay: 3000,
+                disableOnInteraction: false,
+              }}
+              loop={true}
+              className="statsSwiper"
+            >
+              {bottomStats.map((stat, index) => {
+                const label    = stat.title ?? stat.label ?? ''
+                const iconInfo = resolveBottomIcon(label, stat.icon)
+
+                return (
+                  <SwiperSlide key={index}>
+                    <div className="flex items-start justify-between rounded-2xl border border-[#8ED9EE] p-6">
+                      <div>
+                        <h4 className="text-[#0A2A4A] text-[16px] font-extrabold uppercase">
+                          {label}
+                        </h4>
+
+                        <h2 className="text-[#0A2A4A] text-[42px] font-black leading-none mt-1">
+                          {stat.value}
+                        </h2>
+
+                        <div className="w-[90px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
+
+                        <p className="text-[#0A2A4A] text-sm">
+                          {stat.sub}
+                        </p>
+                      </div>
+
+                      {iconInfo.type === 'fa' ? (
+                        <i className={`${iconInfo.src} text-[#0A2A4A] text-2xl`} />
+                      ) : (
+                        <Image src={iconInfo.src} alt="" width={52} height={52} />
+                      )}
+                    </div>
+                  </SwiperSlide>
+                )
+              })}
+            </Swiper>
+
           </div>
         </div>
       </div>
