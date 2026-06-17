@@ -113,7 +113,7 @@ export default function GearUpSection() {
 
           {/* MANDATORY EQUIPMENT */}
           <div className="w-full md:w-1/3 md:border-r md:border-cyan-200 md:pr-8">
-            <div className="flex items-center gap-2 md:gap-32 md:items-start mb-2">
+            <div className="flex items-center gap-2 md:justify-between md:items-start mb-2 md:w-full">
               <Image
                 src={checkIcon}
                 alt="check"
@@ -155,7 +155,7 @@ export default function GearUpSection() {
 
           {/* RECOMMENDED EQUIPMENT */}
           <div className="w-full md:w-1/3">
-            <div className="flex items-center gap-2 md:gap-28 md:items-start mb-2">
+            <div className="flex items-center gap-2 md:justify-between md:items-start mb-2 md:w-full">
               <Image
                 src={shieldIcon}
                 alt="shield"

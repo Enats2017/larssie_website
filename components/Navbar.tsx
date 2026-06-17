@@ -43,7 +43,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Nav Links */}
-        <ul className="hidden md:flex items-center gap-8">
+        <ul className="hidden lg:flex items-center gap-4 xl:gap-8">
           {navLinks.map((link) => (
             <li key={link.href}>
               <Link
@@ -76,7 +76,7 @@ export default function Navbar() {
         </ul>
 
         {/* Right side */}
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden lg:flex items-center gap-3 xl:gap-4">
 
           {/* Search Icon */}
           <button className="text-white hover:text-sky-300 transition-colors" aria-label="Search">
@@ -98,30 +98,31 @@ export default function Navbar() {
           <Link
             href="/membership"
             className="
-              flex items-center gap-6
+              flex items-center gap-3 xl:gap-6
               bg-sky-500 hover:bg-sky-400
               text-white font-bold
-              px-8 py-3
+              px-5 py-2.5 xl:px-8 xl:py-3
               rounded-full
               transition-all duration-300
               shadow-lg
+              whitespace-nowrap
             "
           >
-            <span className="text-base lg:text-lg">
+            <span className="text-sm xl:text-lg">
               Become Member
             </span>
 
             <span
               className="
                 flex items-center justify-center
-                w-14 h-6
+                w-10 h-5 xl:w-14 xl:h-6
                 bg-white
                 rounded-full
                 shrink-0
               "
             >
               <svg
-                className="w-6 h-6 text-sky-500"
+                className="w-5 h-5 xl:w-6 xl:h-6 text-sky-500"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -139,7 +140,7 @@ export default function Navbar() {
 
         {/* Mobile Hamburger */}
         <button
-          className="md:hidden text-white"
+          className="lg:hidden text-white"
           onClick={() => setMenuOpen((o) => !o)}
           aria-label="Toggle menu"
         >
@@ -158,7 +159,7 @@ export default function Navbar() {
       {/* Mobile Dropdown */}
       {menuOpen && (
         <div
-          className="md:hidden mt-2 mx-auto max-w-7xl rounded-2xl px-5 py-4
+          className="lg:hidden mt-2 mx-auto max-w-7xl rounded-2xl px-5 py-4
                      bg-white/10 backdrop-blur-md border border-white/20
                      shadow-[0_4px_24px_rgba(0,0,0,0.25)]"
         >

@@ -248,105 +248,132 @@ export default function HeroSection() {
     {/* Stats Bar */}
     {/* Stats Bar */}
     <div className="bg-white py-10">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* Desktop */}
-        <div className="hidden md:grid md:grid-cols-4">
+        {/* Desktop (lg and up — this row needs real width to avoid overlap) */}
+        <div className="hidden lg:grid lg:grid-cols-4">
 
           {/* START */}
-          <div className="flex items-start justify-between pr-10 border-r border-[#8ED9EE]">
-            <div>
-              <h4 className="text-[#0A2A4A] text-[18px] font-extrabold uppercase">
+          <div className="flex items-start justify-between gap-3 pr-6 xl:pr-10 border-r border-[#8ED9EE]">
+            <div className="min-w-0">
+              <h4 className="text-[#0A2A4A] text-sm xl:text-[18px] font-extrabold uppercase whitespace-nowrap">
                 START
               </h4>
 
-              <h2 className="text-[#0A2A4A] text-[54px] font-black leading-none mt-1">
+              <h2 className="text-[#0A2A4A] text-4xl xl:text-[54px] font-black leading-none mt-1">
                 06:00
               </h2>
 
-              <div className="w-[110px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
+              <div className="w-[80px] xl:w-[110px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
 
-              <p className="text-[#0A2A4A] text-[16px]">
+              <p className="text-[#0A2A4A] text-sm xl:text-[16px] whitespace-nowrap">
                 May 24, 2025
               </p>
             </div>
 
-            <Image src={time} alt="" width={64} height={64} />
+            <Image
+              src={time}
+              alt=""
+              width={64}
+              height={64}
+              className="w-10 h-10 xl:w-16 xl:h-16 object-contain flex-shrink-0"
+            />
           </div>
 
           {/* CUT OFF */}
-          <div className="flex items-start justify-between px-10 border-r border-[#8ED9EE]">
-            <div className="pt-8">
-              <h4 className="text-[#0A2A4A] text-[18px] font-extrabold uppercase">
+          <div className="flex items-start justify-between gap-3 px-6 xl:px-10 border-r border-[#8ED9EE]">
+            <div className="min-w-0 pt-8">
+              <h4 className="text-[#0A2A4A] text-sm xl:text-[18px] font-extrabold uppercase whitespace-nowrap">
                 CUT-OFF
               </h4>
 
-              <h2 className="text-[#0A2A4A] text-[54px] font-black leading-none mt-1">
+              <h2 className="text-[#0A2A4A] text-4xl xl:text-[54px] font-black leading-none mt-1">
                 14:00
               </h2>
 
-              <div className="w-[110px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
+              <div className="w-[80px] xl:w-[110px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
 
-              <p className="text-[#0A2A4A] text-[16px]">
+              <p className="text-[#0A2A4A] text-sm xl:text-[16px] whitespace-nowrap">
                 8 Checkpoints
               </p>
             </div>
 
-            <Image src={stopwatch} alt="" width={64} height={64} />
+            <Image
+              src={stopwatch}
+              alt=""
+              width={64}
+              height={64}
+              className="w-10 h-10 xl:w-16 xl:h-16 object-contain flex-shrink-0"
+            />
           </div>
 
           {/* AID STATION */}
-          <div className="flex items-start justify-between px-10 border-r border-[#8ED9EE]">
-            <div className="pt-8">
-              <h4 className="text-[#0A2A4A] text-[18px] font-extrabold uppercase">
+          <div className="flex items-start justify-between gap-3 px-6 xl:px-10 border-r border-[#8ED9EE]">
+            <div className="min-w-0 pt-8">
+              <h4 className="text-[#0A2A4A] text-sm xl:text-[18px] font-extrabold uppercase whitespace-nowrap">
                 AID STATION
               </h4>
 
-              <h2 className="text-[#0A2A4A] text-[54px] font-black leading-none mt-1">
+              <h2 className="text-[#0A2A4A] text-4xl xl:text-[54px] font-black leading-none mt-1">
                 05
               </h2>
 
-              <div className="w-[110px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
+              <div className="w-[80px] xl:w-[110px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
 
-              <p className="text-[#0A2A4A] text-[16px]">
+              <p className="text-[#0A2A4A] text-sm xl:text-[16px] whitespace-nowrap">
                 Incl. Finish
               </p>
             </div>
 
-            <Image src={heroicon} alt="" width={64} height={64} />
+            <Image
+              src={heroicon}
+              alt=""
+              width={64}
+              height={64}
+              className="w-10 h-10 xl:w-16 xl:h-16 object-contain flex-shrink-0"
+            />
           </div>
 
           {/* PARTICIPANTS */}
-          <div className="flex items-start justify-between pl-10">
-            <div>
-              <h4 className="text-[#0A2A4A] text-[18px] font-extrabold uppercase">
+          <div className="flex items-start justify-between gap-3 pl-6 xl:pl-10">
+            <div className="min-w-0">
+              <h4 className="text-[#0A2A4A] text-sm xl:text-[18px] font-extrabold uppercase">
                 MAXIMUM
                 <br />
                 PARTICIPANTS
               </h4>
 
-              <h2 className="text-[#0A2A4A] text-[54px] font-black leading-none mt-1">
+              <h2 className="text-[#0A2A4A] text-4xl xl:text-[54px] font-black leading-none mt-1">
                 600
               </h2>
 
-              <div className="w-[110px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
+              <div className="w-[80px] xl:w-[110px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
 
-              <p className="text-[#0A2A4A] text-[16px]">
+              <p className="text-[#0A2A4A] text-sm xl:text-[16px] whitespace-nowrap">
                 Two Waves
               </p>
             </div>
 
-            <Image src={group} alt="" width={64} height={64} />
+            <Image
+              src={group}
+              alt=""
+              width={64}
+              height={64}
+              className="w-10 h-10 xl:w-16 xl:h-16 object-contain flex-shrink-0"
+            />
           </div>
         </div>
 
-        {/* Mobile Slider */}
-        <div className="md:hidden px-4">
+        {/* Mobile + Tablet Slider (covers the range the 4-col row can't fit in) */}
+        <div className="lg:hidden">
 
           <Swiper
             modules={[Pagination, Autoplay]}
             slidesPerView={1}
             spaceBetween={20}
+            breakpoints={{
+              640: { slidesPerView: 2 },
+            }}
             pagination={{ clickable: true }}
             autoplay={{
               delay: 3000,
