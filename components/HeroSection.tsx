@@ -283,6 +283,8 @@ export default function HeroSection({ menu, hero }: Props) {
                     <Image src={heroBg1} alt="Race" className="w-full block object-cover" style={{ marginTop: '-10px' }} />
                   )}
 
+                       <div className="mx-6 h-px bg-white/20 my-3" />
+
                   {/* Sidebar stats */}
                   <div className="px-6 py-5">
                     {(sidebarStats.length > 0 ? sidebarStats : [

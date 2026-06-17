@@ -297,7 +297,7 @@ export default function Navbar({ tabs, brand_logo }: Props) {
         </Link>
 
         {/* Desktop — one button per tab from DB */}
-        <ul className="hidden md:flex items-center gap-8">
+        <ul className="hidden lg:flex items-center gap-4 xl:gap-8">
           {tabs.map((tab) => (
             <li key={tab.id} className="relative">
               <button
@@ -332,7 +332,7 @@ export default function Navbar({ tabs, brand_logo }: Props) {
         </ul>
 
         {/* Right side */}
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden lg:flex items-center gap-3 xl:gap-4">
           <button className="text-white hover:text-sky-300 transition-colors" aria-label="Search">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
@@ -344,9 +344,14 @@ export default function Navbar({ tabs, brand_logo }: Props) {
             </svg>
           </button>
           <Link href="/membership"
-            className="flex items-center gap-6 bg-sky-500 hover:bg-sky-400
-                           text-white font-bold px-8 py-3 rounded-full
-                           transition-all duration-300 shadow-lg">
+            className=" flex items-center gap-3 xl:gap-6
+              bg-sky-500 hover:bg-sky-400
+              text-white font-bold
+              px-5 py-2.5 xl:px-8 xl:py-3
+              rounded-full
+              transition-all duration-300
+              shadow-lg
+              whitespace-nowrap">
             <span className="text-base lg:text-lg">Become Member</span>
             <span className="flex items-center justify-center w-14 h-6 bg-white rounded-full shrink-0">
               <svg className="w-6 h-6 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -357,7 +362,7 @@ export default function Navbar({ tabs, brand_logo }: Props) {
         </div>
 
         {/* Mobile hamburger */}
-        <button className="md:hidden text-white" onClick={() => setMenuOpen((o) => !o)} aria-label="Toggle menu">
+        <button className="lg:hidden text-white" onClick={() => setMenuOpen((o) => !o)} aria-label="Toggle menu">
           {menuOpen ? (
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />

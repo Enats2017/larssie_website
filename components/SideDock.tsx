@@ -44,7 +44,7 @@ export default function SideDock() {
           <div className="w-14 h-14 flex items-center justify-center shrink-0">
             <Icon
               className={`w-6 h-6 ${
-                active ? 'text-orange-500' : 'text-slate-400'
+                active ? 'text-blue-500' : 'text-slate-400'
               }`}
             />
           </div>
