@@ -16,7 +16,7 @@ import heroicon  from '@/assets/heroicon.png'
 import group     from '@/assets/group.png'
 
 // ── Base URL for relative image paths stored in DB ─────────────────────────
-const BASE_URL = 'http://localhost'
+const BASE_URL = 'http://91.99.229.154'
 
 function imgUrl(path: string | null | undefined): string | null {
   if (!path) return null
@@ -280,8 +280,7 @@ export default function HeroSection({ menu, hero }: Props) {
 
               {/* ── Right: sidebar card ── */}
               <div className="hidden lg:flex justify-end items-start pt-16">
-                <div className="w-72 rounded-2xl overflow-hidden bg-white/10 backdrop-blur-md border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
-
+                 <div className="w-72 rounded-2xl overflow-hidden bg-white/20 backdrop-blur-[4px] border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
                   {/* Badge image */}
                   {badgeImgUrl ? (
                     <img src={badgeImgUrl} alt={hero.event_name ?? 'Badge'} width={180} className="block object-cover mx-auto" style={{ marginTop: '10px' }} />
@@ -301,7 +300,11 @@ export default function HeroSection({ menu, hero }: Props) {
                       <div key={index}>
                         <div className="flex items-center gap-4 py-4">
                           <span className="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 flex-shrink-0">
-                            <i className={`${icon} text-white text-lg`} />
+
+<i
+  className={`${icon} text-lg`}
+  style={{ color: '#36A5DD' }}
+/>
                           </span>
                           <div>
                             {show_star_rating && <StarRating value={value} />}

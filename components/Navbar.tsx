@@ -6,7 +6,7 @@ import Image from 'next/image'
 import logo from '@/assets/logo.png'
 import { useScrollDirection } from '@/hooks/useScrollDirection'
 
-const BASE_URL = 'http://localhost'
+const BASE_URL = 'http://91.99.229.154'
 
 function imgUrl(path: string | null | undefined): string | null {
   if (!path) return null
@@ -255,6 +255,8 @@ function MegaMenu({
 // ── Navbar ─────────────────────────────────────────────────────────────────
 
 export default function Navbar({ tabs, brand_logo }: Props) {
+  console.log('brand_logo received:', brand_logo)
+  console.log('imgUrl result:', imgUrl(brand_logo))
   const [lang, setLang] = useState('NL')
   const [menuOpen, setMenuOpen] = useState(false)
   const [megaOpen, setMegaOpen] = useState(false)

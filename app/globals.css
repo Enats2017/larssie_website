@@ -21,7 +21,7 @@
 }
 
 /* Sponsors Animation */
-@keyframes sponsors {
+/* @keyframes sponsors {
   0% {
     transform: translateX(-50%);
   }
@@ -37,7 +37,7 @@
 
 .animate-sponsors {
   animation: sponsors 18s linear infinite;
-}
+} */
 
 /* Marquee Animation */
 @keyframes scroll-left {
