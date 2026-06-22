@@ -1,5 +1,5 @@
 'use client'
-
+import Link from 'next/link'
 import Image from 'next/image'
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
@@ -172,13 +172,27 @@ export default function HeroSection({ menu, hero }: Props) {
 
   const overlayColor   = hero.overlay_color   ?? '#0D1F35'
   const overlayOpacity = (hero.overlay_opacity ?? 40) / 100
+  const groupedStats = [];
 
+  for (let i = 0; i < bottomStats.length; i += 2) {
+    groupedStats.push(bottomStats.slice(i, i + 2));
+  }
   return (
     <>
       {/* Font Awesome */}
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-      <section className="relative w-full min-h-[700px] md:min-h-[850px] h-[750px] md:h-screen md:max-h-[900px] overflow-hidden">
+      <section
+        className="
+          relative
+          w-full
+          min-h-screen
+          lg:min-h-[850px]
+          lg:h-screen
+          lg:max-h-[900px]
+          overflow-hidden
+        "
+      >
 
         {/* Background image */}
         {bgImgUrl ? (
@@ -196,18 +210,19 @@ export default function HeroSection({ menu, hero }: Props) {
              style={{ background: overlayColor, opacity: overlayOpacity * 0.15 }} />
 
         {/* Brand logo overlay */}
-        {brandLogoImgUrl && (
+        {/* {brandLogoImgUrl && (
           <div className="absolute hidden lg:block z-10" style={{ right: '34%', top: '45%' }}>
             <img src={brandLogoImgUrl} alt={menu.brand_name} width={160} height={80} className="object-contain" />
           </div>
-        )}
+        )} */}
 
-        <div className="relative z-10 h-full flex items-center">
+        {/* <div className="relative z-10 flex items-center py-10 lg:h-full"> */}
+        <div className="relative z-10 flex items-center py-10 lg:h-full xl:pl-16">
           <div className="max-w-7xl mx-auto w-full px-5 md:px-6">
-            <div className="grid lg:grid-cols-2 gap-10 items-center">
+            <div className="grid lg:grid-cols-2 gap-6 lg:gap-10 items-center">
 
               {/* ── Left: text ── */}
-              <div className="text-center lg:text-left">
+              <div className="text-center lg:text-left pt-24 md:pt-28 lg:pt-0">
 
                 {/* Breadcrumb */}
                 {hero.breadcrumb && (
@@ -239,37 +254,124 @@ export default function HeroSection({ menu, hero }: Props) {
                   {ctaButtons.length > 0 ? ctaButtons.map((btn, i) => {
                     const isPrimary = i === 0 || (btn.style ?? btn.type) === 'primary'
                     const href = btn.url ?? btn.link ?? '#'
+
                     return (
-                      <a key={i} href={href}
-                         className={`flex items-center justify-center gap-2 font-bold px-6 py-3 rounded-full transition-colors ${
-                           isPrimary
-                             ? 'bg-sky-500 hover:bg-sky-400 text-white shadow-lg'
-                             : 'border border-white/60 text-white hover:bg-white/10'
-                         }`}>
-                        {btn.label}
-                        <span className={`rounded-full p-1.5 flex items-center justify-center ${isPrimary ? 'bg-white' : 'bg-sky-500'}`}>
-                          <svg className={`w-10 h-4 ${isPrimary ? 'text-[#36A5DD]' : 'text-white'}`}
-                               fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5-5 5M6 12h12" />
-                          </svg>
+                      <a
+                        key={i}
+                        href={href}
+                        className={`relative overflow-hidden inline-flex items-center justify-center font-bold px-6 py-3 rounded-full whitespace-nowrap ${
+                          isPrimary
+                            ? 'bg-[#36A5DD] text-white'
+                            : 'border border-white/60 text-white'
+                        }
+                        before:absolute before:inset-0 before:bg-white before:rounded-full
+                        before:-translate-x-[110%] hover:before:translate-x-0
+                        before:transition-transform before:duration-[600ms] before:ease-in-out
+                        transition-colors duration-[600ms]
+                        hover:text-[#36A5DD]
+                        `}
+                      >
+                        <span className="relative z-10">
+                          {btn.label}
                         </span>
                       </a>
                     )
                   }) : (
                     <>
-                      <a href="/register" className="flex items-center justify-center gap-2 bg-sky-500 hover:bg-sky-400 text-white font-bold px-6 py-3 rounded-full transition-colors shadow-lg">
-                        Register Now
-                        <span className="bg-white rounded-full p-1.5 flex items-center justify-center">
-                          <svg className="w-10 h-4 text-[#36A5DD]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5-5 5M6 12h12" />
+                      {/* Register */}
+                      <a
+                        href="/register"
+                        className="
+                          group
+                          flex items-center justify-between gap-4
+                          bg-[#36A5DD]
+                          text-white
+                          font-bold
+                          px-6 py-3
+                          rounded-full
+                          transition-all duration-300
+                          hover:bg-white
+                          hover:text-[#36A5DD]
+                        "
+                      >
+                        <span className="transition-all duration-300 group-hover:translate-x-1">
+                          Register Now
+                        </span>
+
+                        <span
+                          className="
+                            flex h-8 w-12 items-center justify-center
+                            rounded-full bg-white
+                            transition-all duration-300
+                            group-hover:bg-[#36A5DD]
+                          "
+                        >
+                          <svg
+                            className="
+                              w-6 h-6 text-[#36A5DD]
+                              transition-all duration-300
+                              group-hover:text-white
+                              group-hover:-rotate-45
+                            "
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2.5}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M5 12h14m-5-5 5 5-5 5"
+                            />
                           </svg>
                         </span>
                       </a>
-                      <a href="/race-guide" className="flex items-center justify-center gap-2 border border-white/60 text-white font-bold px-6 py-3 rounded-full hover:bg-white/10 transition-colors">
-                        Download Race Guide
-                        <span className="bg-sky-500 rounded-full p-1.5 flex items-center justify-center">
-                          <svg className="w-10 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5-5 5M6 12h12" />
+
+                      {/* Race Guide */}
+                      <a
+                        href="/race-guide"
+                        className="
+                          group
+                          flex items-center justify-between gap-4
+                          border border-white/60
+                          text-white
+                          font-bold
+                          px-6 py-3
+                          rounded-full
+                          transition-all duration-300
+                          hover:bg-white
+                          hover:text-[#36A5DD]
+                        "
+                      >
+                        <span className="transition-all duration-300 group-hover:translate-x-1">
+                          Download Race Guide
+                        </span>
+
+                        <span
+                          className="
+                            flex h-8 w-12 items-center justify-center
+                            rounded-full bg-[#36A5DD]
+                            transition-all duration-300
+                            group-hover:bg-white
+                          "
+                        >
+                          <svg
+                            className="
+                              w-6 h-6 text-white
+                              transition-all duration-300
+                              group-hover:text-[#36A5DD]
+                              group-hover:-rotate-45
+                            "
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2.5}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M5 12h14m-5-5 5 5-5 5"
+                            />
                           </svg>
                         </span>
                       </a>
@@ -279,40 +381,113 @@ export default function HeroSection({ menu, hero }: Props) {
               </div>
 
               {/* ── Right: sidebar card ── */}
-              <div className="hidden lg:flex justify-end items-start pt-16">
-                 <div className="w-72 rounded-2xl overflow-hidden bg-white/20 backdrop-blur-[4px] border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
+              <div className="flex justify-center lg:justify-end items-start pt-0 lg:pt-16">
+                <div className="w-full max-w-[280px] lg:w-72 rounded-2xl overflow-hidden bg-white/20 backdrop-blur-md border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.2)]"
+                  style={{
+                    marginTop: '20px',
+                  }}
+                >
                   {/* Badge image */}
                   {badgeImgUrl ? (
-                    <img src={badgeImgUrl} alt={hero.event_name ?? 'Badge'} width={180} className="block object-cover mx-auto" style={{ marginTop: '10px' }} />
+                    <img
+                      src={badgeImgUrl}
+                      alt={hero.event_name ?? 'Badge'}
+                      width={180}
+                      className="block object-cover mx-auto transition-transform duration-300 ease-out hover:scale-110"
+                      style={{ marginTop: '10px' }}
+                    />
                   ) : (
-                    <Image src={heroBg1} alt="Race" width={180} className="block object-cover mx-auto" style={{ marginTop: '10px' }} />
+                    <Image
+                      src={heroBg1}
+                      alt="Race"
+                      width={180}
+                      className="block object-cover mx-auto transition-transform duration-300 ease-out hover:scale-110"
+                      style={{ marginTop: '10px' }}
+                    />
                   )}
 
                        <div className="mx-6 h-px bg-white/20 my-3" />
 
                   {/* Sidebar stats */}
+                  {/* Sidebar stats */}
                   <div className="px-6 py-5">
-                    {(sidebarStats.length > 0 ? sidebarStats : [
-                      { icon: 'fa-solid fa-star',           value: '4.7/5',  label: '350 Reviews',         show_star_rating: true  },
-                      { icon: 'fa-solid fa-users',          value: '2,250+', label: 'Participants in 2024', show_star_rating: false },
-                      { icon: 'fa-solid fa-person-running', value: '91%',    label: 'Finish Rate',          show_star_rating: false },
-                    ]).map(({ icon, value, label, show_star_rating }, index, arr) => (
+                    {(sidebarStats.length > 0
+                      ? sidebarStats
+                      : [
+                          {
+                            icon: 'fa-solid fa-star',
+                            value: '4.7/5',
+                            label: '350 Reviews',
+                            show_star_rating: true,
+                          },
+                          {
+                            icon: 'fa-solid fa-users',
+                            value: '2,250+',
+                            label: 'Participants in 2024',
+                            show_star_rating: false,
+                          },
+                          {
+                            icon: 'fa-solid fa-person-running',
+                            value: '91%',
+                            label: 'Finish Rate',
+                            show_star_rating: false,
+                          },
+                        ]
+                    ).map(({ icon, value, label, show_star_rating }, index, arr) => (
                       <div key={index}>
-                        <div className="flex items-center gap-4 py-4">
-                          <span className="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 flex-shrink-0">
-
-<i
-  className={`${icon} text-lg`}
-  style={{ color: '#36A5DD' }}
-/>
+                        <div className="group flex items-center gap-4 py-4">
+                          
+                          {/* Icon Circle */}
+                          <span
+                            className="
+                              flex items-center justify-center
+                              w-10 h-10 rounded-full
+                              bg-white
+                              flex-shrink-0
+                              transition-all duration-300
+                              group-hover:bg-[#36A5DD]
+                              group-hover:scale-110
+                            "
+                          >
+                            <i
+                              className={`
+                                ${icon}
+                                text-lg
+                                text-[#36A5DD]
+                                transition-all duration-300
+                                group-hover:text-white
+                              `}
+                            />
                           </span>
-                          <div>
+
+                          {/* Text Content */}
+                          <div
+                            className="
+                              transition-all duration-300
+                              group-hover:translate-x-2
+                            "
+                          >
                             {show_star_rating && <StarRating value={value} />}
-                            <p className="text-white font-bold text-xl leading-tight">{value}</p>
-                            <p className="text-white/60 text-sm">{label}</p>
+
+                            <p className="text-white font-bold text-xl leading-tight">
+                              {value}
+                            </p>
+
+                            <p
+                              className="
+                                text-blue-400 text-sm
+                                transition-colors duration-300
+                                group-hover:text-blue-600
+                              "
+                            >
+                              {label}
+                            </p>
                           </div>
                         </div>
-                        {index < arr.length - 1 && <div className="h-px bg-white/20 w-full" />}
+
+                        {index < arr.length - 1 && (
+                          <div className="h-px bg-white/20 w-full" />
+                        )}
                       </div>
                     ))}
                   </div>
@@ -324,7 +499,7 @@ export default function HeroSection({ menu, hero }: Props) {
         </div>
 
         {/* Bottom shape mobile */}
-        <div className="absolute bottom-0 left-0 w-full h-[60px] md:hidden z-20 pointer-events-none">
+        <div className="absolute -bottom-[2px] left-0 w-full h-[60px] md:hidden z-20 pointer-events-none">
           <svg className="w-full h-full" viewBox="0 0 390 60" preserveAspectRatio="none">
             <path fill="#fff" d="M0,0 Q195,120 390,0 L390,60 L0,60 Z" />
           </svg>
@@ -337,16 +512,35 @@ export default function HeroSection({ menu, hero }: Props) {
           </svg>
         </div>
 
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-30">
-          <Image src={trail} alt="Trail Running" width={45} height={45} className="object-contain drop-shadow-md" />
-        </div>
+<div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-30">
+  <Link
+    href="https://www.liviolive.com/"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="relative flex items-center justify-center group"
+  >
+    {/* Ripple circles */}
+    <span className="absolute w-12 h-12 rounded-full bg-white/40 animate-ping-slow" />
+    <span className="absolute w-12 h-12 rounded-full bg-white/30 animate-ping-slow animation-delay-1000" />
+
+    {/* Logo */}
+    <Image
+      src={trail}
+      alt="Trail Running"
+      width={60}
+      height={60}
+      className="relative z-10 object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-110"
+    />
+  </Link>
+</div>
       </section>
 
       {/* ── Stats Bar (ported from static, now data-driven) ── */}
-      <div className="bg-white py-10">
+      {/* ── Minimal Premium Stats Bar (Pure White, 100% Position Accurate) ── */}
+      <div className="bg-white pt-6 pb-0 overflow-hidden select-none">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-          {/* Desktop (lg and up — this row needs real width to avoid overlap) */}
+          {/* Desktop (lg and up) */}
           <div className="hidden lg:grid lg:grid-cols-4">
             {bottomStats.map((stat, index, arr) => {
               const label    = stat.title ?? stat.label ?? ''
@@ -357,7 +551,7 @@ export default function HeroSection({ menu, hero }: Props) {
               return (
                 <div
                   key={index}
-                  className={`flex items-center justify-between gap-3 ${
+                  className={`group flex items-center justify-between gap-3 transition-all duration-300 ${
                     isFirst
                       ? 'pr-6 xl:pr-10 border-r border-[#8ED9EE]'
                       : isLast
@@ -365,103 +559,132 @@ export default function HeroSection({ menu, hero }: Props) {
                         : 'px-6 xl:px-10 border-r border-[#8ED9EE]'
                   }`}
                 >
-                  <div className="min-w-0">
-                    <h4 className="text-[#0A2A4A] text-sm xl:text-[18px] font-extrabold uppercase whitespace-nowrap">
+                  <div className="min-w-0 flex-1">
+                    <h4 className="text-[#0A2A4A] text-sm xl:text-[18px] font-extrabold uppercase whitespace-nowrap transition-colors duration-300 group-hover:text-[#8ED9EE]">
                       {label}
                     </h4>
 
-                    <h2 className="text-[#0A2A4A] text-4xl xl:text-[54px] font-black leading-none mt-1">
+                    <h2 className="text-[#0A2A4A] text-4xl xl:text-[54px] font-black leading-none mt-1 transition-transform duration-300 group-hover:translate-x-1">
                       {stat.value}
                     </h2>
 
-                    <div className="w-[80px] xl:w-[110px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
+                    <div className="w-[80px] xl:w-[110px] h-[2px] bg-[#8AA0BC] mt-2 mb-2 transition-all duration-300 group-hover:w-[140px] group-hover:bg-[#8ED9EE]" />
 
-                    <p className="text-[#0A2A4A] text-sm xl:text-[16px] whitespace-nowrap">
+                    <p className="text-[#0A2A4A] text-sm xl:text-[16px] whitespace-nowrap font-medium">
                       {stat.sub}
                     </p>
                   </div>
 
-                  {iconInfo.type === 'fa' ? (
-                    <i className={`${iconInfo.src} text-[#0A2A4A] text-3xl xl:text-4xl flex-shrink-0`} />
-                  ) : (
-                    <Image
-                      src={iconInfo.src}
-                      alt=""
-                      width={64}
-                      height={64}
-                      className="w-10 h-10 xl:w-16 xl:h-16 object-contain flex-shrink-0"
-                    />
-                  )}
+                  <div className="flex-shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+                    {iconInfo.type === 'fa' ? (
+                      <i className={`${iconInfo.src} text-[#0A2A4A] text-3xl xl:text-4xl`} />
+                    ) : (
+                      <Image
+                        src={iconInfo.src}
+                        alt=""
+                        width={64}
+                        height={64}
+                        className="w-10 h-10 xl:w-16 xl:h-16 object-contain"
+                      />
+                    )}
+                  </div>
                 </div>
               )
             })}
           </div>
 
-          {/* Mobile + Tablet Slider (covers the range the 4-col row can't fit in) */}
+          {/* Mobile + Tablet Slider (Preserved Layout Structure + Premium Tap Animations) */}
           <div className="lg:hidden">
-
             <style jsx global>{`
               .statsSwiper {
-                padding-bottom: 44px;
+                padding-bottom: 0px; /* Completely removed bottom empty spacing */
               }
               .statsSwiper .swiper-pagination {
                 position: static;
-                margin-top: 20px;
+                margin-top: 16px;
+              }
+              .statsSwiper .swiper-pagination-bullet {
+                background: #8AA0BC;
+                opacity: 0.3;
+                width: 6px;
+                height: 6px;
+                transition: all 0.3s ease;
+              }
+              .statsSwiper .swiper-pagination-bullet-active {
+                background: #0A2A4A;
+                opacity: 1;
+                width: 16px;
+                border-radius: 4px;
               }
             `}</style>
 
             <Swiper
-              modules={[Pagination, Autoplay]}
+              modules={[Pagination]}
               slidesPerView={1}
               spaceBetween={20}
-              breakpoints={{
-                640: { slidesPerView: 2 },
-              }}
               pagination={{ clickable: true }}
-              autoplay={{
-                delay: 3000,
-                disableOnInteraction: false,
-              }}
-              loop={true}
               className="statsSwiper"
             >
-              {bottomStats.map((stat, index) => {
-                const label    = stat.title ?? stat.label ?? ''
-                const iconInfo = resolveBottomIcon(label, stat.icon)
+              {groupedStats.map((group, slideIndex) => (
+                <SwiperSlide key={slideIndex}>
+                  <div className="grid grid-cols-2 bg-white">
+                    {group.map((stat, index) => {
+                      const label = stat.title ?? stat.label ?? '';
+                      const iconInfo = resolveBottomIcon(label, stat.icon);
 
-                return (
-                  <SwiperSlide key={index}>
-                    <div className="flex items-start justify-between rounded-2xl border border-[#8ED9EE] p-6">
-                      <div>
-                        <h4 className="text-[#0A2A4A] text-[16px] font-extrabold uppercase">
-                          {label}
-                        </h4>
+                      return (
+                        <div
+                          key={index}
+                          className={`group px-4 transition-all duration-200 active:bg-slate-50/50 rounded-lg ${
+                            index === 0 ? 'border-r border-[#8ED9EE]' : ''
+                          }`}
+                        >
+                          {/* Position Maintained: Icon + Label Row Header */}
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="flex-shrink-0 transition-all duration-300 group-active:scale-110 group-active:rotate-3">
+                              {iconInfo.type === 'fa' ? (
+                                <i className={`${iconInfo.src} text-[#5E7391] text-sm transition-colors duration-300 group-active:text-[#8ED9EE]`} />
+                              ) : (
+                                <Image
+                                  src={iconInfo.src}
+                                  alt=""
+                                  width={18}
+                                  height={18}
+                                  className="object-contain"
+                                />
+                              )}
+                            </div>
 
-                        <h2 className="text-[#0A2A4A] text-[42px] font-black leading-none mt-1">
-                          {stat.value}
-                        </h2>
+                            <span className="text-[#5E7391] text-sm font-medium uppercase transition-colors duration-300 group-active:text-[#8ED9EE]">
+                              {label}
+                            </span>
+                          </div>
 
-                        <div className="w-[90px] h-[2px] bg-[#8AA0BC] mt-2 mb-2" />
+                          {/* Value Header */}
+                          <h2 className="text-[#0A2A4A] text-[26px] font-black leading-none transition-transform duration-300 group-active:translate-x-0.5">
+                            {stat.value}
+                          </h2>
 
-                        <p className="text-[#0A2A4A] text-sm">
-                          {stat.sub}
-                        </p>
-                      </div>
+                          {/* Expanding Dynamic Divider Accent */}
+                          <div className="w-full h-px bg-[#8AA0BC] my-2 transition-all duration-300 ease-out group-active:bg-[#8ED9EE] group-active:h-[2px]" />
 
-                      {iconInfo.type === 'fa' ? (
-                        <i className={`${iconInfo.src} text-[#0A2A4A] text-2xl`} />
-                      ) : (
-                        <Image src={iconInfo.src} alt="" width={52} height={52} />
-                      )}
-                    </div>
-                  </SwiperSlide>
-                )
-              })}
+                          {/* Subtext Description */}
+                          <p className="text-[#0A2A4A] text-sm font-medium">
+                            {stat.sub}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </SwiperSlide>
+              ))}
             </Swiper>
-
           </div>
+
         </div>
       </div>
+
+
     </>
   )
 }

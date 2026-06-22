@@ -40,7 +40,7 @@ export default function GearUpSection() {
   return (
     <section className="w-full bg-white py-10 px-6 md:px-10">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row gap-8">
+        <div className="flex flex-col md:flex-row gap-8 xl:pl-16">
 
           {/* LEFT COLUMN: Heading + Image Cards */}
           <div className="w-full md:w-1/3 flex flex-col gap-4">
@@ -49,62 +49,108 @@ export default function GearUpSection() {
               <h2 className="font-black text-3xl md:text-4xl text-[#0d2a4a] tracking-wide leading-tight">
                 GEAR UP
               </h2>
-              <p className="text-[#36A5DD] italic text-xl md:text-2xl font-light -mt-1">
-                for the adventure
+              <p
+                className="font-playlist text-[#36A5DD] leading-none transition-all duration-300 hover:translate-x-1"
+                style={{
+                  fontSize: 'clamp(26px,4vw,40px)',
+                  marginTop: '-6px',
+                }}
+              >
+                For the adventure
               </p>
             </div>
 
             {/* Card 1 */}
-            <div className="relative w-full h-[160px] sm:h-[180px] rounded-xl overflow-hidden">
+            {/* Card 1 */}
+            <div className="group relative w-full h-[160px] sm:h-[180px] rounded-xl overflow-hidden cursor-pointer">
               <Image
                 src={summerImg}
                 alt="Summer at Trail Running"
                 fill
                 sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-cover object-center"
+                className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
               />
+
               <div className="absolute inset-0 bg-black/20" />
+
               <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-                <p className="text-white font-bold text-lg leading-tight">
+                <p className="text-white font-bold text-lg leading-tight transition-all duration-300 group-hover:translate-x-1">
                   Summer at<br />Trail Running
                 </p>
-                <span className="bg-white/90 rounded-full w-10 h-6 flex items-center justify-center shadow-sm">
+
+                <span
+                  className="
+                    flex h-8 w-12 items-center justify-center
+                    rounded-full bg-white/90 shrink-0
+                    transition-all duration-300
+                    group-hover:bg-[#36A5DD]
+                  "
+                >
                   <svg
-                    className="w-7 h-4 text-[#36A5DD]"
+                    className="
+                      w-6 h-6 text-[#36A5DD]
+                      transition-all duration-300
+                      group-hover:text-white
+                      group-hover:-rotate-45
+                    "
                     fill="none"
-                    viewBox="0 0 32 24"
+                    viewBox="0 0 24 24"
                     stroke="currentColor"
-                    strokeWidth={2}
+                    strokeWidth={2.5}
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 7l5 5-5 5M6 12h21" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5 12h14m-5-5 5 5-5 5"
+                    />
                   </svg>
                 </span>
               </div>
             </div>
 
             {/* Card 2 */}
-            <div className="relative w-full h-[160px] sm:h-[180px] rounded-xl overflow-hidden">
+            {/* Card 2 */}
+            <div className="group relative w-full h-[160px] sm:h-[180px] rounded-xl overflow-hidden cursor-pointer">
               <Image
                 src={docsImg}
                 alt="Documentation and brochures"
                 fill
                 sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-cover object-center"
+                className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
               />
+
               <div className="absolute inset-0 bg-black/20" />
+
               <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-                <p className="text-white font-bold text-lg leading-tight">
+                <p className="text-white font-bold text-lg leading-tight transition-all duration-300 group-hover:translate-x-1">
                   Documentation<br />and brochures
                 </p>
-                <span className="bg-white/90 rounded-full w-10 h-6 flex items-center justify-center shadow-sm">
+
+                <span
+                  className="
+                    flex h-8 w-12 items-center justify-center
+                    rounded-full bg-white/90 shrink-0
+                    transition-all duration-300
+                    group-hover:bg-[#36A5DD]
+                  "
+                >
                   <svg
-                    className="w-7 h-4 text-[#36A5DD]"
+                    className="
+                      w-6 h-6 text-[#36A5DD]
+                      transition-all duration-300
+                      group-hover:text-white
+                      group-hover:-rotate-45
+                    "
                     fill="none"
-                    viewBox="0 0 32 24"
+                    viewBox="0 0 24 24"
                     stroke="currentColor"
-                    strokeWidth={2}
+                    strokeWidth={2.5}
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 7l5 5-5 5M6 12h21" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5 12h14m-5-5 5 5-5 5"
+                    />
                   </svg>
                 </span>
               </div>
@@ -132,21 +178,60 @@ export default function GearUpSection() {
             <div className="flex flex-col">
               {mandatoryItems.map((item, index) => (
                 <div key={item.id}>
-                  <div className="flex items-center gap-4 py-4">
-                    <Image src={item.icon} alt={item.title} width={32} height={32} />
+                  <div
+                    className="
+                      group
+                      flex items-center gap-4 py-4
+                      transition-all duration-300
+                      hover:translate-x-2
+                    "
+                  >
+                    <Image
+                      src={item.icon}
+                      alt={item.title}
+                      width={32}
+                      height={32}
+                      className="
+                        transition-all duration-300
+                        group-hover:scale-110
+                        group-hover:rotate-3
+                      "
+                    />
+
                     <div>
-                      {/* Mobile: one line */}
-                      <p className="md:hidden font-semibold text-[#36A5DD] text-base leading-tight">
+                      <p
+                        className="
+                          md:hidden
+                          font-semibold
+                          text-[#36A5DD]
+                          text-base
+                          leading-tight
+                          transition-all duration-300
+                          group-hover:text-[#1d8cc5]
+                        "
+                      >
                         {item.title.replace('\n', ' ')}
                       </p>
-                      {/* Desktop: two lines */}
-                      <p className="hidden md:block font-semibold text-[#36A5DD] text-base leading-tight" style={{ whiteSpace: 'pre-line' }}>
+
+                      <p
+                        className="
+                          hidden md:block
+                          font-semibold
+                          text-[#36A5DD]
+                          text-base
+                          leading-tight
+                          transition-all duration-300
+                          group-hover:text-[#1d8cc5]
+                        "
+                        style={{ whiteSpace: 'pre-line' }}
+                      >
                         {item.title}
                       </p>
                     </div>
                   </div>
+
                   {index < mandatoryItems.length - 1 && (
-                    <div className="h-px bg-gray-200 w-full" />
+                    <div className="h-px w-full bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
                   )}
                 </div>
               ))}
@@ -172,21 +257,62 @@ export default function GearUpSection() {
             </p>
 
             <div className="flex flex-col">
-              {recommendedItems.map((item, index) => (
+              {mandatoryItems.map((item, index) => (
                 <div key={item.id}>
-                  <div className="flex items-center gap-4 py-4">
-                    <Image src={item.icon} alt={item.title} width={32} height={32} />
+                  <div
+                    className="
+                      group
+                      flex items-center gap-4 py-4
+                      transition-all duration-300
+                      hover:translate-x-2
+                    "
+                  >
+                    <Image
+                      src={item.icon}
+                      alt={item.title}
+                      width={32}
+                      height={32}
+                      className="
+                        transition-all duration-300
+                        group-hover:scale-110
+                        group-hover:rotate-3
+                      "
+                    />
+
                     <div>
-                      <p className="md:hidden font-semibold text-[#0d2a4a] text-base leading-tight">
+                      <p
+                        className="
+    md:hidden
+    font-semibold
+    text-[#0d2a4a]
+    text-base
+    leading-tight
+    transition-all duration-300
+    group-hover:text-[#36A5DD]
+  "
+                      >
                         {item.title.replace('\n', ' ')}
                       </p>
-                      <p className="hidden md:block font-semibold text-[#0d2a4a] text-base leading-tight" style={{ whiteSpace: 'pre-line' }}>
+
+                      <p
+                        className="
+    hidden md:block
+    font-semibold
+    text-[#0d2a4a]
+    text-base
+    leading-tight
+    transition-all duration-300
+    group-hover:text-[#36A5DD]
+  "
+                        style={{ whiteSpace: 'pre-line' }}
+                      >
                         {item.title}
                       </p>
                     </div>
                   </div>
-                  {index < recommendedItems.length - 1 && (
-                    <div className="h-px bg-gray-200 w-full" />
+
+                  {index < mandatoryItems.length - 1 && (
+                    <div className="h-px w-full bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
                   )}
                 </div>
               ))}

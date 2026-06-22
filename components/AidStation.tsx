@@ -77,26 +77,26 @@ const AidStations = () => {
                   "linear-gradient(to bottom, rgba(5,20,50,0.55) 0%, rgba(5,20,50,0.85) 30%, rgba(5,20,50,0.97) 55%)",
               }}
             >
-              <div className="max-w-[1280px] mx-auto px-6 md:px-10 py-12 pb-16">
+              <div className="max-w-[1280px] mx-auto px-6 md:px-10 py-12 pb-16 xl:pl-24">
                 {/* TITLE */}
-                <div className="text-center mb-10">
-                    <h2
-                        className="text-white uppercase font-black tracking-[4px] leading-none"
-                        style={{ fontSize: "clamp(40px,6vw,64px)", fontStyle: "italic" }}
-                    >
-                        Aid Stations
-                    </h2>
-                    <p
-                        className="text-[#36A5DD] mt-1"
-                        style={{
-                            fontSize: "clamp(20px,3vw,30px)",
-                            fontFamily: "Georgia, serif",
-                            fontStyle: "italic",
-                        }}
-                    >
-                        8 aid stations + finish
-                    </p>
-                </div>
+								<div className="text-center mb-10">
+									<p
+										className="text-white uppercase font-black tracking-[2px] leading-[0.9]"
+										style={{ fontSize: 'clamp(20px,2.75vw,31px)' }}
+									>
+										AID STATIONS
+									</p>
+
+									<p
+										className="font-playlist text-[#36A5DD] leading-none transition-all duration-300 hover:translate-x-1"
+										style={{
+											fontSize: 'clamp(28px,4vw,40px)',
+											marginTop: '-12px',
+										}}
+									>
+										8 aid stations + finish
+									</p>
+								</div>
 
                 {/* TABLE */}
                 <div
@@ -114,7 +114,7 @@ const AidStations = () => {
                             display: none !important;
                         }
                     `}</style>
-                    <table className="w-full min-w-[700px] border-collapse">
+                    <table className="w-full min-w-[700px] border-collapse font-poppins">
                         <thead>
                             <tr className="border-b border-white/20">
                                 <th className="text-left pb-4 pt-2 pr-4 w-[22%]">
@@ -295,17 +295,41 @@ const AidStations = () => {
                 </div>
 
                 {/* BOTTOM CTA */}
-                <div className="text-center mt-10">
-                    <p className="text-white/75 text-[14px] mb-4">
-                        Use Livio to navigate the course and find the aid stations as a spectator,
-                    </p>
-                    <a
-                        href="#"
-                        className="inline-flex items-center gap-2 bg-[#36A5DD] text-white font-bold rounded-full px-7 py-3 hover:opacity-90 transition-opacity text-[15px]"
-                    >
-                        Use Livio
-                        <Image src={arrowImg} alt="arrow" width={22} height={22} />
-                    </a>
+                <div className="text-center mt-10 font-poppins">
+                <p className="text-white/75 text-[14px] mb-4">
+                    Use Livio to navigate the course and find the aid stations as a spectator,
+                </p>
+
+                <a
+                    href="#"
+                    className="
+                    relative overflow-hidden
+                    inline-flex items-center justify-center
+
+                    bg-[#36A5DD]
+                    text-white font-bold
+                    rounded-full
+
+                    px-7 py-3
+                    text-[15px]
+
+                    before:absolute before:inset-0
+                    before:bg-white
+                    before:rounded-full
+                    before:-translate-x-[110%]
+                    hover:before:translate-x-0
+                    before:transition-transform
+                    before:duration-[600ms]
+                    before:ease-in-out
+
+                    transition-colors duration-[600ms]
+                    hover:text-[#36A5DD]
+                    "
+                >
+                    <span className="relative z-10">
+                    Use Livio
+                    </span>
+                </a>
                 </div>
               </div>
             </div>

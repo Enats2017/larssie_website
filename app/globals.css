@@ -35,6 +35,15 @@
   }
 }
 
+/* Disable text selection / copy-paste on interactive elements */
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
 .animate-sponsors {
   animation: sponsors 18s linear infinite;
 } */
@@ -75,4 +84,12 @@
 
 .statsSwiper .swiper-slide {
   height: auto;
+}
+
+.animation-delay-1000 {
+  animation-delay: 1s;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
 }

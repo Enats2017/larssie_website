@@ -28,74 +28,172 @@ const demoBrands = [
 export default function InfoSection({ brands }: Props) {
   return (
     <section className="w-full bg-[#0d2a4a] md:bg-white py-10 px-6 md:px-10">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-8">
+      {/* <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-8"> */}
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-8 xl:pl-16 mt-10">
 
         {/* Left Image */}
         <div className="w-full md:w-1/2">
-          <div className="relative w-full h-[280px] sm:h-[360px] md:h-[460px] lg:h-[566px] rounded-[15px] overflow-hidden">
+          <div className="group relative w-full h-[280px] sm:h-[360px] md:h-[460px] lg:h-[566px] rounded-[15px] overflow-hidden cursor-pointer">
             <Image
               src={territoryImg}
               alt="Val Thorens trail runners"
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover object-center"
+              className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
             />
           </div>
         </div>
 
         {/* Right Content */}
         <div className="w-full md:w-1/2 flex flex-col justify-center items-center md:items-start gap-1 p-2 md:p-4 text-center md:text-left">
-          <p className="text-base md:text-2xl text-sky-500 italic font-light -mb-2">
-            <b>The Territory</b>
-          </p>
+            <p className="font-playlist text-[28px] md:text-[40px] text-sky-500 -mb-6 transition-all duration-300 hover:translate-x-1">
+              The Territory
+            </p>
 
-          <h2 className="font-black text-3xl md:text-4xl text-white md:text-gray-900 tracking-wide mb-3">
-            VAL THORENS
-          </h2>
+            <h2 className="font-black text-3xl md:text-4xl text-white md:text-gray-900 tracking-wide mb-0">
+              VAL THORENS
+            </h2>
 
           <div className="flex items-center justify-center md:justify-start gap-3 text-white md:text-gray-700 text-sm md:text-base font-[500] italic mb-3">
-            <Image src={mountainIcon} alt="Altitude" width={62} height={62} className="brightness-0 invert md:filter-none" />
+            <Image src={mountainIcon} alt="Altitude" width={40} height={40} className="brightness-0 invert md:filter-none" />
             <span>
               <b>Altitude :<span className="md:hidden"> </span><br className="hidden md:inline" />2,300m to 3,200m</b>
             </span>
           </div>
 
-          <div
-            className="flex flex-col gap-[15px] mb-6 text-white md:text-black"
-            style={{ fontWeight: 400, fontStyle: 'normal', fontSize: 'clamp(16px, 2vw, 22px)', lineHeight: '30px' }}
-          >
-            <p>Val Thorens is located in the heart of the 3 Valleys, the world&apos;s largest ski area.</p>
-            <p>A unique alpine destination with breathtaking panoramas all year round.</p>
-          </div>
+            <div
+              className="group flex flex-col gap-[15px] mb-6 text-white md:text-black"
+              style={{
+                fontWeight: 400,
+                fontStyle: 'normal',
+                fontSize: 'clamp(14px, 1.6vw, 18px)',
+                lineHeight: '28px',
+              }}
+            >
+              <p>Val Thorens is located in the heart of the 3 Valleys, the world&apos;s largest ski area.</p>
+              <p>A unique alpine destination with breathtaking panoramas all year round.</p>
+            </div>
 
           <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+            {/* Explore */}
+            {/* <a
+              href="/territory"
+              className="
+                group
+                relative overflow-hidden
+                flex items-center justify-between
+                w-full sm:w-[264px]
+                h-[52px]
+                rounded-full
+                bg-[#36A5DD]
+                px-6
+                text-white text-sm font-bold
+
+                before:absolute before:inset-0
+                before:bg-white before:rounded-full
+                before:-translate-x-[110%]
+                hover:before:translate-x-0
+                before:transition-transform
+                before:duration-[600ms]
+                before:ease-in-out
+
+                transition-colors duration-[600ms]
+                hover:text-[#36A5DD]
+              "
+            >
+              <span className="relative z-10">
+                Explore The Territory
+              </span>
+
+              <span
+                className="
+                  relative z-10
+                  flex h-8 w-12 items-center justify-center
+                  rounded-full bg-white shrink-0
+                  transition-all duration-300
+                  group-hover:bg-[#36A5DD]
+                "
+              >
+                <svg
+                  className="
+                    w-6 h-6 text-[#36A5DD]
+                    transition-all duration-300
+                    group-hover:text-white
+                    group-hover:-rotate-45
+                  "
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 12h14m-5-5 5 5-5 5"
+                  />
+                </svg>
+              </span>
+            </a> */}
             <a
               href="/territory"
-              className="flex items-center justify-center gap-2 bg-[#36A5DD] hover:bg-sky-400
-                        text-white text-sm font-bold
-                        w-full sm:w-[264px] h-[52px]
-                        rounded-full transition-colors shadow-lg"
+              className="
+                relative overflow-hidden
+                flex items-center justify-center
+                w-full sm:w-[264px]
+                h-[52px]
+                rounded-full
+                bg-[#36A5DD]
+                border-2 border-[#36A5DD]
+                px-6
+                text-white text-sm font-bold
+
+                before:absolute before:inset-0
+                before:bg-white before:rounded-full
+                before:-translate-x-[110%]
+                hover:before:translate-x-0
+                before:transition-transform
+                before:duration-[600ms]
+                before:ease-in-out
+
+                transition-colors duration-[600ms]
+                hover:text-[#36A5DD]
+              "
             >
-              Explore The Territory
-              <span className="bg-white rounded-full p-1 flex items-center justify-center">
-                <svg className="w-7 h-3.5 text-[#36A5DD]" fill="none" viewBox="0 0 32 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 7l5 5-5 5M6 12h21" />
-                </svg>
+              <span className="relative z-10">
+                Explore The Territory
               </span>
             </a>
 
+            {/* FAQ */}
             <a
               href="/faq"
-              className="flex items-center justify-center gap-2 bg-white md:bg-[#10899E] hover:bg-sky-400
-                        text-[#0d2a4a] md:text-white text-sm font-bold
-                        w-full sm:w-[139px] h-[52px]
-                        rounded-full transition-colors shadow-lg"
+              className="
+                relative overflow-hidden
+                flex items-center justify-center
+                w-full sm:w-[139px]
+                h-[52px]
+                rounded-full
+                bg-white
+                border-2 border-[#36A5DD]
+                px-6
+                text-[#36A5DD]
+                text-sm font-bold
+
+                before:absolute before:inset-0
+                before:bg-[#36A5DD]
+                before:rounded-full
+                before:-translate-x-[110%]
+                hover:before:translate-x-0
+                before:transition-transform
+                before:duration-[600ms]
+                before:ease-in-out
+
+                transition-colors duration-[600ms]
+                hover:text-white
+              "
             >
-              FAQs
-              <span className="bg-[#36A5DD] md:bg-white rounded-full p-1 flex items-center justify-center">
-                <svg className="w-7 h-3.5 text-white md:text-[#0f7587]" fill="none" viewBox="0 0 32 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 7l5 5-5 5M6 12h21" />
-                </svg>
+              <span className="relative z-10">
+                FAQs
               </span>
             </a>
           </div>

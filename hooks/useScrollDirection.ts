@@ -4,13 +4,15 @@ import { useEffect, useRef, useState } from 'react'
 
 export type ScrollDirection = 'up' | 'down'
 
-export function useScrollDirection(threshold = 10) {
+export function useScrollDirection(threshold = 10, locked = false) {
   const [visible, setVisible] = useState(true)
   const lastScrollY = useRef(0)
   const ticking = useRef(false)
 
   useEffect(() => {
     const handleScroll = () => {
+      if (locked) return          // ✅ pause when mobile menu is open
+
       if (ticking.current) return
       ticking.current = true
 
@@ -29,7 +31,7 @@ export function useScrollDirection(threshold = 10) {
 
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [threshold])
+  }, [threshold, locked])        // ✅ locked in deps array
 
   return visible
 }

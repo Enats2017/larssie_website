@@ -1,18 +1,4 @@
 'use client'
-import { useState } from "react";
-import Image from "next/image";
-import rectangle1 from '@/assets/rectangle1.png'
-import rectangle2 from '@/assets/rectangle2.png'
-import rectangle from '@/assets/rectangle.png'
-
-import support from '@/assets/support.png'
-import shield from '@/assets/shield.png'
-import water from '@/assets/water.png'
-import road1 from '@/assets/road1.png'
-import mountain from '@/assets/mountain.png'
-import temp from '@/assets/temp.png'
-
-import star1 from '@/assets/star1.png'
 
 const timelineData = [
   { x: 40, y: 425, textY: 215, title: 'FRIDAY', time: '14:00 - 20:00', text: 'Bib pick-up', sub: 'Le markstein',},
@@ -23,76 +9,124 @@ const timelineData = [
   { x: 995, y: 480, textY: 270, title: 'SATURDAY', time: '20:00 (max)', text: 'Finish', sub: 'Le Markstein', km: '(50km)',},
 ]
 
-const CURVE_PATH = `
- M 0,390
- C 150,530 250,520 400,470
- C 550,420 650,400 800,440
- C 950,480 1050,510 1200,430
-`
-
-const UPLOAD_BASE = process.env.NEXT_PUBLIC_UPLOAD_BASE_URL || 'http://localhost'
-
-// Fallback cards used only when no course_link_cards rows exist for this course
-const defaultCards = [
-  { src: rectangle1.src, alt: 'Summer at Val Thorens', title: 'Summer at Val Thorens', url: '#' },
-  { src: rectangle2.src, alt: 'Documentation and Brochures', title: 'Documentation and Brochures', url: '#' },
-  { src: rectangle1.src, alt: 'Frequently Asked Questions', title: 'Frequently Asked Questions', url: '#' },
+// The curve is generated to pass exactly through every dot's (x, y), plus a
+// fixed point at each side edge. The markers sit ON the line by
+// construction -- if timelineData ever changes, the curve follows
+// automatically instead of drifting out of sync with the dots again.
+const EDGE_Y = 390
+const curvePoints = [
+  { x: 0, y: EDGE_Y },
+  ...timelineData.map(({ x, y }) => ({ x, y })),
+  { x: 1200, y: EDGE_Y },
 ]
 
-type CourseData = {
-  course_id: number
-  title_word: string | null
-  title_script: string | null
-  tech_name: string | null
-  tech_icon: string | null
-  tech_stars: number | null
-  tech_label: string | null
-  terrain_name: string | null
-  terrain_icon: string | null
-  terrain_line1: string | null
-  terrain_line2: string | null
-  metric1_name: string | null
-  metric1_sub_label: string | null
-  metric1_value: string | null
-  metric2_name: string | null
-  metric2_sub_label: string | null
-  metric2_value: string | null
-  metric3_name: string | null
-  metric3_sub_label: string | null
-  metric3_value: string | null
-  metric4_name: string | null
-  metric4_sub_label: string | null
-  metric4_value: string | null
-} | null
-
-type CourseLinkCard = {
-  card_title: string | null
-  card_image: string | null
-  card_url: string | null
+function round(n) {
+  return Math.round(n * 10) / 10
 }
 
-type Props = {
-  course?: CourseData
-  linkCards?: CourseLinkCard[]
+// Catmull-Rom -> cubic Bezier, using centripetal-style tangents so every
+// turn (peak or valley) comes out as a smooth, rounded curve instead of a
+// pinched corner. Mirrored phantom points are added before the first and
+// after the last point so the tangent at both edges comes out perfectly
+// horizontal (the line lands flush on the margin instead of entering/
+// exiting on a slope). Every interior tangent is derived from its
+// neighbours, so adjoining segments always match in direction -- no kinks
+// at any joint, including the dots themselves.
+function buildSmoothSegments(points) {
+  const n = points.length
+  const xs = points.map(p => p.x)
+  const ys = points.map(p => p.y)
+
+  // Extend with mirrored phantom points at both ends so edge tangents are
+  // computed the same way as interior ones (keeps the flat entry/exit).
+  const ex = [2 * xs[0] - xs[1], ...xs, 2 * xs[n - 1] - xs[n - 2]]
+  const ey = [ys[0], ...ys, ys[n - 1]]
+
+  // Tangent at each real point (index i in 0..n-1, shifted by +1 in ex/ey)
+  // is the average of the slopes of its two neighbouring segments,
+  // weighted by segment length (centripetal-ish) -- this rounds off
+  // direction changes instead of collapsing them to a flat zero.
+  const m = new Array(n).fill(0)
+  for (let i = 0; i < n; i++) {
+    const j = i + 1 // index into ex/ey
+    const dxPrev = ex[j] - ex[j - 1]
+    const dyPrev = ey[j] - ey[j - 1]
+    const dxNext = ex[j + 1] - ex[j]
+    const dyNext = ey[j + 1] - ey[j]
+
+    const slopePrev = dxPrev !== 0 ? dyPrev / dxPrev : 0
+    const slopeNext = dxNext !== 0 ? dyNext / dxNext : 0
+
+    // Force flat tangents at the true edges (first/last real point)
+    if (i === 0 || i === n - 1) {
+      m[i] = 0
+      continue
+    }
+
+    // Weighted average favouring the shorter adjacent segment a little,
+    // which keeps overshoot in check while still rounding the corner.
+    const wPrev = Math.abs(dxNext)
+    const wNext = Math.abs(dxPrev)
+    const wSum = wPrev + wNext
+    m[i] = wSum > 0 ? (slopePrev * wPrev + slopeNext * wNext) / wSum : 0
+  }
+
+  // Limit tangent magnitude per segment (Fritsch-Carlson-style clamp) to
+  // avoid overshoot/wobble while still allowing a smooth, rounded turn
+  // rather than snapping to zero like a strict monotonic filter would.
+  for (let i = 0; i < n - 1; i++) {
+    const dx = xs[i + 1] - xs[i]
+    const d = dx !== 0 ? (ys[i + 1] - ys[i]) / dx : 0
+    if (d === 0) continue
+    const a = m[i] / d
+    const b = m[i + 1] / d
+    const s = a * a + b * b
+    if (s > 9) {
+      const t = 3 / Math.sqrt(s)
+      m[i] *= t
+      m[i + 1] *= t
+    }
+  }
+
+  const segments = []
+  for (let i = 0; i < n - 1; i++) {
+    const dx = xs[i + 1] - xs[i]
+    segments.push({
+      start: { x: xs[i], y: ys[i] },
+      cp1: { x: xs[i] + dx / 3, y: ys[i] + (m[i] * dx) / 3 },
+      cp2: { x: xs[i + 1] - dx / 3, y: ys[i + 1] - (m[i + 1] * dx) / 3 },
+      end: { x: xs[i + 1], y: ys[i + 1] },
+    })
+  }
+  return segments
 }
 
-export default function TimelineSection({ course, linkCards = [] }: Props) {
-  const [cardIndex, setCardIndex] = useState(0);
+function toPath(segments) {
+  let d = `M ${round(segments[0].start.x)},${round(segments[0].start.y)}`
+  segments.forEach((s) => {
+    d += ` C ${round(s.cp1.x)},${round(s.cp1.y)} ${round(s.cp2.x)},${round(s.cp2.y)} ${round(s.end.x)},${round(s.end.y)}`
+  })
+  return d
+}
 
-  const cards = linkCards.length > 0
-    ? linkCards.map((c) => ({
-        src: c.card_image ? `${UPLOAD_BASE}${c.card_image}` : rectangle1.src,
-        alt: c.card_title || 'Course link card',
-        title: c.card_title || '',
-        url: c.card_url || '#',
-      }))
-    : defaultCards;
+// Same segments, reversed direction, with each segment's control points
+// swapped -- used so the fill mask traces the exact mirror of the visible
+// stroke and stays perfectly seamed to it (no gap, no double edge).
+function toReversedCommands(segments) {
+  const rev = [...segments].reverse()
+  return rev
+    .map(
+      (s) =>
+        `C ${round(s.cp2.x)},${round(s.cp2.y)} ${round(s.cp1.x)},${round(s.cp1.y)} ${round(s.start.x)},${round(s.start.y)}`
+    )
+    .join(' ')
+}
 
-  const prevCard = () => setCardIndex((i) => (i - 1 + cards.length) % cards.length);
-  const nextCard = () => setCardIndex((i) => (i + 1) % cards.length);
+const curveSegments = buildSmoothSegments(curvePoints)
+const CURVE_PATH = toPath(curveSegments)
+const CURVE_PATH_REVERSED_COMMANDS = toReversedCommands(curveSegments)
 
-  const techStars = course?.tech_stars ?? 4;
-
+export default function TimelineSection() {
   return (
     <section
       className="relative w-full overflow-hidden"
@@ -101,7 +135,7 @@ export default function TimelineSection({ course, linkCards = [] }: Props) {
       }}
     >
       {/* ============ DESKTOP TIMELINE (horizontal SVG curve) ============ */}
-      <div className="hidden md:block">
+      <div className="hidden md:block mx-auto max-w-[1520px]">
         <svg
           viewBox="0 0 1200 550"
           className="relative z-10 w-full h-auto block"
@@ -115,39 +149,53 @@ export default function TimelineSection({ course, linkCards = [] }: Props) {
             </linearGradient>
           </defs>
 
-          {/* Mask above the curve — gradient fill matches section background */}
+    
           <path
             d={`
               M 0,0
               L 1200,0
-              L 1200,430
-              C 1050,510 950,480 800,440
-              C 650,400 550,420 400,470
-              C 250,520 150,530 0,390
+              L 1200,${EDGE_Y}
+              ${CURVE_PATH_REVERSED_COMMANDS}
               Z
             `}
             fill="url(#bgGradient)"
           />
 
           {/* Header Titles */}
-          <text x="600" y="85" textAnchor="middle" fontSize="44" fontWeight="900" fill="#08264a" letterSpacing="4">
+          <text
+            x="600"
+            y="85"
+            textAnchor="middle"
+            fontSize="28"
+            fontWeight="900"
+            fill="#08264a"
+            letterSpacing="3"
+          >
             TIMELINE
           </text>
 
-          <text x="600" y="122" textAnchor="middle" fontSize="28" fill="#23a8f2" style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
+          <text
+            x="600"
+            y="108"
+            textAnchor="middle"
+            fontSize="30"
+            fill="#23a8f2"
+            className="transition-all duration-300 hover:translate-x-1"
+            style={{
+              fontFamily: 'var(--font-playlist-script), cursive',
+            }}
+          >
             50k distance
           </text>
 
-          {/* Curve stroke on top */}
           <path
             d={CURVE_PATH}
             fill="none"
             stroke="#35a8eb"
             strokeWidth="7"
             strokeLinecap="round"
-            />
+          />
 
-          {/* Timeline Nodes */}
           {timelineData.map((item, index) => (
             <g key={index}>
               <line
@@ -227,285 +275,10 @@ export default function TimelineSection({ course, linkCards = [] }: Props) {
           })}
         </div>
 
-        {/* decorative wave cap */}
+        {/* decorative wave cap — transitions into the dark CourseDetailsSection below */}
         <svg viewBox="0 0 400 60" preserveAspectRatio="none" className="block w-full" style={{ height: '40px' }}>
           <path d="M0,30 C100,55 200,5 400,30 L400,60 L0,60 Z" fill="#061831" />
         </svg>
-      </div>
-
-      {/* Mountain Section Container */}
-      <div 
-        className="relative z-0 w-full text-white bg-[#061831] -mt-px md:-mt-[13.3333vw]"
-      >
-        {/* Background Image & Ambient Blur Overlays */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
-          <img
-            src={rectangle.src}
-            alt="Mountain Background"
-            className="w-full h-full object-cover opacity-35"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#edf7fd]/0 via-[#061831]/70 to-[#030d1a]" />
-        </div>
-
-        {/* Main Content Wrapper */}
-        <div className="relative z-10 max-w-[1280px] mx-auto px-6 md:px-10 pt-12 md:pt-44 pb-16 md:pb-24 flex flex-col gap-10 md:gap-16">
-
-          {/* Top Half: Course Details & Stats Grid */}
-          <div className="flex flex-col lg:flex-row justify-between items-start w-full pt-0 md:pt-12 lg:pt-24">
-
-            {/* LEFT SIDE — centered on mobile, left-aligned from lg up */}
-            <div className="w-full lg:w-[360px] text-center lg:text-left">
-              <h2 className="leading-[0.85]">
-                <span className="block text-[40px] md:text-[64px] font-black uppercase text-white">
-                  {course?.title_word ?? 'COURSE'}
-                </span>
-
-                <span
-                  className="block text-[32px] md:text-[48px] text-[#2ea9ec] italic normal-case"
-                  style={{ fontFamily: 'Georgia, serif' }}
-                >
-                  {course?.title_script ?? 'details'}
-                </span>
-              </h2>
-
-              <p className="mt-6 md:mt-8 text-white/80 text-[16px] md:text-[20px] leading-[1.4] max-w-[320px] mx-auto lg:mx-0">
-                Explore the course metrics and essential information to help you
-                prepare for your adventure
-              </p>
-            </div>
-
-            {/* RIGHT SIDE — 2-col grid full width on mobile, fixed 280/280 grid from md up */}
-            <div className="grid grid-cols-2 gap-x-6 gap-y-8 w-full mt-10 lg:mt-0 md:w-auto md:grid-cols-[280px_280px] md:gap-x-0 md:gap-y-6 md:ml-auto">
-
-              {/* Technical */}
-              <div className="flex items-start gap-3 md:gap-4">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-[#2ea9ec] flex items-center justify-center shrink-0">
-                  <Image
-                    src={support}
-                    alt="Technical"
-                    className="w-5 h-5 md:w-6 md:h-6 object-contain"
-                  />
-                </div>
-
-                <div>
-                  <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase">
-                    {course?.tech_name ?? 'TECHNICAL'}
-                  </h4>
-
-                  <div className="flex items-center mt-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Image
-                        key={i}
-                        src={star1}
-                        alt="star"
-                        className={`w-6 h-6 md:w-8 md:h-8 object-contain -mr-1 ${i < techStars ? '' : 'opacity-20'}`}
-                      />
-                    ))}
-                  </div>
-
-                  <p className="text-white/70 text-xs md:text-sm mt-1">
-                    {course?.tech_label ?? 'very technical'}
-                  </p>
-                </div>
-              </div>
-
-              {/* Terrains */}
-              <div className="flex items-start gap-3 md:gap-4">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-[#2ea9ec] flex items-center justify-center shrink-0">
-                  <Image
-                    src={shield}
-                    alt="Terrains"
-                    className="w-5 h-5 md:w-6 md:h-6 object-contain"
-                  />
-                </div>
-
-                <div>
-                  <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase">
-                    {course?.terrain_name ?? 'TERRAINS'}
-                  </h4>
-
-                  <p className="text-white text-xs md:text-sm mt-1">
-                    {course?.terrain_line1 ?? 'Mountain trails & singletrack'}
-                  </p>
-
-                  <p className="text-white/70 text-xs md:text-sm">
-                    {course?.terrain_line2 ?? 'Snow, rocks, forest'}
-                  </p>
-                </div>
-              </div>
-
-              {/* Wet */}
-              <div className="flex items-start gap-3 md:gap-4">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-[#2ea9ec] flex items-center justify-center shrink-0">
-                  <Image
-                    src={water}
-                    alt="Wet Conditions"
-                    className="w-5 h-5 md:w-6 md:h-6 object-contain"
-                  />
-                </div>
-
-                <div>
-                  <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase leading-tight" style={{ whiteSpace: 'pre-line' }}>
-                    {course?.metric1_name ?? 'SPEED FACTOR\nWET CONDITIONS'}
-                  </h4>
-
-                  <p className="text-[#2ea9ec] text-[26px] md:text-[42px] font-black leading-none mt-2">
-                    {course?.metric1_value ?? '1.2'}
-                  </p>
-                </div>
-              </div>
-
-              {/* Offroad */}
-              <div className="flex items-start gap-3 md:gap-4">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-[#2ea9ec] flex items-center justify-center shrink-0">
-                  <Image
-                    src={road1}
-                    alt="Offroad"
-                    className="w-5 h-5 md:w-6 md:h-6 object-contain"
-                  />
-                </div>
-
-                <div>
-                  <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase">
-                    {course?.metric2_name ?? 'OFFROAD RATIO'}
-                  </h4>
-
-                  <p className="text-[#2ea9ec] text-[26px] md:text-[42px] font-black leading-none mt-2">
-                    {course?.metric2_value ?? '85%'}
-                  </p>
-                </div>
-              </div>
-
-              {/* Vertical */}
-              <div className="flex items-start gap-3 md:gap-4">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-[#2ea9ec] flex items-center justify-center shrink-0">
-                  <Image
-                    src={mountain}
-                    alt="Terrains"
-                    className="w-5 h-5 md:w-6 md:h-6 object-contain"
-                  />
-                </div>
-
-                <div>
-                  <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase">
-                    {course?.metric3_name ?? 'VERTICAL INDEX'}
-                  </h4>
-
-                  <p className="text-[#2ea9ec] text-[26px] md:text-[42px] font-black leading-none mt-2">
-                    {course?.metric3_value ?? '100K'}
-                  </p>
-                </div>
-              </div>
-
-              {/* Dry */}
-              <div className="flex items-start gap-3 md:gap-4">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-[#2ea9ec] flex items-center justify-center shrink-0">
-                  <Image
-                    src={temp}
-                    alt="Dry Conditions"
-                    className="w-5 h-5 md:w-6 md:h-6 object-contain"
-                  />
-                </div>
-
-                <div>
-                  <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase leading-tight" style={{ whiteSpace: 'pre-line' }}>
-                    {course?.metric4_name ?? 'SPEED FACTOR\nDRY CONDITIONS'}
-                  </h4>
-
-                  <p className="text-[#2ea9ec] text-[26px] md:text-[42px] font-black leading-none mt-2">
-                    {course?.metric4_value ?? '1.1'}
-                  </p>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          {/* ============ DESKTOP CARDS — 3-col grid ============ */}
-          <div className="hidden md:grid md:grid-cols-3 gap-4 mt-4 relative z-30 translate-y-[110px] -mb-[110px]">
-            {cards.map((card, i) => (
-              <a
-                key={i}
-                href={card.url}
-                className="group relative overflow-hidden rounded-[24px] aspect-[1.8/1] bg-slate-800 shadow-xl cursor-pointer block"
-              >
-                <img
-                  src={card.src}
-                  alt={card.alt}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
-
-                <div className="absolute inset-x-0 bottom-5 px-6 flex items-end justify-between">
-                  <h3 className="text-[18px] leading-[1.05] font-bold text-white max-w-[75%]" style={{ whiteSpace: 'pre-line' }}>
-                    {card.title}
-                  </h3>
-
-                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-md transition-transform duration-300 group-hover:translate-x-1">
-                    <svg
-                      className="w-4 h-4 text-[#2ea9ec]"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </a>
-            ))}
-          </div>
-
-          {/* ============ MOBILE CARDS — single-card carousel ============ */}
-          <div className="md:hidden relative z-30 mt-2">
-            <a href={cards[cardIndex].url} className="relative overflow-hidden rounded-[24px] aspect-[1.6/1] bg-slate-800 shadow-xl block">
-              <img
-                src={cards[cardIndex].src}
-                alt={cards[cardIndex].alt}
-                className="w-full h-full object-cover"
-              />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
-
-              <div className="absolute inset-x-0 bottom-5 px-6">
-                <h3 className="text-[18px] leading-[1.05] font-bold text-white" style={{ whiteSpace: 'pre-line' }}>
-                  {cards[cardIndex].title}
-                </h3>
-              </div>
-            </a>
-
-            {/* prev / next controls */}
-            <div className="flex items-center justify-center gap-4 mt-6">
-              <button
-                onClick={prevCard}
-                aria-label="Previous card"
-                className="w-10 h-10 rounded-full bg-white/10 border border-white/30 flex items-center justify-center"
-              >
-                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-                </svg>
-              </button>
-
-              <button
-                onClick={nextCard}
-                aria-label="Next card"
-                className="w-10 h-10 rounded-full bg-[#2ea9ec] flex items-center justify-center"
-              >
-                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-        </div>
-        <div className="bg-white w-full h-40 md:h-56 relative" style={{ zIndex: 1 }} /> 
       </div>
     </section>
   )

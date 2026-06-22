@@ -1,10 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import { useState, useRef } from 'react'
+import { useState, useRef, ReactNode } from 'react'
 import Image from 'next/image'
 import logo from '@/assets/logo.png'
 import { useScrollDirection } from '@/hooks/useScrollDirection'
+import NotifyMe from '@/components/NotifyMe'
+import Register from '@/components/Register'
+import ContactUs from '@/components/ContactUs'
 
 const BASE_URL = 'http://91.99.229.154'
 
@@ -57,6 +60,7 @@ type MenuTab = {
 type Props = {
   tabs: MenuTab[]
   brand_logo: string | null
+  lang: string
 }
 
 // ── Field renderers ────────────────────────────────────────────────────────
@@ -64,12 +68,17 @@ type Props = {
 function FieldImage({ field }: { field: MenuField }) {
   if (!field.image) return null
   return (
-    <a href={field.link_en ?? '#'} className="block group">
+    <a href={field.link_en ?? '#'} className="block group mb-4 last:mb-0">
       <div className="overflow-hidden rounded-xl">
-        <img src={field.image} alt={field.label ?? ''}
-          className="w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+        <img
+          src={field.image}
+          alt={field.label ?? ''}
+          className="w-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
       </div>
-      {field.label && <p className="mt-2 text-sm font-semibold text-[#0d2a4a]">{field.label}</p>}
+      {field.label && (
+        <p className="mt-2 text-sm font-semibold text-[#0d2a4a]">{field.label}</p>
+      )}
     </a>
   )
 }
@@ -85,9 +94,14 @@ function FieldIcon({ field }: { field: MenuField }) {
             {field.contact_title}
           </p>
         )}
-        {field.contact_body && <p className="text-xs text-gray-500 whitespace-pre-line">{field.contact_body}</p>}
+        {field.contact_body && (
+          <p className="text-xs text-gray-500 whitespace-pre-line">{field.contact_body}</p>
+        )}
         {field.contact_link_url && (
-          <a href={field.contact_link_url} className="mt-2 inline-block text-xs font-semibold text-sky-500 hover:underline">
+          <a
+            href={field.contact_link_url}
+            className="mt-2 inline-block text-xs font-semibold text-sky-500 hover:text-sky-600 transition-colors"
+          >
             {field.contact_link_label ?? field.contact_link_url}
           </a>
         )}
@@ -96,11 +110,16 @@ function FieldIcon({ field }: { field: MenuField }) {
   }
 
   return (
-    <a href={field.link_en ?? '#'}
-      className="flex flex-row gap-3 items-center group rounded-xl px-3 py-2 hover:bg-gray-50 transition-colors">
+    <a
+      href={field.link_en ?? '#'}
+      className="flex flex-row gap-3 items-center group px-3 py-2 transition-colors"
+
+    >
       {field.icon && (
-        <span className="flex items-center justify-center w-9 h-9 rounded-full flex-shrink-0"
-          style={{ background: field.icon_background ?? '#e0f2fe', color: field.icon_color ?? '#0284c7' }}>
+        <span
+          className="flex items-center justify-center w-9 h-9 rounded-full flex-shrink-0"
+          style={{ background: field.icon_background ?? '#e0f2fe', color: field.icon_color ?? '#0284c7' }}
+        >
           {field.icon.startsWith('fa-') || field.icon.includes(' fa-') ? (
             <i className={`${field.icon} text-sm`} aria-hidden="true" />
           ) : (
@@ -123,17 +142,22 @@ function FieldText({ field }: { field: MenuField }) {
   return (
     <div>
       {field.section_heading_en && (
-        <p className={
-          isSubsection
-            ? 'text-[11px] font-bold tracking-wider uppercase text-gray-400 mb-2.5'
-            : 'text-[11px] font-bold tracking-wider uppercase text-[#0d2a4a] mb-2.5'
-        }>
+        <p
+          className={
+            isSubsection
+              ? 'text-[11px] font-normal tracking-wider uppercase text-gray-400 hover:text-sky-500 transition-colors mb-2.5 cursor-pointer'
+              : 'text-sm font-bold text-[#0d2a4a] hover:text-sky-500 transition-colors mb-3 cursor-pointer'
+          }
+        >
           {field.section_heading_en}
         </p>
       )}
+    
       {field.link_en && (
-        <a href={field.link_en}
-          className="text-[13px] text-gray-400 hover:text-[#0d2a4a] transition-colors mb-1.5 leading-snug block py-0.5">
+        <a
+         href={field.link_en}
+          className="text-[13px] text-gray-400 hover:text-sky-500 transition-colors mb-1.5 leading-snug block py-0.5"
+        >
           {field.link_en}
         </a>
       )}
@@ -144,8 +168,14 @@ function FieldText({ field }: { field: MenuField }) {
 function FieldExtra({ field }: { field: MenuField }) {
   if (field.extra_type === 'social') {
     const SocialCircle = ({
-      href, bg, children,
-    }: { href?: string | null; bg: string; children: React.ReactNode }) => {
+      href,
+      bg,
+      children,
+    }: {
+      href?: string | null
+      bg: string
+      children: React.ReactNode
+    }) => {
       const circle = (
         <div
           className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm flex-shrink-0"
@@ -154,9 +184,9 @@ function FieldExtra({ field }: { field: MenuField }) {
           {children}
         </div>
       )
-      return href
-        ? <a href={href} target="_blank" rel="noreferrer">{circle}</a>
-        : circle
+      return href ? (
+        <a href={href} target="_blank" rel="noreferrer">{circle}</a>
+      ) : circle
     }
 
     return (
@@ -179,16 +209,22 @@ function FieldExtra({ field }: { field: MenuField }) {
       </div>
     )
   }
+
   if (field.extra_type === 'text_block') {
     const title = field.text_block_title ?? field.contact_link_label
     if (!title && !field.text_block_body) return null
     return (
       <div className="border-t border-gray-100 pt-3 mt-1">
-        {title && <p className="text-[11px] font-bold tracking-wider uppercase text-[#0d2a4a] mb-2.5">{title}</p>}
-        {field.text_block_body && <p className="text-xs text-gray-500 whitespace-pre-line">{field.text_block_body}</p>}
+        {title && (
+          <p className="text-[11px] font-bold tracking-wider uppercase text-[#0d2a4a] mb-2.5">{title}</p>
+        )}
+        {field.text_block_body && (
+          <p className="text-xs text-gray-500 whitespace-pre-line">{field.text_block_body}</p>
+        )}
       </div>
     )
   }
+
   return null
 }
 
@@ -213,15 +249,16 @@ function MegaMenu({
   onMouseEnter: () => void
   onMouseLeave: () => void
 }) {
-  const currentTab = tabs.find((t) => t.id === activeTabId) ?? tabs[0]
+  const currentTab = tabs.find((t) => t.id === activeTabId)
+  if (!currentTab || currentTab.fields.length === 0) return null
 
-  const byColumn = (currentTab?.fields ?? []).reduce<Record<number, MenuField[]>>((acc, f) => {
+  const byColumn = currentTab.fields.reduce<Record<number, MenuField[]>>((acc, f) => {
     const col = f.column ?? 0
       ; (acc[col] ??= []).push(f)
     return acc
   }, {})
   const colKeys = Object.keys(byColumn).map(Number).sort((a, b) => a - b)
-  const cols = currentTab?.num_cols ?? 4
+  const cols = currentTab.num_cols ?? 4
 
   return (
     <div
@@ -231,8 +268,7 @@ function MegaMenu({
                  bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.15)]
                  border border-gray-100 overflow-hidden z-50"
     >
-      {/* Content grid */}
-      {currentTab && colKeys.length > 0 ? (
+      {colKeys.length > 0 ? (
         <div
           className="grid gap-6 p-6"
           style={{ gridTemplateColumns: `repeat(${Math.min(cols, colKeys.length)}, minmax(0, 1fr))` }}
@@ -254,25 +290,33 @@ function MegaMenu({
 
 // ── Navbar ─────────────────────────────────────────────────────────────────
 
-export default function Navbar({ tabs, brand_logo }: Props) {
-  console.log('brand_logo received:', brand_logo)
-  console.log('imgUrl result:', imgUrl(brand_logo))
-  const [lang, setLang] = useState('NL')
+export default function Navbar({ tabs, brand_logo, lang }: Props) {
+  const currentLang = lang.toUpperCase()
   const [menuOpen, setMenuOpen] = useState(false)
   const [megaOpen, setMegaOpen] = useState(false)
-  const [activeTabId, setActiveTabId] = useState(tabs[0]?.id ?? 0)
+  const [drawerOpen, setDrawerOpen] = useState(false)
+const [registerOpen, setRegisterOpen] = useState(false)
+const [contactOpen, setContactOpen] = useState(false)
+  const [activeTabId, setActiveTabId] = useState<number>(tabs[0]?.id ?? 0)
   const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const openMega = (tabId: number) => {
+    const tab = tabs.find((t) => t.id === tabId)
+    if (!tab || tab.fields.length === 0) {
+      closeMega()
+      return
+    }
     leaveTimer.current && clearTimeout(leaveTimer.current)
     setActiveTabId(tabId)
     setMegaOpen(true)
   }
+
   const closeMega = () => {
     leaveTimer.current = setTimeout(() => setMegaOpen(false), 120)
   }
 
-  const visible = useScrollDirection(10)
+  // ✅ locked=menuOpen pauses hide-on-scroll while mobile menu is open
+  const visible = useScrollDirection(10, menuOpen)
 
   return (
     <nav
@@ -282,6 +326,7 @@ export default function Navbar({ tabs, brand_logo }: Props) {
         ${visible ? 'translate-y-0' : '-translate-y-full'}
       `}
     >
+      {/* ── Pill bar ── */}
       <div
         className="max-w-7xl mx-auto flex items-center justify-between
                    rounded-full px-5 py-2.5
@@ -289,16 +334,30 @@ export default function Navbar({ tabs, brand_logo }: Props) {
                    border border-white/20
                    shadow-[0_4px_24px_rgba(0,0,0,0.25)]"
       >
-
         {/* Logo */}
-        <Link href="/" className="flex items-center select-none">
-          {brand_logo
-            ? <img src={imgUrl(brand_logo) ?? ''} alt="Brand Logo" className="h-10 w-auto object-contain" />
-            : <Image src={logo} alt="Trail Running" className="h-10 w-auto object-contain" />
-          }
+        <Link href="/" className="flex items-center select-none group">
+          {brand_logo ? (
+            <img
+              src={imgUrl(brand_logo) ?? ''}
+              alt="Brand Logo"
+              className="h-10 w-auto object-contain
+      transition-transform duration-500 ease-out
+      group-hover:-translate-y-1 group-hover:translate-x-1
+      group-hover:scale-105"
+            />
+          ) : (
+            <Image
+              src={logo}
+              alt="Trail Running"
+              className="h-10 w-auto object-contain
+      transition-transform duration-500 ease-out
+      group-hover:-translate-y-1 group-hover:translate-x-1
+      group-hover:scale-105"
+            />
+          )}
         </Link>
 
-        {/* Desktop — one button per tab from DB */}
+        {/* Desktop nav tabs */}
         <ul className="hidden lg:flex items-center gap-4 xl:gap-8">
           {tabs.map((tab) => (
             <li key={tab.id} className="relative">
@@ -306,15 +365,12 @@ export default function Navbar({ tabs, brand_logo }: Props) {
                 onMouseEnter={() => openMega(tab.id)}
                 onMouseLeave={closeMega}
                 className={`flex items-center gap-1 text-sm font-semibold tracking-wide transition-colors
-                  ${activeTabId === tab.id && megaOpen ? 'text-sky-300' : 'text-sky-400 hover:text-sky-300'}`}
+  relative after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[2px]
+  after:bg-sky-400 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200
+  ${activeTabId === tab.id && megaOpen ? 'text-white after:scale-x-100' : 'text-sky-400 hover:text-white'}`}
               >
                 {tab.tab_name.toUpperCase()}
-                <svg
-                  className={`w-3 h-3 mt-0.5 transition-transform ${activeTabId === tab.id && megaOpen ? 'rotate-180' : ''}`}
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
+
               </button>
             </li>
           ))}
@@ -322,49 +378,68 @@ export default function Navbar({ tabs, brand_logo }: Props) {
           <span className="w-px h-5 bg-white/30" />
 
           {/* Language */}
-          <button
-            onClick={() => setLang((l) => (l === 'NL' ? 'EN' : 'NL'))}
-            className="flex items-center gap-1 text-sm font-semibold text-white hover:text-sky-300 transition-colors"
-          >
-            {lang}
+          <button className="flex items-center gap-1 text-sm font-semibold text-white hover:text-sky-300 transition-colors">
+            {currentLang}
             <svg className="w-3.5 h-3.5 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
           </button>
         </ul>
 
-        {/* Right side */}
-        <div className="hidden lg:flex items-center gap-3 xl:gap-4">
-          <button className="text-white hover:text-sky-300 transition-colors" aria-label="Search">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
-            </svg>
-          </button>
-          <button className="text-white hover:text-sky-300 transition-colors" aria-label="Account">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
-            </svg>
-          </button>
-          <Link href="/membership"
-            className=" flex items-center gap-3 xl:gap-6
-              bg-sky-500 hover:bg-sky-400
-              text-white font-bold
-              px-5 py-2.5 xl:px-8 xl:py-3
-              rounded-full
-              transition-all duration-300
-              shadow-lg
-              whitespace-nowrap">
-            <span className="text-base lg:text-lg">Become Member</span>
-            <span className="flex items-center justify-center w-14 h-6 bg-white rounded-full shrink-0">
-              <svg className="w-6 h-6 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5-5 5M6 12h12" />
-              </svg>
-            </span>
-          </Link>
-        </div>
+        {/* Desktop right actions */}
+       <div className="hidden lg:flex items-center gap-3 xl:gap-4">
+  <button
+    onClick={() => setDrawerOpen(true)}
+    className="text-white hover:text-sky-300 transition-colors"
+    aria-label="Notifications"
+  >
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0 1 18 14.158V11a6.002 6.002 0 0 0-4-5.659V5a2 2 0 1 0-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 1 1-6 0v-1m6 0H9" />
+    </svg>
+  </button>
+  <button
+    onClick={() => setContactOpen(true)}
+    className="text-white hover:text-sky-300 transition-colors"
+    aria-label="Contact Us"
+  >
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M21 8a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8Zm-2 0-7 5-7-5" />
+    </svg>
+  </button>
+ <button className="text-white hover:text-sky-300 transition-colors" aria-label="Search">
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+    </svg>
+  </button>
+  <button className="text-white hover:text-sky-300 transition-colors" aria-label="Account">
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
+    </svg>
+  </button>
+  <button
+    onClick={() => setRegisterOpen(true)}
+    className="flex items-center gap-3 xl:gap-6
+    relative overflow-hidden
+    bg-sky-500 text-white font-bold
+    px-5 py-2.5 xl:px-8 xl:py-3
+    rounded-full shadow-lg whitespace-nowrap
+    before:absolute before:inset-0 before:bg-white before:rounded-full
+    before:-translate-x-[110%] hover:before:translate-x-0
+    before:transition-transform before:duration-[600ms] before:ease-in-out
+    hover:text-sky-500 transition-colors duration-[600ms]"
+  >
+    <span className="relative z-10 text-base lg:text-lg">Become Member</span>
+  </button>
+</div>
 
         {/* Mobile hamburger */}
-        <button className="lg:hidden text-white" onClick={() => setMenuOpen((o) => !o)} aria-label="Toggle menu">
+
+        {/* Mobile hamburger */}
+        <button
+          className="lg:hidden text-white"
+          onClick={() => setMenuOpen((o) => !o)}
+          aria-label="Toggle menu"
+        >
           {menuOpen ? (
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -377,7 +452,7 @@ export default function Navbar({ tabs, brand_logo }: Props) {
         </button>
       </div>
 
-      {/* Mega menu — rendered OUTSIDE the pill, full width below it */}
+      {/* ── Desktop mega menu ── */}
       {megaOpen && tabs.length > 0 && (
         <div className="hidden md:block relative max-w-7xl mx-auto">
           <MegaMenu
@@ -389,51 +464,137 @@ export default function Navbar({ tabs, brand_logo }: Props) {
         </div>
       )}
 
-      {/* Mobile dropdown */}
+      {/* ── Mobile dropdown ── */}
       {menuOpen && (
-        <div className="md:hidden mt-2 mx-auto max-w-7xl rounded-2xl px-5 py-4
-                        bg-white/10 backdrop-blur-md border border-white/20
-                        shadow-[0_4px_24px_rgba(0,0,0,0.25)]">
-          <ul className="flex flex-col gap-2">
-            {tabs.map((tab) => (
-              <li key={tab.id}>
-                <details className="group">
-                  <summary className="text-sm font-semibold text-sky-400 cursor-pointer list-none
-                                      flex items-center justify-between py-1">
-                    {tab.tab_name.toUpperCase()}
-                    <svg className="w-4 h-4 transition-transform group-open:rotate-180"
-                      fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </summary>
-                  <div className="pl-3 pt-2 flex flex-col gap-1.5">
-                    {tab.fields.map((field) => field.label && (
-                      <a key={field.id} href={field.link_en ?? '#'}
-                        className="text-sm text-white/70 hover:text-white transition-colors">
-                        {field.label}
-                      </a>
-                    ))}
-                  </div>
-                </details>
-              </li>
-            ))}
-          </ul>
+        <div
+          className="lg:hidden mt-2 mx-auto max-w-7xl rounded-2xl
+           bg-white border border-gray-100
+           shadow-[0_20px_60px_rgba(0,0,0,0.15)]
+           flex flex-col overflow-hidden"
+          style={{ maxHeight: 'calc(100dvh - 5rem)' }}
+        >
+          {/* ✅ overflow-y-auto + overscroll-contain: scrollable, won't bubble to window */}
+          <div className="overflow-y-auto overscroll-contain px-5 py-4">
+            <ul className="flex flex-col gap-2">
+              {tabs.map((tab) => (
+                <li key={tab.id}>
+                  <details className="group">
+                    <summary
+                      className="text-sm font-semibold text-[#0d2a4a] cursor-pointer list-none
+  flex items-center justify-between py-1
+  relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px]
+  after:bg-sky-400 after:scale-x-0 active:after:scale-x-100
+  after:transition-transform after:duration-200
+  active:text-sky-500 transition-colors duration-200"
+                    >
+                      {tab.tab_name.toUpperCase()}
+                      <svg
+                        className="w-4 h-4 transition-transform duration-200 group-open:rotate-180 text-sky-500 shrink-0"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </summary>
 
-          <div className="mt-4 pt-4 border-t border-white/20">
-            <Link href="/membership" onClick={() => setMenuOpen(false)}
-              className="flex items-center justify-center gap-2 bg-sky-500 hover:bg-sky-400
-                             text-white text-sm font-bold px-5 py-2.5 rounded-full
-                             transition-colors w-full">
-              <span className="text-base lg:text-lg">Become Member</span>
-              <span className="flex items-center justify-center w-10 h-5 bg-white rounded-full shrink-0">
-                <svg className="w-5 h-5 text-[#36A5DD]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5-5 5M6 12h12" />
-                </svg>
-              </span>
-            </Link>
+                    {tab.fields.length > 0 && (
+                      <div className="pl-2 pt-2 pb-1 flex flex-col gap-1 bg-gray-50 rounded-xl mt-1">
+                        {tab.fields.map((field) => (
+                          <Field key={field.id} field={field} />
+                        ))}
+                      </div>
+                    )}
+                  </details>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-4 pt-4 border-t border-gray-100 pb-2">
+             <button
+  onClick={() => { setMenuOpen(false); setRegisterOpen(true) }}
+  className="flex items-center justify-center gap-2
+   relative overflow-hidden
+   bg-sky-500 text-white text-sm font-bold
+   px-5 py-2.5 rounded-full w-full
+   before:absolute before:inset-0 before:bg-white before:rounded-full
+   before:-translate-x-[110%] active:before:translate-x-0
+   before:transition-transform before:duration-[400ms] before:ease-in-out
+   active:text-sky-500 transition-colors duration-[400ms]"
+>
+  <span className="relative z-10 text-base lg:text-lg">Become Member</span>
+</button>
+            </div>
           </div>
         </div>
       )}
+ {/* ── Notification Drawer ── */}
+
+      {/* Backdrop */}
+       <div
+  onClick={() => { setDrawerOpen(false); setRegisterOpen(false); setContactOpen(false) }}
+  className={`fixed inset-0 bg-black/40 z-[60] transition-opacity duration-300
+    ${drawerOpen || registerOpen || contactOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+/>
+
+      {/* Drawer Panel */}
+     <div
+  className={`fixed top-0 right-0 h-screen w-[35vw] min-w-[320px] bg-white z-[70] shadow-2xl
+    transition-transform duration-500 ease-in-out overflow-y-auto
+    ${drawerOpen ? 'translate-x-0' : 'translate-x-full'}`}
+>
+        {/* Close Button */}
+        <button
+          onClick={() => setDrawerOpen(false)}
+          className="absolute top-4 right-4 w-8 h-8 rounded-full bg-sky-100 hover:bg-sky-200
+  flex items-center justify-center transition-colors z-10"
+          aria-label="Close"
+        >
+          <svg className="w-4 h-4 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        {/* NotifyMe content — remove outer bg wrapper */}
+        <NotifyMe />
+      </div>
+
+      {/* ── Register Drawer ── */}
+      <div
+        className={`fixed top-0 right-0 h-screen w-[35vw] min-w-[320px] bg-white z-[70] shadow-2xl
+          transition-transform duration-500 ease-in-out overflow-y-auto
+          ${registerOpen ? 'translate-x-0' : 'translate-x-full'}`}
+      >
+        <button
+          onClick={() => setRegisterOpen(false)}
+          className="absolute top-4 right-4 w-8 h-8 rounded-full bg-sky-100 hover:bg-sky-200
+            flex items-center justify-center transition-colors z-10"
+          aria-label="Close"
+        >
+          <svg className="w-4 h-4 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        <Register />
+      </div>
+
+      {/* ── Contact Us Drawer ── */}
+      <div
+        className={`fixed top-0 right-0 h-screen w-[35vw] min-w-[320px] bg-white z-[70] shadow-2xl
+          transition-transform duration-500 ease-in-out overflow-y-auto
+          ${contactOpen ? 'translate-x-0' : 'translate-x-full'}`}
+      >
+        <button
+  onClick={() => setContactOpen(false)}
+  className="absolute top-4 right-4 w-8 h-8 rounded-full bg-sky-100 hover:bg-sky-200
+    flex items-center justify-center transition-colors z-10"
+  aria-label="Close"
+>
+  <svg className="w-4 h-4 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        <ContactUs />
+      </div>
+
     </nav>
   )
 }
