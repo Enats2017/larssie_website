@@ -25,7 +25,7 @@ const responsiveStyles = `
   }
   .filter-btn {
     clip-path: polygon(6% 0%, 100% 0%, 94% 100%, 0% 100%);
-    background: #0d2a4a;
+    background: #0284c7;
     width: 200px;
     padding: 22px 0;
     display: flex;
@@ -34,15 +34,15 @@ const responsiveStyles = `
     gap: 10px;
     border: none;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
     color: white;
     font-weight: 700;
     font-size: 17px;
     letter-spacing: 0.08em;
     margin: 0 -4px;
   }
-  .filter-btn:hover { background: #0369a1 !important; }
-  .filter-btn.active-filter { background: #075985; }
+.filter-btn:hover { background: #0369a1 !important; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(2,132,199,0.35); }
+.filter-btn.active-filter { background: #0369a1; }
   .reset-btn {
     display: flex;
     align-items: center;
@@ -73,7 +73,7 @@ const responsiveStyles = `
   }
   .option-btn {
     clip-path: polygon(6% 0%, 100% 0%, 94% 100%, 0% 100%);
-    background: #0c4a6e;
+    background: #f0f9ff;
     min-height: 60px;
     display: flex;
     align-items: center;
@@ -81,17 +81,17 @@ const responsiveStyles = `
     padding: 0 20px;
     font-size: 17px;
     font-weight: 500;
-    color: white;
+    color: #0284c7;
     transition: background 0.3s;
     cursor: pointer;
-    border: 1px solid rgba(255,255,255,0.12);
+    border: 1px solid #bae6fd;
     width: 100%;
   }
-  .option-btn:hover { background: #0284c7 !important; }
-  .option-btn.selected { background: #0284c7; }
-  .region-btn {
+  .option-btn:hover { background: #e0f2fe !important; }
+  .option-btn.selected { background: #bae6fd; }
+.region-btn {
     clip-path: polygon(6% 0%, 100% 0%, 94% 100%, 0% 100%);
-    background: #0c4a6e;
+    background: #f0f9ff;
     min-height: 90px;
     display: flex;
     align-items: center;
@@ -100,14 +100,14 @@ const responsiveStyles = `
     gap: 14px;
     font-size: 20px;
     font-weight: 600;
-    color: white;
+    color: #0284c7;
     transition: background 0.3s;
     cursor: pointer;
-    border: 1px solid rgba(255,255,255,0.12);
+    border: 1px solid #bae6fd;
     width: 100%;
   }
-  .region-btn:hover { background: #0284c7 !important; }
-  .region-btn.selected { background: #0284c7; }
+  .region-btn:hover { background: #e0f2fe !important; }
+  .region-btn.selected { background: #bae6fd; }
 
   @media (max-width: 860px) {
     .filter-outer-row {
@@ -152,7 +152,7 @@ interface Card {
 
 const ContinentIcons: Record<Region, JSX.Element> = {
   Asia: (
-    <svg width="58" height="50" viewBox="0 0 100 90" fill="white" xmlns="http://www.w3.org/2000/svg">
+    <svg width="58" height="50" viewBox="0 0 100 90" fill="#0284c7" xmlns="http://www.w3.org/2000/svg">
       <path d="M 38,2 L 44,1 L 50,4 L 55,2 L 60,5 L 63,3 L 68,6 L 72,5 L 76,8 L 78,12 L 75,14 L 78,17 L 80,22 L 78,26 L 80,30 L 78,34 L 74,36 L 72,40 L 68,42 L 64,40 L 60,42 L 56,44 L 52,46 L 48,48 L 44,50 L 40,52 L 36,50 L 32,48 L 28,46 L 24,44 L 20,42 L 18,38 L 16,34 L 14,30 L 16,26 L 14,22 L 12,18 L 14,14 L 12,10 L 15,7 L 18,4 L 22,3 L 26,5 L 30,3 Z M 60,10 L 64,12 L 66,16 L 63,19 L 59,17 L 58,13 Z M 44,20 L 48,22 L 46,26 L 42,24 Z M 66,24 L 70,26 L 68,30 L 64,28 Z M 34,30 L 38,32 L 36,36 L 32,34 Z M 52,30 L 56,32 L 54,36 L 50,34 Z" />
       <ellipse cx="82" cy="18" rx="3" ry="5" transform="rotate(-30 82 18)" />
       <ellipse cx="86" cy="24" rx="2" ry="4" transform="rotate(-20 86 24)" />
@@ -162,7 +162,7 @@ const ContinentIcons: Record<Region, JSX.Element> = {
     </svg>
   ),
   Europe: (
-    <svg width="52" height="48" viewBox="0 0 90 85" fill="white" xmlns="http://www.w3.org/2000/svg">
+    <svg width="52" height="48" viewBox="0 0 90 85" fill="#0284c7" xmlns="http://www.w3.org/2000/svg">
       <path d="M 30,5 L 36,3 L 42,4 L 48,2 L 54,4 L 58,8 L 62,7 L 66,10 L 68,14 L 65,18 L 68,21 L 66,25 L 62,27 L 64,31 L 62,35 L 58,37 L 54,39 L 50,41 L 46,39 L 42,37 L 38,39 L 34,38 L 30,36 L 26,33 L 22,30 L 20,26 L 18,22 L 20,18 L 18,14 L 20,10 L 24,7 Z M 46,9 L 50,11 L 48,14 L 44,12 Z M 56,14 L 60,16 L 58,20 L 54,18 Z M 34,18 L 38,20 L 36,24 L 32,22 Z M 48,22 L 52,24 L 50,28 L 46,26 Z" />
       <path d="M 44,2 L 48,0 L 52,2 L 54,6 L 50,4 L 46,5 Z" />
       <path d="M 16,12 L 20,10 L 22,14 L 18,16 Z" />
@@ -173,13 +173,13 @@ const ContinentIcons: Record<Region, JSX.Element> = {
     </svg>
   ),
   Africa: (
-    <svg width="44" height="56" viewBox="0 0 70 95" fill="white" xmlns="http://www.w3.org/2000/svg">
+    <svg width="44" height="56" viewBox="0 0 70 95" fill="#0284c7" xmlns="http://www.w3.org/2000/svg">
       <path d="M 18,4 L 24,2 L 30,3 L 36,2 L 42,4 L 48,3 L 52,6 L 56,10 L 58,15 L 56,20 L 58,25 L 57,31 L 54,37 L 50,43 L 46,50 L 42,57 L 38,64 L 35,70 L 32,76 L 30,82 L 28,78 L 26,72 L 24,66 L 20,59 L 16,52 L 12,45 L 9,38 L 8,31 L 9,24 L 8,18 L 10,12 L 14,7 Z M 30,10 L 34,12 L 33,17 L 28,15 Z M 44,18 L 48,20 L 46,25 L 42,23 Z M 20,22 L 24,24 L 22,28 L 18,26 Z M 36,30 L 40,32 L 38,37 L 34,35 Z" />
       <path d="M 60,36 L 64,34 L 66,38 L 65,44 L 63,50 L 60,52 L 58,48 L 59,42 L 58,38 Z" />
     </svg>
   ),
   Oceania: (
-    <svg width="64" height="46" viewBox="0 0 110 80" fill="white" xmlns="http://www.w3.org/2000/svg">
+    <svg width="64" height="46" viewBox="0 0 110 80" fill="#0284c7" xmlns="http://www.w3.org/2000/svg">
       <path d="M 10,22 L 16,18 L 22,16 L 28,16 L 34,14 L 40,15 L 46,14 L 52,16 L 56,14 L 60,16 L 62,20 L 60,24 L 62,28 L 60,33 L 56,37 L 52,40 L 48,43 L 44,46 L 40,47 L 36,46 L 32,44 L 28,42 L 24,44 L 20,43 L 16,40 L 12,36 L 9,31 L 8,26 Z M 52,20 L 56,22 L 54,26 L 50,24 Z M 22,24 L 26,26 L 24,30 L 20,28 Z M 38,28 L 42,30 L 40,34 L 36,32 Z" />
       <path d="M 56,14 L 60,10 L 62,14 L 60,18 L 58,16 Z" />
       <path d="M 84,30 L 88,28 L 92,30 L 94,34 L 92,38 L 88,40 L 84,38 L 82,34 Z" />
@@ -192,7 +192,7 @@ const ContinentIcons: Record<Region, JSX.Element> = {
     </svg>
   ),
   America: (
-    <svg width="48" height="58" viewBox="0 0 80 100" fill="white" xmlns="http://www.w3.org/2000/svg">
+    <svg width="48" height="58" viewBox="0 0 80 100" fill="#0284c7" xmlns="http://www.w3.org/2000/svg">
       <path d="M 32,2 L 38,2 L 44,4 L 50,3 L 55,6 L 58,10 L 56,14 L 60,17 L 58,21 L 54,24 L 56,28 L 52,30 L 48,28 L 44,30 L 40,32 L 36,30 L 32,32 L 28,30 L 24,28 L 20,26 L 16,22 L 14,18 L 16,14 L 14,10 L 16,6 L 20,3 L 26,2 Z M 42,8 L 46,10 L 44,14 L 40,12 Z M 28,12 L 32,14 L 30,18 L 26,16 Z M 48,16 L 52,18 L 50,22 L 46,20 Z" />
       <path d="M 48,30 L 52,28 L 54,32 L 52,37 L 50,35 L 48,33 Z" />
       <path d="M 14,22 L 18,20 L 20,24 L 19,30 L 16,32 L 14,28 Z" />
@@ -235,8 +235,8 @@ const FilterButton = ({ filterKey, label, selectedValue, activeFilter, setActive
     >
       <span>{selectedValue ? selectedValue.toUpperCase() : label}</span>
       {isActive
-        ? <ChevronUp size={16} style={{ color: "#38bdf8", flexShrink: 0 }} />
-        : <ChevronDown size={16} style={{ color: "#38bdf8", flexShrink: 0 }} />
+        ? <ChevronUp size={16} style={{ color: "white", flexShrink: 0 }} />
+        : <ChevronDown size={16} style={{ color: "white", flexShrink: 0 }} />
       }
     </button>
   );
@@ -297,14 +297,15 @@ export default function EventsCards(): JSX.Element {
   return (
     <>
       <style>{responsiveStyles}</style>
-      <section style={{ background: "#f0f9ff", padding: "20px 24px 80px", color: "#0d2a4a" }}>
+      <section style={{ background: "#ffffff", padding: "20px 24px 80px", color: "#0d2a4a" }}>
+
 
         {/* Section heading */}
         <div style={{ textAlign: "center", marginBottom: "48px" }}>
           <p style={{ color: "#0284c7", fontSize: "13px", fontWeight: "700", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "12px" }}>
             Upcoming Events
           </p>
-          <h2 style={{ color: "#0284c7", fontSize: "clamp(28px, 4vw, 42px)", fontWeight: "800", marginBottom: "16px" }}>
+          <h2 style={{ color: "#000000e0", fontSize: "clamp(28px, 4vw, 42px)", fontWeight: "800", marginBottom: "16px" }}>
             Find Your Next Race
           </h2>
           <div style={{ width: "64px", height: "4px", background: "#38bdf8", borderRadius: "9999px", margin: "0 auto" }} />
@@ -329,7 +330,7 @@ export default function EventsCards(): JSX.Element {
               position: "absolute",
               top: "calc(100% + 10px)",
               left: 0, right: 0,
-              background: "#0d2a4a",
+              background: "#ffffff",
               borderRadius: "8px",
               padding: "16px",
               zIndex: 50,
@@ -361,23 +362,23 @@ export default function EventsCards(): JSX.Element {
 
         <div className="cards-grid">
           {filteredCards.slice(0, visibleCards).map((card) => (
-            <div key={card.id} style={{ background: "white", borderRadius: "16px", overflow: "hidden", border: "1px solid #e0f2fe", boxShadow: "0 4px 20px rgba(13,42,74,0.08)" }}>
-              <img src={card.image} alt={card.title} style={{ width: "100%", height: "240px", objectFit: "cover" }} />
-              <div style={{ padding: "24px" }}>
-                <h2 style={{ fontSize: "28px", fontWeight: "700", color: "#0d2a4a", marginBottom: "12px" }}>{card.title}</h2>
-                <div style={{ display: "flex", gap: "12px", color: "#0d2a4a", marginBottom: "14px", fontWeight: "500" }}>
+            <div key={card.id} style={{ background: "white", borderRadius: "16px", overflow: "hidden", border: "none", boxShadow: "0 8px 30px rgba(13,42,74,0.12)" }}>
+              <img src={card.image} alt={card.title} style={{ width: "100%", height: "220px", objectFit: "cover" }} />
+              <div style={{ padding: "20px" }}>
+
+                <h2 style={{ fontSize: "20px", fontWeight: "700", color: "#0284c7", marginBottom: "10px" }}>{card.title}</h2>                <div style={{ display: "flex", gap: "12px", color: "#0d2a4a", marginBottom: "14px", fontWeight: "500" }}>
                   <span>📅 {card.month}</span>
                   <span>📍 {card.country}</span>
                 </div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "20px" }}>
-                  <span style={{ background: "#e0f2fe", color: "#0284c7", padding: "4px 14px", borderRadius: "9999px", fontSize: "13px", fontWeight: "600" }}>{card.circuit}</span>
-                  <span style={{ background: "#e0f2fe", color: "#0284c7", padding: "4px 14px", borderRadius: "9999px", fontSize: "13px", fontWeight: "600" }}>{card.region}</span>
-                  <span style={{ background: "#0d2a4a", color: "white", padding: "4px 14px", borderRadius: "9999px", fontSize: "13px", fontWeight: "600" }}>{card.category}</span>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "18px" }}>
+                  <span style={{ background: "#f1f5f9", color: "#475569", padding: "4px 14px", borderRadius: "9999px", fontSize: "12px", fontWeight: "600" }}>{card.circuit}</span>
+                  <span style={{ background: "#f1f5f9", color: "#475569", padding: "4px 14px", borderRadius: "9999px", fontSize: "12px", fontWeight: "600" }}>{card.region}</span>
+                  <span style={{ background: "#0284c7", color: "white", padding: "4px 14px", borderRadius: "9999px", fontSize: "12px", fontWeight: "600" }}>{card.category}</span>
                 </div>
                 <button
-                  style={{ background: "#0d2a4a", color: "white", padding: "12px 24px", borderRadius: "8px", border: "none", cursor: "pointer", fontWeight: "600", fontSize: "15px", transition: "background 0.2s" }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "#0284c7")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "#0d2a4a")}
+                  style={{ background: "#0284c7", color: "white", padding: "12px 24px", borderRadius: "8px", border: "none", cursor: "pointer", fontWeight: "600", fontSize: "15px", transition: "background 0.2s" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = "#0369a1")}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = "#0284c7")}
                 >
                   Register now
                 </button>
@@ -397,18 +398,18 @@ export default function EventsCards(): JSX.Element {
             {visibleCards < filteredCards.length ? (
               <button
                 onClick={() => setVisibleCards((prev) => prev + 2)}
-                style={{ clipPath: "polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%)", background: "#0d2a4a", padding: "16px 40px", color: "white", fontWeight: "700", fontSize: "18px", border: "none", cursor: "pointer", transition: "background 0.2s" }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "#0284c7")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "#0d2a4a")}
+                style={{ clipPath: "polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%)", background: "#0284c7", padding: "16px 40px", color: "white", fontWeight: "700", fontSize: "18px", border: "none", cursor: "pointer", transition: "background 0.2s" }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "#0369a1")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "#0284c7")}
               >
                 Load More
               </button>
             ) : (
               <button
                 onClick={() => setVisibleCards(4)}
-                style={{ clipPath: "polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%)", background: "#0d2a4a", padding: "16px 40px", color: "white", fontWeight: "700", fontSize: "18px", border: "none", cursor: "pointer", transition: "background 0.2s" }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "#0284c7")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "#0d2a4a")}
+                style={{ clipPath: "polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%)", background: "#0284c7", padding: "16px 40px", color: "white", fontWeight: "700", fontSize: "18px", border: "none", cursor: "pointer", transition: "background 0.2s" }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "#0369a1")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "#0284c7")}
               >
                 Load Less
               </button>
