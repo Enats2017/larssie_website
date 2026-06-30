@@ -17,7 +17,7 @@ export default function Home(): JSX.Element {
       <Hero />
       <WorldMap />
       <EventsCards/>
-      <Partners />
+      {/* <Partners /> */}
     </div>
   );
 }
