@@ -3,13 +3,15 @@ import NavbarBrand from '@/components/NavbarBrand'
 import Hero from '@/components/Hero'
 import WorldMap from '@/components/WorldMap'
 import EventsCards from '@/components/EventsCards'
-import Partners from '@/components/Partners'
+// import Partners from '@/components/Partners'
+import SideDock from '@/components/SideDock'
 
 
 
 const BRAND_ID = 1
 const EVENT_ID = 78
 const BASE_URL = 'http://91.99.229.154'
+// const BASE_URL = 'http://localhost'
 
 function resolveUrl(path: string | null | undefined): string | null {
     if (!path) return null
@@ -77,7 +79,7 @@ export default async function BrandPage() {
             />
             <WorldMap />
             <EventsCards />
-            <Partners />
+            {/* <Partners /> */}
         </div>
     )
 }
