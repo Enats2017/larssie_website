@@ -80,6 +80,7 @@ export default async function BrandPage() {
             <WorldMap />
             <EventsCards />
             {/* <Partners /> */}
+            <SideDock />
         </div>
     )
 }

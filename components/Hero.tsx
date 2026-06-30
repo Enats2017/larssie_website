@@ -45,7 +45,7 @@ export default function Hero({ brand_name = "", description = "", cta_buttons = 
       <div className="absolute inset-0 bg-black/40" />
 
       {/* Content */}
-      <div className="relative z-10 flex items-center h-full px-8 md:px-16">
+      <div className="relative z-10 flex items-center h-full px-8 md:px-16 xl:pl-32">
         <div className="max-w-4xl text-white">
 
           {/* Brand Name */}

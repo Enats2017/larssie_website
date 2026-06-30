@@ -24,20 +24,12 @@ export default function WorldMap(): React.ReactElement {
     map.current = new mapboxgl.Map({
       container: mapContainer.current!,
       style: "mapbox://styles/mapbox/streets-v12",
-      center: [0, 20],
-      zoom: 1.2,
+    center: [8, 50],
+      zoom: 3.5,
       projection: "mercator",
     });
 
     const locations: Location[] = [
-      {
-        coords: [-72.5754, 44.2601],
-        title: "Vermont Gran Fondo",
-        date: "28 June",
-        country: "USA",
-        description:
-          "The Vermont Gran Fondo (VTGF) was born from a famous bucket-list epic 4-gap ride known by cyclists around the world.",
-      },
       {
         coords: [2.3522, 48.8566],
         title: "Paris Cycling Tour",
@@ -47,20 +39,28 @@ export default function WorldMap(): React.ReactElement {
           "Experience one of the most beautiful cycling routes through the iconic roads of Paris.",
       },
       {
-        coords: [77.209, 28.6139],
-        title: "Delhi Race",
-        date: "12 August",
-        country: "India",
+        coords: [12.4964, 41.9028],
+        title: "Rome Gran Fondo",
+        date: "5 May",
+        country: "Italy",
         description:
-          "Ride through historic streets and modern city landscapes in this exciting Indian cycling event.",
+          "Ride through ancient streets and rolling countryside on this historic Italian cycling route.",
       },
       {
-        coords: [151.2093, -33.8688],
-        title: "Sydney Ride",
-        date: "22 September",
-        country: "Australia",
+        coords: [4.9041, 52.3676],
+        title: "Amsterdam Classic",
+        date: "20 June",
+        country: "Netherlands",
         description:
-          "Explore coastal cycling routes and world-famous city roads in Sydney.",
+          "A flat, fast circuit through canals and countryside, perfect for both pros and amateurs.",
+      },
+      {
+        coords: [13.405, 52.52],
+        title: "Berlin Endurance Ride",
+        date: "10 August",
+        country: "Germany",
+        description:
+          "A challenging long-distance ride through the heart of Berlin and its surrounding forests.",
       },
     ];
 
