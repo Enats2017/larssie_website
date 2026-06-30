@@ -20,7 +20,7 @@ type HeroProps = {
   bg_desktop:  string | null
 }
 
-export default function Hero({ brand_name, description, cta_buttons, bg_desktop }: HeroProps) {
+export default function Hero({ brand_name = "", description = "", cta_buttons = [], bg_desktop = null }: HeroProps) {
   return (
     <section className="relative w-full h-screen overflow-hidden">
 
