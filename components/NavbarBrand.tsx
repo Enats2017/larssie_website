@@ -138,7 +138,7 @@ function FieldText({ field, isOpen, onToggle, hasChildren, lang }: {
     <div>
       <div
         onClick={() => hasChildren && onToggle?.()}
-        className={`flex items-center justify-between gap-2 mb-1 ${hasChildren ? 'cursor-pointer group' : ''}`}
+        className={`flex items-center justify-between gap-2 ${hasChildren ? 'cursor-pointer group' : ''}`}
       >
         <p className={`text-sm font-bold text-[#0d2a4a] transition-colors ${hasChildren ? 'group-hover:text-sky-500' : ''}`}>
           {field.section_heading_en}
@@ -248,7 +248,7 @@ function ColumnWithToggle({ fields, lang }: { fields: MenuField[], lang: string 
   }
 
   return (
-    <div className="flex flex-col gap-3">
+   <div className="flex flex-col gap-3">
       {parents.map((field) => {
         if (field.type !== 'text') {
           return <Field key={field.id} field={field} lang={lang} />
@@ -260,7 +260,7 @@ function ColumnWithToggle({ fields, lang }: { fields: MenuField[], lang: string 
         const isOpen = openSections.has(field.id)
 
         return (
-          <div key={field.id} className="mb-2">
+          <div key={field.id}>
             <div
               onClick={() => hasChildren && toggleSection(field.id)}
               className={`flex items-center justify-between gap-2 ${hasChildren ? 'cursor-pointer group' : ''}`}
@@ -282,7 +282,7 @@ function ColumnWithToggle({ fields, lang }: { fields: MenuField[], lang: string 
             </div>
 
             {isOpen && hasChildren && (
-              <div className="flex flex-col gap-0.5 mt-1">
+              <div className="flex flex-col gap-0">
                 {fieldChildren.map((child) => (
                   <a
                     key={child.id}
@@ -315,7 +315,7 @@ function MegaMenu({ tabs, activeTabId, onMouseEnter, onMouseLeave, lang }: {
     <div onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}
       className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[90vw] max-w-6xl bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden z-50">
       {colKeys.length > 0 ? (
-        <div className="grid gap-6 p-6 items-start" style={{ gridTemplateColumns: `repeat(${Math.min(cols, colKeys.length)}, minmax(0, 1fr))` }}>
+        <div className="grid gap-4 p-4 items-start" style={{ gridTemplateColumns: `repeat(${Math.min(cols, colKeys.length)}, minmax(0, 1fr))` }}>
           {colKeys.map((col) => <ColumnWithToggle key={col} fields={byColumn[col]} lang={lang} />)}
         </div>
       ) : (
