@@ -93,3 +93,150 @@
 .animation-delay-2000 {
   animation-delay: 2s;
 }
+/* ── EventsCards buttons ── */
+.filter-btn {
+  position: relative;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: #36A5DD;
+  width: 200px;
+  padding: 18px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.08em;
+  box-shadow: 0 4px 14px rgba(54,165,221,0.25);
+  transition: color 600ms ease-in-out;
+}
+.filter-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: white;
+  border-radius: 9999px;
+  transform: translateX(-110%);
+  transition: transform 600ms ease-in-out;
+  z-index: 1;
+}
+.filter-btn:hover::before { transform: translateX(0%); }
+.filter-btn:hover { color: #36A5DD; }
+.filter-btn span, .filter-btn svg { position: relative; z-index: 2; pointer-events: none; }
+
+.option-btn {
+  position: relative;
+  overflow: hidden;
+  clip-path: polygon(6% 0%, 100% 0%, 94% 100%, 0% 100%);
+  background: #36A5DD;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  font-size: 17px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  border: none;
+  transition: color 600ms ease-in-out;
+}
+.option-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: white;
+  transform: translateX(-110%);
+  transition: transform 600ms ease-in-out;
+  z-index: 1;
+}
+.option-btn:hover::before,
+.option-btn.selected::before { transform: translateX(0%); }
+.option-btn:hover,
+.option-btn.selected { color: #36A5DD; }
+.option-btn span { position: relative; z-index: 2; pointer-events: none; }
+
+.region-btn {
+  position: relative;
+  overflow: hidden;
+  clip-path: polygon(6% 0%, 100% 0%, 94% 100%, 0% 100%);
+  background: #36A5DD;
+  min-height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 10px 24px;
+  gap: 14px;
+  font-size: 20px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  border: none;
+  transition: color 600ms ease-in-out;
+}
+.region-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: white;
+  transform: translateX(-110%);
+  transition: transform 600ms ease-in-out;
+  z-index: 1;
+}
+.region-btn:hover::before,
+.region-btn.selected::before { transform: translateX(0%); }
+.region-btn:hover,
+.region-btn.selected { color: #36A5DD; }
+.region-btn span,
+.region-btn svg { position: relative; z-index: 2; pointer-events: none; }
+.region-btn svg { fill: currentColor; }
+
+.load-btn {
+  position: relative;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: #36A5DD;
+  padding: 16px 40px;
+  color: white;
+  font-weight: 700;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(54,165,221,0.25);
+  transition: color 600ms ease-in-out;
+}
+.load-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: white;
+  border-radius: 9999px;
+  transform: translateX(-110%);
+  transition: transform 600ms ease-in-out;
+  z-index: 1;
+}
+.load-btn:hover::before { transform: translateX(0%); }
+.load-btn:hover { color: #36A5DD; }
+.load-btn span { position: relative; z-index: 2; pointer-events: none; }
+
+/* responsive */
+.filters-wrapper { max-width: 900px; margin: 0 auto 110px; position: relative; }
+.filter-outer-row { display: flex; justify-content: center; align-items: center; flex-wrap: nowrap; gap: 0; }
+.filter-row { display: flex; flex-wrap: nowrap; justify-content: center; align-items: center; gap: 12px; }
+.cards-grid { max-width: 1152px; margin: 0 auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; }
+.dropdown-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.reset-btn { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; color: #0d2a4a; background: none; border: none; cursor: pointer; transition: color 0.2s; letter-spacing: 0.08em; padding: 0 0 0 20px; white-space: nowrap; }
+.reset-btn:hover { color: #38bdf8; }
+
+@media (max-width: 860px) {
+  .filter-outer-row { flex-direction: column; align-items: stretch; gap: 0; }
+  .filter-btn { width: 100%; border-radius: 9999px; margin: 0; }
+  .filter-row { flex-direction: column; align-items: stretch; gap: 8px; width: 100%; }
+  .reset-btn { justify-content: center; padding: 0; margin-top: 12px; }
+  .cards-grid { grid-template-columns: 1fr; gap: 24px; }
+  .dropdown-grid { grid-template-columns: 1fr; }
+}

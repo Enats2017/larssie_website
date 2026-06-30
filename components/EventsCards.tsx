@@ -3,219 +3,7 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp, RotateCw } from "lucide-react";
 
-const responsiveStyles = `
-  .filters-wrapper {
-    max-width: 900px;
-    margin: 0 auto 110px;
-    position: relative;
-  }
-  .filter-outer-row {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: nowrap;
-    gap: 0;
-  }
-  .filter-row {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-  }
 
-  /* ── Filter button: white slides in from left, text turns sky-blue ── */
-  .filter-btn {
-    position: relative;
-    overflow: hidden;
-    border-radius: 9999px;
-    background: #36A5DD;
-    width: 200px;
-    padding: 18px 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    border: none;
-    cursor: pointer;
-    color: white;
-    font-weight: 700;
-    font-size: 17px;
-    letter-spacing: 0.08em;
-    box-shadow: 0 4px 14px rgba(2,132,199,0.25);
-    transition: color 0.6s ease-in-out, transform 0.2s, box-shadow 0.2s;
-  }
-  .filter-btn::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: white;
-    border-radius: 9999px;
-    transform: translateX(-110%);
-    transition: transform 0.6s ease-in-out;
-    z-index: 1;
-  }
-  .filter-btn:hover::before,
-  .filter-btn.active-filter::before { transform: translateX(0); }
-  .filter-btn:hover,
-  .filter-btn.active-filter { color: #36A5DD; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(54,165,221,0.35); }
-  .filter-btn span, .filter-btn svg { position: relative; z-index: 2; }
-
-  .reset-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 700;
-    font-size: 15px;
-    color: white;
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: color 0.2s;
-    letter-spacing: 0.08em;
-    padding: 0 0 0 20px;
-    white-space: nowrap;
-  }
-  .reset-btn:hover { color: #38bdf8; }
-
-  .cards-grid {
-    max-width: 1152px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 32px;
-  }
-  .dropdown-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
-
-  /* ── Option button: white slides in from left, text turns sky-blue ── */
-  .option-btn {
-    position: relative;
-    overflow: hidden;
-    clip-path: polygon(6% 0%, 100% 0%, 94% 100%, 0% 100%);
-    background: #36A5DD;
-    min-height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 20px;
-    font-size: 17px;
-    font-weight: 600;
-    color: white;
-    cursor: pointer;
-    border: none;
-    transition: color 0.6s ease-in-out;
-  }
-  .option-btn::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: white;
-    transform: translateX(-110%);
-    transition: transform 0.6s ease-in-out;
-    z-index: 1;
-  }
-  .option-btn:hover::before,
-  .option-btn.selected::before { transform: translateX(0); }
-  .option-btn:hover,
-  .option-btn.selected { color: #36A5DD; }
-  .option-btn span { position: relative; z-index: 2; }
-
-  /* ── Region button: same sliding white effect ── */
-  .region-btn {
-    position: relative;
-    overflow: hidden;
-    clip-path: polygon(6% 0%, 100% 0%, 94% 100%, 0% 100%);
-    background: #36A5DD;
-    min-height: 90px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 10px 24px;
-    gap: 14px;
-    font-size: 20px;
-    font-weight: 600;
-    color: white;
-    cursor: pointer;
-    border: none;
-    transition: color 0.6s ease-in-out;
-  }
-  .region-btn::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: white;
-    transform: translateX(-110%);
-    transition: transform 0.6s ease-in-out;
-    z-index: 1;
-  }
-  .region-btn:hover::before,
-  .region-btn.selected::before { transform: translateX(0); }
-  .region-btn:hover,
-  .region-btn.selected { color: #36A5DD; }
-  .region-btn span,
-  .region-btn svg { position: relative; z-index: 2; }
-  /* SVG fill also flips on hover/selected via currentColor */
-  .region-btn svg { fill: currentColor; }
-
-  /* ── Load More / Load Less button ── */
-  .load-btn {
-    position: relative;
-    overflow: hidden;
-    border-radius: 9999px;
-    background: #36A5DD;
-    padding: 16px 40px;
-    color: white;
-    font-weight: 700;
-    font-size: 18px;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 4px 14px rgba(54,165,221,0.25);
-    transition: color 0.6s ease-in-out, transform 0.2s, box-shadow 0.2s;
-  }
-  .load-btn::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: white;
-    border-radius: 9999px;
-    transform: translateX(-110%);
-    transition: transform 0.6s ease-in-out;
-    z-index: 1;
-  }
-  .load-btn:hover::before { transform: translateX(0); }
-  .load-btn:hover { color: #36A5DD; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(54,165,221,0.35); }
-  .load-btn span { position: relative; z-index: 2; }
-
-  @media (max-width: 860px) {
-    .filter-outer-row {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 0;
-    }
-    .filter-btn {
-      width: 100%;
-      border-radius: 9999px;
-      margin: 0;
-    }
-    .filter-row {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 8px;
-      width: 100%;
-    }
-    .reset-btn {
-      justify-content: center;
-      padding: 0;
-      margin-top: 12px;
-    }
-    .cards-grid { grid-template-columns: 1fr; gap: 24px; }
-    .dropdown-grid { grid-template-columns: 1fr; }
-  }
-`;
 
 type Region = "Asia" | "Europe" | "Africa" | "Oceania" | "America";
 type FilterKey = "date" | "circuit" | "region" | "category" | "";
@@ -311,7 +99,7 @@ const FilterButton = ({ filterKey, label, selectedValue, activeFilter, setActive
   const isActive = activeFilter === filterKey;
   return (
     <button
-      className={`filter-btn${isActive || selectedValue ? " active-filter" : ""}`}
+      className="filter-btn"
       onClick={() => setActiveFilter(isActive ? "" : filterKey)}
     >
       <span>{selectedValue ? selectedValue.toUpperCase() : label}</span>
@@ -377,7 +165,7 @@ export default function EventsCards(): JSX.Element {
 
   return (
     <>
-      <style suppressHydrationWarning>{responsiveStyles}</style>
+    
       <section style={{ background: "#ffffff", padding: "20px 24px 80px", color: "#0d2a4a" }}>
 
         {/* Section heading */}
@@ -398,7 +186,7 @@ export default function EventsCards(): JSX.Element {
               <FilterButton filterKey="region" label="REGION" selectedValue={region} activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
               <FilterButton filterKey="category" label="CATEGORY" selectedValue={category} activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
             </div>
-            <button className="reset-btn" style={{ color: "#0d2a4a" }} onClick={resetFilters}>
+            <button className="reset-btn" onClick={resetFilters}>
               <RotateCw size={16} style={{ color: "#0284c7" }} />
               RESET ALL
             </button>
