@@ -145,6 +145,7 @@ model HeroBuilder {
   distance_id     Int?
   distance_name   String?   @db.VarChar(100)
   bg_img          String?   @db.LongText
+  mobile_background_image String? @db.VarChar(255) 
   race_photo      String?   @db.LongText
   badge_img       String?   @db.LongText
   brand_logo_img  String?   @db.LongText
@@ -383,66 +384,6 @@ model Product {
   @@index([live_result_url])
   @@map("oc_product")
 }
-
-model GearupBuilder {
-  gearup_id         Int      @id @default(autoincrement())
-  brand_id          Int
-  event_id          Int
-  distance_id       Int?
-  title_word        String?  @db.VarChar(100)
-  title_script      String?  @db.VarChar(100)
-  mandatory_title   String?  @db.VarChar(255)
-  mandatory_desc    String?  @db.Text
-  mandatory_icon    String?  @db.VarChar(255)
-  recommended_title String?  @db.VarChar(255)
-  recommended_desc  String?  @db.Text
-  recommended_icon  String?  @db.VarChar(255)
-  mandatory_items   String?  @db.LongText
-  recommended_items String?  @db.LongText
-  created_at        DateTime @default(now())
-  updated_at        DateTime @updatedAt
-
-  link_cards GearupLinkCard[]
-
-  @@map("gearup_builder")
-}
-
-model GearupLinkCard {
-  card_id    Int      @id @default(autoincrement())
-  gearup_id  Int
-  card_title String?  @db.VarChar(255)
-  card_image String?  @db.LongText
-  card_url   String?  @db.Text
-  sort_order Int      @default(0)
-  created_at DateTime @default(now())
-
-  gearup GearupBuilder @relation(fields: [gearup_id], references: [gearup_id])
-
-  @@map("gearup_link_cards")
-}
-
-model InfoBuilder {
-  info_id     Int      @id @default(autoincrement())
-  brand_id    Int
-  event_id    Int
-  distance_id Int?
-  sort_order  Int      @default(0)
-  tagline     String   @db.VarChar(150)
-  title       String   @db.VarChar(150)
-  alt_label   String   @db.VarChar(100)
-  altitude    String   @db.VarChar(100)
-  description String?  @db.Text
-  cta_text    String   @db.VarChar(150)
-  cta_link    String   @db.VarChar(500)
-  faq_link    String   @db.VarChar(500)
-  faq_icon    String   @db.VarChar(100)
-  media_type  String   @db.VarChar(10)
-  image_path  String   @db.VarChar(500)
-  video_path  String   @db.VarChar(500)
-  video_url   String   @db.VarChar(500)
-
-  @@map("info_builder")
-}
 model CourseBuilder {
   course_id         Int      @id @default(autoincrement())
   brand_id          Int
@@ -485,6 +426,49 @@ model CourseBuilder {
   created_at        DateTime? @default(now())
   updated_at        DateTime? @updatedAt
 
+  description    String?  @db.Text
+  description_nl String?  @db.Text
+  description_fr String?  @db.Text
+
+  title_word_nl   String?  @db.VarChar(100)
+  title_word_fr   String?  @db.VarChar(100)
+  title_script_nl String?  @db.VarChar(100)
+  title_script_fr String?  @db.VarChar(100)
+  tech_name_nl    String?  @db.VarChar(100)
+  tech_name_fr    String?  @db.VarChar(100)
+  tech_label_nl   String?  @db.VarChar(255)
+  tech_label_fr   String?  @db.VarChar(255)
+  terrain_name_nl  String? @db.VarChar(100)
+  terrain_name_fr  String? @db.VarChar(100)
+  terrain_line1_nl String? @db.VarChar(255)
+  terrain_line1_fr String? @db.VarChar(255)
+  terrain_line2_nl String? @db.VarChar(255)
+  terrain_line2_fr String? @db.VarChar(255)
+  metric1_name_nl  String? @db.VarChar(255)
+  metric1_name_fr  String? @db.VarChar(255)
+  metric1_sub_nl   String? @db.VarChar(255)
+  metric1_sub_fr   String? @db.VarChar(255)
+  metric1_value_nl String? @db.VarChar(255)
+  metric1_value_fr String? @db.VarChar(255)
+  metric2_name_nl  String? @db.VarChar(255)
+  metric2_name_fr  String? @db.VarChar(255)
+  metric2_sub_nl   String? @db.VarChar(255)
+  metric2_sub_fr   String? @db.VarChar(255)
+  metric2_value_nl String? @db.VarChar(255)
+  metric2_value_fr String? @db.VarChar(255)
+  metric3_name_nl  String? @db.VarChar(255)
+  metric3_name_fr  String? @db.VarChar(255)
+  metric3_sub_nl   String? @db.VarChar(255)
+  metric3_sub_fr   String? @db.VarChar(255)
+  metric3_value_nl String? @db.VarChar(255)
+  metric3_value_fr String? @db.VarChar(255)
+  metric4_name_nl  String? @db.VarChar(255)
+  metric4_name_fr  String? @db.VarChar(255)
+  metric4_sub_nl   String? @db.VarChar(255)
+  metric4_sub_fr   String? @db.VarChar(255)
+  metric4_value_nl String? @db.VarChar(255)
+  metric4_value_fr String? @db.VarChar(255)
+
   @@index([brand_id])
   @@index([event_id])
   @@map("course_builder")
@@ -494,6 +478,8 @@ model CourseLinkCards {
   card_id    Int       @id @default(autoincrement())
   course_id  Int
   card_title String?   @db.VarChar(255)
+  card_title_nl String?   @db.VarChar(255)
+  card_title_fr String?   @db.VarChar(255)
   card_image String?   @db.LongText
   card_url   String?   @db.Text
   sort_order Int?      @default(0)
@@ -501,4 +487,264 @@ model CourseLinkCards {
 
   @@index([course_id])
   @@map("course_link_cards")
+}
+enum InfoBuilderLayoutType {
+  side
+  side_left @map("side-left")
+  background
+}
+
+enum InfoBuilderMediaType {
+  image
+  video
+}
+
+model InfoBuilder {
+  info_id     Int      @id @default(autoincrement())
+  brand_id    Int
+  event_id    Int
+  distance_id Int?
+  sort_order  Int      @default(0)
+
+  tagline     String   @db.VarChar(150)
+  title       String   @db.VarChar(150)
+  alt_label   String   @default("ALTITUDE") @db.VarChar(100)
+  altitude    String   @db.VarChar(100)
+  description String?  @db.Text
+
+  cta_text    String   @db.VarChar(150)
+  cta_link    String   @db.VarChar(500)
+
+  faq_link    String   @db.VarChar(500)
+  faq_text    String   @default("FREQUENTLY ASKED QUESTIONS") @db.VarChar(150)
+  faq_icon    String   @default("fa-question-circle") @db.VarChar(100)
+
+  layout_type InfoBuilderLayoutType? @default(side)
+  media_type  InfoBuilderMediaType   @default(image)
+
+  image_path  String   @db.VarChar(500)
+  video_path  String   @db.VarChar(500)
+  video_url   String   @db.VarChar(500)
+
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  @@index([brand_id])
+  @@index([event_id])
+  @@index([distance_id])
+  @@map("info_builder")
+}
+
+model gearup_builder {
+  gearup_id          Int      @id @default(autoincrement())
+  brand_id           Int
+  event_id           Int
+  distance_id        Int
+  title_word         String?  @db.VarChar(255)
+  title_script       String?  @db.VarChar(255)
+  mandatory_title    String?  @db.VarChar(255)
+  mandatory_desc     String?  @db.Text
+  mandatory_icon     String?  @db.VarChar(255)
+  recommended_title  String?  @db.VarChar(255)
+  recommended_desc   String?  @db.Text
+  recommended_icon   String?  @db.VarChar(255)
+  mandatory_items    String?  @db.LongText
+  recommended_items  String?  @db.LongText
+  created_at         DateTime? @default(now())
+  updated_at         DateTime? @updatedAt
+  gearup_link_cards  gearup_link_cards[]
+
+  @@index([event_id, distance_id])
+}
+
+model gearup_link_cards {
+  card_id        Int    @id @default(autoincrement())
+  gearup_id      Int
+  card_title     String? @db.VarChar(255)
+  card_image     String? @db.VarChar(500)
+  card_url       String? @db.VarChar(500)
+  sort_order     Int     @default(0)
+  gearup_builder gearup_builder @relation(fields: [gearup_id], references: [gearup_id])
+}
+
+model sponsor_builder {
+  sponsor_id   Int      @id @default(autoincrement())
+  brand_id     Int
+  event_id     Int
+  distance_id  String   @db.VarChar(100)
+  title_word   String?  @db.VarChar(255)
+  title_script String?  @db.VarChar(255)
+  description  String?  @db.Text
+  created_at   DateTime? @default(now())
+  updated_at   DateTime? @updatedAt
+
+  sponsor_logos sponsor_logos[]
+
+  @@index([event_id, brand_id, distance_id])
+}
+
+model sponsor_logos {
+  logo_id         Int      @id @default(autoincrement())
+  sponsor_id      Int
+  logo_name       String?  @db.VarChar(255)
+  logo_image      String?  @db.VarChar(500)
+  logo_url        String?  @db.VarChar(500)
+  sort_order      Int      @default(0)
+
+  sponsor_builder sponsor_builder @relation(fields: [sponsor_id], references: [sponsor_id])
+
+  @@index([sponsor_id])
+}
+
+model aidStationBuilder {
+  aid_station_id       Int       @id @default(autoincrement())
+  brand_id              Int
+  event_id              Int
+  distance_id           String?   @db.VarChar(100)
+  title_word            String?   @db.VarChar(100)
+  title_word_nl         String?   @db.VarChar(100)
+  title_word_fr         String?   @db.VarChar(100)
+  title_script          String?   @db.VarChar(100)
+  title_script_nl       String?   @db.VarChar(100)
+  title_script_fr       String?   @db.VarChar(100)
+  stations              String?   @db.LongText
+  created_at            DateTime? @default(now())
+  updated_at            DateTime? @updatedAt
+  bg_img                String?   @db.VarChar(255)
+  overlay_opacity       Int?      @default(40)
+  cta_label             String?   @db.VarChar(255) @default("Use Livio")
+  cta_label_nl          String?   @db.VarChar(255)
+  cta_label_fr          String?   @db.VarChar(255)
+  cta_url               String?   @db.VarChar(500)
+  cta_show              Int?      @default(1) @db.TinyInt
+  station_col_icon      String?   @db.VarChar(100) @default("fa-solid fa-location-dot")
+  station_col_label     String?   @db.VarChar(100) @default("STATIONS")
+  station_col_label_nl  String?   @db.VarChar(100)
+  station_col_label_fr  String?   @db.VarChar(100)
+
+  @@map("aid_station_builder")
+}
+
+
+model timeline_builder {
+  timeline_id   Int              @id @default(autoincrement())
+  brand_id      Int
+  event_id      Int
+  distance_id   Int
+  title_word    String?          @default("TIMELINE")
+  title_script  String?          @default("50k distance")
+  title_word_nl String?
+  title_word_fr String?
+  title_script_nl String?
+  title_script_fr String?
+  created_at    DateTime?        @default(now())
+  updated_at    DateTime?        @updatedAt
+  items         timeline_items[]
+
+  @@index([event_id])
+}
+
+model timeline_items {
+  item_id         Int               @id @default(autoincrement())
+  timeline_id     Int
+  day_label       String?
+  day_label_nl    String?
+  day_label_fr    String?
+  time_label      String?
+  time_label_nl   String?
+  time_label_fr   String?
+  item_title      String?
+  item_title_nl   String?
+  item_title_fr   String?
+  item_subtitle   String?
+  item_subtitle_nl String?
+  item_subtitle_fr String?
+  sort_order      Int?             @default(0)
+  builder         timeline_builder @relation(fields: [timeline_id], references: [timeline_id])
+
+  @@index([timeline_id])
+}
+
+model HeroEventBuilder {
+  id              Int       @id @default(autoincrement())
+  brand_id        Int
+  event_id        Int
+  menu_id         Int?
+  bg_desktop      String?   @db.VarChar(500)
+  bg_mobile       String?   @db.VarChar(500)
+  overlay_opacity Int       @default(40) @db.TinyInt
+  event_name      String    @db.VarChar(255)
+  race_title      String    @db.VarChar(255)
+  race_date       DateTime? @db.Date
+  description     String?   @db.Text
+  sidebar_stats   Json?
+  cta_buttons     Json?
+  bottom_stats    Json?
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+
+  @@index([brand_id])
+  @@index([event_id])
+  @@map("hero_event_builder")
+}
+
+
+model FooterBuilder {
+  footer_id           Int    @id @default(autoincrement()) @db.UnsignedInt
+  brand_id            Int    @db.UnsignedInt
+  event_id            Int    @db.UnsignedInt
+  distance_id         Int    @db.UnsignedInt
+  social_icons        Json
+  distance_heading    String @default("Choose Your Distance") @db.VarChar(120)
+  distance_heading_nl String @default("") @db.VarChar(120)
+  distance_heading_fr String @default("") @db.VarChar(120)
+  distance_items      Json
+  quick_heading       String @default("Quick Links") @db.VarChar(120)
+  quick_heading_nl    String @default("") @db.VarChar(120)
+  quick_heading_fr    String @default("") @db.VarChar(120)
+  quick_items         Json
+  engage_heading      String @default("Engage With Us") @db.VarChar(120)
+  engage_heading_nl   String @default("") @db.VarChar(120)
+  engage_heading_fr   String @default("") @db.VarChar(120)
+  engage_items        Json
+  explore_heading     String @default("Explore With us") @db.VarChar(120)
+  explore_heading_nl  String @default("") @db.VarChar(120)
+  explore_heading_fr  String @default("") @db.VarChar(120)
+  explore_items       Json
+  cta_line1           String @default("SEE YOU AT") @db.VarChar(120)
+  cta_line1_nl        String @default("") @db.VarChar(120)
+  cta_line1_fr        String @default("") @db.VarChar(120)
+  cta_line2           String @default("THE START LINE") @db.VarChar(120)
+  cta_line2_nl        String @default("") @db.VarChar(120)
+  cta_line2_fr        String @default("") @db.VarChar(120)
+  register_text       String @default("Register Now") @db.VarChar(80)
+  register_text_nl    String @default("") @db.VarChar(80)
+  register_text_fr    String @default("") @db.VarChar(80)
+  register_link       String @default("#") @db.VarChar(500)
+  member_text         String @default("Become Member") @db.VarChar(80)
+  member_text_nl      String @default("") @db.VarChar(80)
+  member_text_fr      String @default("") @db.VarChar(80)
+  member_link         String @default("#") @db.VarChar(500)
+  mail_label          String @default("Mail Us:") @db.VarChar(80)
+  mail_label_nl       String @default("") @db.VarChar(80)
+  mail_label_fr       String @default("") @db.VarChar(80)
+  mail_email          String @default("") @db.VarChar(200)
+  copyright_text      String @default("") @db.VarChar(300)
+  copyright_text_nl   String @default("") @db.VarChar(300)
+  copyright_text_fr   String @default("") @db.VarChar(300)
+
+  @@map("footer_builder")
+}
+
+model MenuColorSettings {
+  id              Int     @id @default(autoincrement())
+  menu_id         Int     // just a plain field, no relation
+  nav_type        String  @db.VarChar(50)
+  navbar_bg_color String  @db.VarChar(20)
+  text_color      String  @db.VarChar(20)
+  underline_color String  @db.VarChar(20)
+  font_family     String  @db.VarChar(100)
+  theme           String  @db.VarChar(50)
+
+  @@map("oc_menu_color_settings")
 }

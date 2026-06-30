@@ -46,13 +46,6 @@ type MenuField = {
   text_block_body: string | null
   sort_order: number
   num_cols: number
-  link_nl: string | null
-  link_fr: string | null
-  section_heading_nl: string | null
-  section_heading_fr: string | null
-  section_link_en: string | null
-  section_link_nl: string | null
-  section_link_fr: string | null
 }
 
 type MenuTab = {
@@ -68,8 +61,6 @@ type Props = {
   tabs: MenuTab[]
   brand_logo: string | null
   lang: string
-  searchParams: Record<string, string>
-  navbarBg: string  // 👈 add this line
 }
 
 // ── Field renderers ────────────────────────────────────────────────────────
@@ -122,6 +113,7 @@ function FieldIcon({ field }: { field: MenuField }) {
     <a
       href={field.link_en ?? '#'}
       className="flex flex-row gap-3 items-center group px-3 py-2 transition-colors"
+
     >
       {field.icon && (
         <span
@@ -144,14 +136,12 @@ function FieldIcon({ field }: { field: MenuField }) {
   )
 }
 
-function FieldText({ field, isOpen, onToggle, hasChildren, lang }: {
+function FieldText({ field, isOpen, onToggle, hasChildren }: {
   field: MenuField
   isOpen?: boolean
   onToggle?: () => void
   hasChildren?: boolean
-  lang?: string
 }) {
-
   const isSubsection = !!field.label
 
   if (isSubsection) {
@@ -160,11 +150,12 @@ function FieldText({ field, isOpen, onToggle, hasChildren, lang }: {
         href={field.link_en ?? '#'}
         className="text-[11px] font-normal tracking-wider uppercase text-gray-400 hover:text-sky-500 transition-colors block py-1"
       >
-        {lang === 'nl' ? (field.section_heading_nl || field.section_heading_en) : lang === 'fr' ? (field.section_heading_fr || field.section_heading_en) : field.section_heading_en}
+        {field.section_heading_en}
       </a>
     )
   }
 
+  // Parent/section — bold dark text, arrow if has children
   return (
     <div>
       <div
@@ -172,11 +163,12 @@ function FieldText({ field, isOpen, onToggle, hasChildren, lang }: {
         className={`flex items-center justify-between gap-2 mb-1 ${hasChildren ? 'cursor-pointer group' : ''}`}
       >
         <p className={`text-sm font-bold text-[#0d2a4a] transition-colors ${hasChildren ? 'group-hover:text-sky-500' : ''}`}>
-          {lang === 'nl' ? (field.section_heading_nl || field.section_heading_en) : lang === 'fr' ? (field.section_heading_fr || field.section_heading_en) : field.section_heading_en}
+          {field.section_heading_en}
         </p>
         {hasChildren && (
           <svg
-            className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180 text-sky-500' : 'text-sky-400'}`}
+            className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180 text-sky-500' : 'text-sky-400'
+              }`}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -253,15 +245,15 @@ function FieldExtra({ field }: { field: MenuField }) {
   return null
 }
 
-function Field({ field, lang }: { field: MenuField, lang: string }) {
+function Field({ field }: { field: MenuField }) {
   if (field.extra_type) return <FieldExtra field={field} />
   if (field.type === 'image') return <FieldImage field={field} />
   if (field.type === 'icon') return <FieldIcon field={field} />
-  if (field.type === 'text') return <FieldText field={field} lang={lang} />
+  if (field.type === 'text') return <FieldText field={field} />
   return null
 }
 
-function ColumnWithToggle({ fields, lang }: { fields: MenuField[], lang: string }) {
+function ColumnWithToggle({ fields }: { fields: MenuField[] }) {
   const [openSections, setOpenSections] = useState<Set<number>>(new Set())
 
   const toggleSection = (id: number) => {
@@ -272,14 +264,17 @@ function ColumnWithToggle({ fields, lang }: { fields: MenuField[], lang: string 
     })
   }
 
+  // Filter only English content fields
   const visibleFields = fields.filter(f => {
     if (f.type === 'text') return !!f.section_heading_en
     return true
   })
 
+  // Separate parents and children
   const parents = visibleFields.filter(f => f.label === null || f.type !== 'text')
   const children = visibleFields.filter(f => f.type === 'text' && f.label !== null)
 
+  // Group children under their parent by matching label (parent id as string)
   const childrenByParentId: Record<number, MenuField[]> = {}
   children.forEach(child => {
     const parentId = Number(child.label)
@@ -291,7 +286,7 @@ function ColumnWithToggle({ fields, lang }: { fields: MenuField[], lang: string 
     <div className="flex flex-col gap-3">
       {parents.map((field) => {
         if (field.type !== 'text') {
-          return <Field key={field.id} field={field} lang={lang} />
+          return <Field key={field.id} field={field} />
         }
 
         const fieldChildren = childrenByParentId[field.id] ?? []
@@ -304,15 +299,13 @@ function ColumnWithToggle({ fields, lang }: { fields: MenuField[], lang: string 
               onClick={() => hasChildren && toggleSection(field.id)}
               className={`flex items-center justify-between gap-2 ${hasChildren ? 'cursor-pointer group' : ''}`}
             >
-              <p
-                className={`text-sm font-bold text-[#0d2a4a] transition-colors leading-snug ${hasChildren ? 'group-hover:text-sky-500' : ''}`}
-                style={{ color: '#0d2a4a' }}
-              >
-                {lang === 'nl' ? (field.section_heading_nl || field.section_heading_en) : lang === 'fr' ? (field.section_heading_fr || field.section_heading_en) : field.section_heading_en}
+              <p className={`text-sm font-bold text-[#0d2a4a] transition-colors leading-snug ${hasChildren ? 'group-hover:text-sky-500' : ''}`} style={{ color: '#0d2a4a' }}>
+                {field.section_heading_en}
               </p>
               {hasChildren && (
                 <svg
-                  className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180 text-sky-500' : 'text-sky-400'}`}
+                  className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180 text-sky-500' : 'text-sky-400'
+                    }`}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -328,10 +321,10 @@ function ColumnWithToggle({ fields, lang }: { fields: MenuField[], lang: string 
                 {fieldChildren.map((child) => (
                   <a
                     key={child.id}
-                    href={(lang === 'nl' ? child.link_nl : lang === 'fr' ? child.link_fr : child.link_en) ?? child.link_en ?? '#'}
+                    href={child.link_en ?? '#'}
                     className="text-[11px] font-normal tracking-wider uppercase text-gray-400 hover:text-sky-500 transition-colors block py-1 pl-2"
                   >
-                    {lang === 'nl' ? (child.section_heading_nl || child.section_heading_en) : lang === 'fr' ? (child.section_heading_fr || child.section_heading_en) : child.section_heading_en}
+                    {child.section_heading_en}
                   </a>
                 ))}
               </div>
@@ -345,12 +338,16 @@ function ColumnWithToggle({ fields, lang }: { fields: MenuField[], lang: string 
 
 // ── Mega menu panel ────────────────────────────────────────────────────────
 
-function MegaMenu({ tabs, activeTabId, onMouseEnter, onMouseLeave, lang }: {
+function MegaMenu({
+  tabs,
+  activeTabId,
+  onMouseEnter,
+  onMouseLeave,
+}: {
   tabs: MenuTab[]
   activeTabId: number
   onMouseEnter: () => void
   onMouseLeave: () => void
-  lang: string
 }) {
   const currentTab = tabs.find((t) => t.id === activeTabId)
   if (!currentTab || currentTab.fields.length === 0) return null
@@ -377,8 +374,8 @@ function MegaMenu({ tabs, activeTabId, onMouseEnter, onMouseLeave, lang }: {
           style={{ gridTemplateColumns: `repeat(${Math.min(cols, colKeys.length)}, minmax(0, 1fr))` }}
         >
           {colKeys.map((col) => (
-  <ColumnWithToggle key={col} fields={byColumn[col]} lang={lang} />
-))}
+            <ColumnWithToggle key={col} fields={byColumn[col]} />
+          ))}
         </div>
       ) : (
         <p className="p-6 text-sm text-gray-400">No items yet.</p>
@@ -388,8 +385,8 @@ function MegaMenu({ tabs, activeTabId, onMouseEnter, onMouseLeave, lang }: {
 }
 
 // ── Navbar ─────────────────────────────────────────────────────────────────
-export default function Navbar({ tabs, brand_logo, lang, searchParams, navbarBg }: Props) {
-  console.log('=== ALL TABS DATA ===', JSON.stringify(tabs, null, 2))
+
+export default function Navbar({ tabs, brand_logo, lang }: Props) {
   const currentLang = lang.toUpperCase()
   const [menuOpen, setMenuOpen] = useState(false)
   const [megaOpen, setMegaOpen] = useState(false)
@@ -414,6 +411,7 @@ export default function Navbar({ tabs, brand_logo, lang, searchParams, navbarBg 
     leaveTimer.current = setTimeout(() => setMegaOpen(false), 120)
   }
 
+  // ✅ locked=menuOpen pauses hide-on-scroll while mobile menu is open
   const visible = useScrollDirection(10, menuOpen)
 
   return (
@@ -438,91 +436,57 @@ export default function Navbar({ tabs, brand_logo, lang, searchParams, navbarBg 
             <img
               src={imgUrl(brand_logo) ?? ''}
               alt="Brand Logo"
-              className="h-10 w-auto object-contain transition-transform duration-500 ease-out group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:scale-105"
+              className="h-10 w-auto object-contain
+      transition-transform duration-500 ease-out
+      group-hover:-translate-y-1 group-hover:translate-x-1
+      group-hover:scale-105"
             />
           ) : (
             <Image
               src={logo}
               alt="Trail Running"
-              className="h-10 w-auto object-contain transition-transform duration-500 ease-out group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:scale-105"
+              className="h-10 w-auto object-contain
+      transition-transform duration-500 ease-out
+      group-hover:-translate-y-1 group-hover:translate-x-1
+      group-hover:scale-105"
             />
           )}
         </Link>
 
         {/* Desktop nav tabs */}
-        <ul
-          className="hidden lg:flex items-center gap-4 xl:gap-8"
-          style={{ '--nav-color': navbarBg } as React.CSSProperties}
-        >
+        <ul className="hidden lg:flex items-center gap-4 xl:gap-8">
           {tabs.map((tab) => (
             <li key={tab.id} className="relative">
               <button
                 onMouseEnter={() => openMega(tab.id)}
                 onMouseLeave={closeMega}
-                style={{
-                  color: activeTabId === tab.id && megaOpen ? navbarBg : '#ffffff',
-                }}
                 className={`flex items-center gap-1 text-sm font-semibold tracking-wide transition-colors
-                  relative
-                  after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[2px]
-                  after:[background:var(--nav-color)]
-                  after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200
-                  ${activeTabId === tab.id && megaOpen ? 'after:scale-x-100' : ''}`}
-                onMouseEnter={(e) => {
-                  openMega(tab.id)
-                  ;(e.currentTarget as HTMLElement).style.color = navbarBg
-                }}
-                onMouseLeave={(e) => {
-                  closeMega()
-                  if (!(activeTabId === tab.id && megaOpen)) {
-                    ;(e.currentTarget as HTMLElement).style.color = '#ffffff'
-                  }
-                }}
+  relative after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[2px]
+  after:bg-sky-400 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200
+  ${activeTabId === tab.id && megaOpen ? 'text-white after:scale-x-100' : 'text-sky-400 hover:text-white'}`}
               >
                 {tab.tab_name.toUpperCase()}
+
               </button>
             </li>
           ))}
 
           <span className="w-px h-5 bg-white/30" />
 
-          {/* Language Dropdown */}
-          <div className="relative group">
-            <button
-              className="flex items-center gap-1 text-sm font-semibold transition-colors"
-              style={{ color: '#ffffff' }}
-              onMouseEnter={(e) => (e.currentTarget as HTMLElement).style.color = navbarBg}
-              onMouseLeave={(e) => (e.currentTarget as HTMLElement).style.color = '#ffffff'}
-            >
-              {currentLang}
-              <svg className="w-3.5 h-3.5 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            <div className="absolute top-full right-0 mt-2 w-24 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-              {['en', 'nl', 'fr'].map((l) => (
-                <a
-                  key={l}
-                  href={'?' + Object.entries({ ...searchParams, lang: l }).map(([k, v]) => `${k}=${v}`).join('&')}
-                  className={`block px-4 py-2 text-sm font-semibold transition-colors ${lang === l ? 'bg-sky-50' : 'text-[#0d2a4a] hover:bg-gray-50'}`}
-                  style={{ color: lang === l ? navbarBg : undefined }}
-                >
-                  {l.toUpperCase()}
-                </a>
-              ))}
-            </div>
-          </div>
+          {/* Language */}
+          <button className="flex items-center gap-1 text-sm font-semibold text-white hover:text-sky-300 transition-colors">
+            {currentLang}
+            <svg className="w-3.5 h-3.5 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
         </ul>
 
-        {/* Desktop right actions */}
         {/* Desktop right actions */}
         <div className="hidden lg:flex items-center gap-3 xl:gap-4">
           <button
             onClick={() => setDrawerOpen(true)}
-            className="transition-colors"
-            style={{ color: '#ffffff' }}
-            onMouseEnter={(e) => (e.currentTarget as HTMLElement).style.color = navbarBg}
-            onMouseLeave={(e) => (e.currentTarget as HTMLElement).style.color = '#ffffff'}
+            className="text-white hover:text-sky-300 transition-colors"
             aria-label="Notifications"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -531,34 +495,19 @@ export default function Navbar({ tabs, brand_logo, lang, searchParams, navbarBg 
           </button>
           <button
             onClick={() => setContactOpen(true)}
-            className="transition-colors"
-            style={{ color: '#ffffff' }}
-            onMouseEnter={(e) => (e.currentTarget as HTMLElement).style.color = navbarBg}
-            onMouseLeave={(e) => (e.currentTarget as HTMLElement).style.color = '#ffffff'}
+            className="text-white hover:text-sky-300 transition-colors"
             aria-label="Contact Us"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 8a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8Zm-2 0-7 5-7-5" />
             </svg>
           </button>
-          <button
-            className="transition-colors"
-            style={{ color: '#ffffff' }}
-            onMouseEnter={(e) => (e.currentTarget as HTMLElement).style.color = navbarBg}
-            onMouseLeave={(e) => (e.currentTarget as HTMLElement).style.color = '#ffffff'}
-            aria-label="Search"
-          >
+          <button className="text-white hover:text-sky-300 transition-colors" aria-label="Search">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
             </svg>
           </button>
-          <button
-            className="transition-colors"
-            style={{ color: '#ffffff' }}
-            onMouseEnter={(e) => (e.currentTarget as HTMLElement).style.color = navbarBg}
-            onMouseLeave={(e) => (e.currentTarget as HTMLElement).style.color = '#ffffff'}
-            aria-label="Account"
-          >
+          <button className="text-white hover:text-sky-300 transition-colors" aria-label="Account">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
             </svg>
@@ -566,17 +515,14 @@ export default function Navbar({ tabs, brand_logo, lang, searchParams, navbarBg 
           <button
             onClick={() => setRegisterOpen(true)}
             className="flex items-center gap-3 xl:gap-6
-              relative overflow-hidden
-              text-white font-bold
-              px-5 py-2.5 xl:px-8 xl:py-3
-              rounded-full shadow-lg whitespace-nowrap
-              before:absolute before:inset-0 before:bg-white before:rounded-full
-              before:-translate-x-[110%] hover:before:translate-x-0
-              before:transition-transform before:duration-[600ms] before:ease-in-out
-              transition-colors duration-[600ms]"
-            style={{ backgroundColor: navbarBg }}
-            onMouseEnter={(e) => (e.currentTarget as HTMLElement).style.color = navbarBg}
-            onMouseLeave={(e) => (e.currentTarget as HTMLElement).style.color = '#ffffff'}
+    relative overflow-hidden
+    bg-sky-500 text-white font-bold
+    px-5 py-2.5 xl:px-8 xl:py-3
+    rounded-full shadow-lg whitespace-nowrap
+    before:absolute before:inset-0 before:bg-white before:rounded-full
+    before:-translate-x-[110%] hover:before:translate-x-0
+    before:transition-transform before:duration-[600ms] before:ease-in-out
+    hover:text-sky-500 transition-colors duration-[600ms]"
           >
             <span className="relative z-10 text-base lg:text-lg">Become Member</span>
           </button>
@@ -603,101 +549,103 @@ export default function Navbar({ tabs, brand_logo, lang, searchParams, navbarBg 
       {/* ── Desktop mega menu ── */}
       {megaOpen && tabs.length > 0 && (
         <div className="hidden md:block relative max-w-7xl mx-auto">
-          <MegaMenu tabs={tabs} 
-          activeTabId={activeTabId} 
-          onMouseEnter={() => { leaveTimer.current && clearTimeout(leaveTimer.current) }} 
-          onMouseLeave={closeMega} lang={lang} />
+          <MegaMenu
+            tabs={tabs}
+            activeTabId={activeTabId}
+            onMouseEnter={() => { leaveTimer.current && clearTimeout(leaveTimer.current) }}
+            onMouseLeave={closeMega}
+          />
         </div>
       )}
 
       {/* ── Mobile dropdown ── */}
-{menuOpen && (
-  <div
-    className="lg:hidden mt-2 mx-auto max-w-7xl rounded-2xl
-       bg-white border border-gray-100
-       shadow-[0_20px_60px_rgba(0,0,0,0.15)]
-       flex flex-col overflow-hidden"
-    style={{ maxHeight: 'calc(100dvh - 5rem)' }}
-  >
-    <div className="overflow-y-auto overscroll-contain px-5 py-4">
-      <ul className="flex flex-col gap-2">
-        {tabs.map((tab) => (
-          <li key={tab.id}>
-            <details className="group">
-              <summary
-                className="text-sm font-semibold text-[#0d2a4a] cursor-pointer list-none
-                  flex items-center justify-between py-1
-                  relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px]
-                  after:scale-x-0 active:after:scale-x-100
-                  after:transition-transform after:duration-200
-                  active:text-[var(--nav-color)] transition-colors duration-200"
-                style={{ '--nav-color': navbarBg } as React.CSSProperties}
-              >
-                {tab.tab_name.toUpperCase()}
-                <svg
-                  className="w-4 h-4 transition-transform duration-200 group-open:rotate-180 shrink-0"
-                  style={{ color: navbarBg }}
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
-              </summary>
-
-              {tab.fields.length > 0 && (
-                <div className="pl-2 pt-2 pb-1 bg-gray-50 rounded-xl mt-1">
-                  <ColumnWithToggle fields={tab.fields} lang={lang} />
-                </div>
-              )}
-            </details>
-          </li>
-        ))}
-      </ul>
-
-      <div className="mt-4 pt-4 border-t border-gray-100 pb-2">
-        <button
-          onClick={() => { setMenuOpen(false); setRegisterOpen(true) }}
-          className="flex items-center justify-center gap-2
-            relative overflow-hidden
-            text-white text-sm font-bold
-            px-5 py-2.5 rounded-full w-full
-            before:absolute before:inset-0 before:bg-white before:rounded-full
-            before:-translate-x-[110%] active:before:translate-x-0
-            before:transition-transform before:duration-[400ms] before:ease-in-out
-            active:text-[var(--nav-color)] transition-colors duration-[400ms]"
-          style={{ backgroundColor: navbarBg, '--nav-color': navbarBg } as React.CSSProperties}
+      {menuOpen && (
+        <div
+          className="lg:hidden mt-2 mx-auto max-w-7xl rounded-2xl
+           bg-white border border-gray-100
+           shadow-[0_20px_60px_rgba(0,0,0,0.15)]
+           flex flex-col overflow-hidden"
+          style={{ maxHeight: 'calc(100dvh - 5rem)' }}
         >
-          <span className="relative z-10 text-base lg:text-lg">Become Member</span>
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+          {/* ✅ overflow-y-auto + overscroll-contain: scrollable, won't bubble to window */}
+          <div className="overflow-y-auto overscroll-contain px-5 py-4">
+            <ul className="flex flex-col gap-2">
+              {tabs.map((tab) => (
+                <li key={tab.id}>
+                  <details className="group">
+                    <summary
+                      className="text-sm font-semibold text-[#0d2a4a] cursor-pointer list-none
+  flex items-center justify-between py-1
+  relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px]
+  after:bg-sky-400 after:scale-x-0 active:after:scale-x-100
+  after:transition-transform after:duration-200
+  active:text-sky-500 transition-colors duration-200"
+                    >
+                      {tab.tab_name.toUpperCase()}
+                      <svg
+                        className="w-4 h-4 transition-transform duration-200 group-open:rotate-180 text-sky-500 shrink-0"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </summary>
 
+                    {tab.fields.length > 0 && (
+                      <div className="pl-2 pt-2 pb-1 bg-gray-50 rounded-xl mt-1">
+                        <ColumnWithToggle fields={tab.fields} />
+                      </div>
+                    )}
+                  </details>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-4 pt-4 border-t border-gray-100 pb-2">
+              <button
+                onClick={() => { setMenuOpen(false); setRegisterOpen(true) }}
+                className="flex items-center justify-center gap-2
+   relative overflow-hidden
+   bg-sky-500 text-white text-sm font-bold
+   px-5 py-2.5 rounded-full w-full
+   before:absolute before:inset-0 before:bg-white before:rounded-full
+   before:-translate-x-[110%] active:before:translate-x-0
+   before:transition-transform before:duration-[400ms] before:ease-in-out
+   active:text-sky-500 transition-colors duration-[400ms]"
+              >
+                <span className="relative z-10 text-base lg:text-lg">Become Member</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* ── Notification Drawer ── */}
 
       {/* Backdrop */}
       <div
         onClick={() => { setDrawerOpen(false); setRegisterOpen(false); setContactOpen(false) }}
         className={`fixed inset-0 bg-black/40 z-[60] transition-opacity duration-300
-          ${drawerOpen || registerOpen || contactOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+    ${drawerOpen || registerOpen || contactOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
       />
 
       {/* Drawer Panel */}
       <div
         className={`fixed top-0 right-0 h-screen w-[35vw] min-w-[320px] bg-white z-[70] shadow-2xl
-          transition-transform duration-500 ease-in-out overflow-y-auto
-          ${drawerOpen ? 'translate-x-0' : 'translate-x-full'}`}
+    transition-transform duration-500 ease-in-out overflow-y-auto
+    ${drawerOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
+        {/* Close Button */}
         <button
           onClick={() => setDrawerOpen(false)}
           className="absolute top-4 right-4 w-8 h-8 rounded-full bg-sky-100 hover:bg-sky-200
-            flex items-center justify-center transition-colors z-10"
+  flex items-center justify-center transition-colors z-10"
           aria-label="Close"
         >
           <svg className="w-4 h-4 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
+
+        {/* NotifyMe content — remove outer bg wrapper */}
         <NotifyMe />
       </div>
 
@@ -729,7 +677,7 @@ export default function Navbar({ tabs, brand_logo, lang, searchParams, navbarBg 
         <button
           onClick={() => setContactOpen(false)}
           className="absolute top-4 right-4 w-8 h-8 rounded-full bg-sky-100 hover:bg-sky-200
-            flex items-center justify-center transition-colors z-10"
+    flex items-center justify-center transition-colors z-10"
           aria-label="Close"
         >
           <svg className="w-4 h-4 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -738,6 +686,7 @@ export default function Navbar({ tabs, brand_logo, lang, searchParams, navbarBg 
         </button>
         <ContactUs />
       </div>
+
     </nav>
   )
 }

@@ -1,236 +1,217 @@
+'use client'
+
 import Image from 'next/image'
-import summerImg from '@/assets/rectangle1.png'
-import docsImg from '@/assets/rectangle2.png'
-import jacketIcon from '@/assets/cloths.png'
-import pantsIcon from '@/assets/pant.png'
-import glovesIcon from '@/assets/gloves.png'
-import waterIcon from '@/assets/bottle.png'
-import energyIcon from '@/assets/cane.png'
-import shoesIcon from '@/assets/shoes.png'
-import headlampIcon from '@/assets/power.png'
-import polesIcon from '@/assets/sticks.png'
-import gelsIcon from '@/assets/nutrition.png'
-import creamIcon from '@/assets/antich.png'
+import { useEffect, useRef, useState } from 'react'
 import checkIcon from '@/assets/rightsign.png'
 import shieldIcon from '@/assets/shield.png'
 
-type GearItem = {
-  id: number
-  icon: any
-  title: string
+const UPLOAD_BASE_URL = 'http://91.99.229.154'
+
+function resolveImg(path: string) {
+  if (!path) return ''
+  if (path.startsWith('http://') || path.startsWith('https://')) return path
+  return path.startsWith('/') ? `${UPLOAD_BASE_URL}${path}` : `${UPLOAD_BASE_URL}/${path}`
 }
 
-const mandatoryItems: GearItem[] = [
-  { id: 1, icon: jacketIcon, title: 'Waterproof\nJacket with Hood' },
-  { id: 2, icon: pantsIcon, title: 'Long Pants\nor Tights' },
-  { id: 3, icon: glovesIcon, title: 'Gloves\nand Hat' },
-  { id: 4, icon: waterIcon, title: 'Min. 1L\nWater' },
-  { id: 5, icon: energyIcon, title: 'Energy Food\n& Drinks' },
-]
+type GearItem = { icon: string; label: string }
+type LinkCard = { title: string; link: string; img: string }
 
-const recommendedItems: GearItem[] = [
-  { id: 1, icon: shoesIcon, title: 'Trail Running\nShoes' },
-  { id: 2, icon: headlampIcon, title: 'Headlamp with\nSpare Battery' },
-  { id: 3, icon: polesIcon, title: 'Trekking\nPoles' },
-  { id: 4, icon: gelsIcon, title: 'Extra\nNutrition Gels' },
-  { id: 5, icon: creamIcon, title: 'Anti-Chafing\nCream' },
-]
+type GearUpData = {
+  titleWord: string
+  titleScript: string
+  mandatoryTitle: string
+  mandatoryDesc: string
+  recommendedTitle: string
+  recommendedDesc: string
+  mandatoryItems: GearItem[]
+  recommendedItems: GearItem[]
+  linkCards: LinkCard[]
+}
 
-export default function GearUpSection() {
+const DEFAULT_DATA: GearUpData = {
+  titleWord: 'GEAR UP',
+  titleScript: 'for the adventure',
+  mandatoryTitle: 'Mandatory Equipment',
+  mandatoryDesc: 'All gear listed below must be carried throughout the event.',
+  recommendedTitle: 'Recommended Equipment',
+  recommendedDesc: 'The gear listed below can help improve your experience.',
+  mandatoryItems: [
+    { icon: 'fa-solid fa-shirt', label: 'Waterproof\nJacket with Hood' },
+    { icon: 'fa-solid fa-person-dress', label: 'Long Pants\nor Tights' },
+    { icon: 'fa-solid fa-hand', label: 'Gloves\nand Hat' },
+    { icon: 'fa-solid fa-bottle-water', label: 'Min. 1L\nWater' },
+    { icon: 'fa-solid fa-apple-whole', label: 'Energy Food\n& Drinks' },
+  ],
+  recommendedItems: [
+    { icon: 'fa-solid fa-shoe-prints', label: 'Trail Running\nShoes' },
+    { icon: 'fa-solid fa-lightbulb', label: 'Headlamp with\nSpare Battery' },
+    { icon: 'fa-solid fa-person-hiking', label: 'Trekking\nPoles' },
+  ],
+  linkCards: [
+    { title: 'Summer at Trail Running', link: '#', img: '' },
+    { title: 'Documentation and brochures', link: '#', img: '' },
+  ],
+}
+
+function useScrollVisible() {
+  const ref = useRef<HTMLDivElement>(null)
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { setVisible(entry.isIntersecting) },
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+  return { ref, visible }
+}
+
+export default function GearUpSection({ data }: { data: GearUpData | null }) {
+  const d = data ?? DEFAULT_DATA
+  const leftCol = useScrollVisible()
+  const heading = useScrollVisible()
+  const card1 = useScrollVisible()
+  const card2 = useScrollVisible()
+  const mandatory = useScrollVisible()
+  const recommended = useScrollVisible()
+
+  const card1Data = d.linkCards[0] ?? { title: '', link: '#', img: '' }
+  const card2Data = d.linkCards[1] ?? { title: '', link: '#', img: '' }
+
+  const card1Img = resolveImg(card1Data.img)
+  const card2Img = resolveImg(card2Data.img)
+
   return (
     <section className="w-full bg-white py-10 px-6 md:px-10">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row gap-8 xl:pl-16">
 
-          {/* LEFT COLUMN: Heading + Image Cards */}
-          <div className="w-full md:w-1/3 flex flex-col gap-4">
-
-            <div>
+          {/* LEFT COLUMN */}
+          <div
+            ref={leftCol.ref}
+            className={`w-full md:w-1/3 flex flex-col gap-4 transition-all duration-700 ease-out ${
+              leftCol.visible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8 md:-translate-x-16'
+            }`}
+          >
+            <div
+              ref={heading.ref}
+              style={{ transitionDelay: heading.visible ? '100ms' : '0ms' }}
+              className={`transition-all duration-700 ease-out ${
+                heading.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6 md:translate-y-8'
+              }`}
+            >
               <h2 className="font-black text-3xl md:text-4xl text-[#0d2a4a] tracking-wide leading-tight">
-                GEAR UP
+                {d.titleWord}
               </h2>
               <p
                 className="font-playlist text-[#36A5DD] leading-none transition-all duration-300 hover:translate-x-1"
-                style={{
-                  fontSize: 'clamp(26px,4vw,40px)',
-                  marginTop: '-6px',
-                }}
+                style={{ fontSize: 'clamp(26px,4vw,40px)', marginTop: '-4px' }}
               >
-                For the adventure
+                {d.titleScript}
               </p>
             </div>
 
-            {/* Card 1 */}
-            {/* Card 1 */}
-            <div className="group relative w-full h-[160px] sm:h-[180px] rounded-xl overflow-hidden cursor-pointer">
-              <Image
-                src={summerImg}
-                alt="Summer at Trail Running"
-                fill
-                sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-              />
-
-              <div className="absolute inset-0 bg-black/20" />
-
-              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-                <p className="text-white font-bold text-lg leading-tight transition-all duration-300 group-hover:translate-x-1">
-                  Summer at<br />Trail Running
-                </p>
-
-                <span
-                  className="
-                    flex h-8 w-12 items-center justify-center
-                    rounded-full bg-white/90 shrink-0
-                    transition-all duration-300
-                    group-hover:bg-[#36A5DD]
-                  "
-                >
-                  <svg
-                    className="
-                      w-6 h-6 text-[#36A5DD]
-                      transition-all duration-300
-                      group-hover:text-white
-                      group-hover:-rotate-45
-                    "
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2.5}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 12h14m-5-5 5 5-5 5"
-                    />
-                  </svg>
-                </span>
+        {/* Card 1 */}
+            {card1Img && (
+              <div
+                ref={card1.ref}
+                style={{ transitionDelay: card1.visible ? '200ms' : '0ms' }}
+                className={`transition-all duration-700 ease-out ${
+                  card1.visible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8 md:-translate-x-16'
+                }`}
+              >
+                <a href={card1Data.link} className="group relative w-full h-[160px] sm:h-[180px] rounded-xl overflow-hidden cursor-pointer block">
+                  <Image
+                    src={card1Img}
+                    alt={card1Data.title}
+                    fill
+                    unoptimized
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-black/20" />
+                  <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                    <p className="text-white font-bold text-lg leading-tight transition-all duration-300 group-hover:translate-x-1" style={{ whiteSpace: 'pre-line' }}>
+                      {card1Data.title}
+                    </p>
+                    <span className="flex h-8 w-12 items-center justify-center rounded-full bg-white/90 shrink-0 transition-all duration-300 group-hover:bg-[#36A5DD]">
+                      <svg className="w-6 h-6 text-[#36A5DD] transition-all duration-300 group-hover:text-white group-hover:-rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-5-5 5 5-5 5" />
+                      </svg>
+                    </span>
+                  </div>
+                </a>
               </div>
-            </div>
-
+            )}
             {/* Card 2 */}
-            {/* Card 2 */}
-            <div className="group relative w-full h-[160px] sm:h-[180px] rounded-xl overflow-hidden cursor-pointer">
-              <Image
-                src={docsImg}
-                alt="Documentation and brochures"
-                fill
-                sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-              />
-
-              <div className="absolute inset-0 bg-black/20" />
-
-              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-                <p className="text-white font-bold text-lg leading-tight transition-all duration-300 group-hover:translate-x-1">
-                  Documentation<br />and brochures
-                </p>
-
-                <span
-                  className="
-                    flex h-8 w-12 items-center justify-center
-                    rounded-full bg-white/90 shrink-0
-                    transition-all duration-300
-                    group-hover:bg-[#36A5DD]
-                  "
-                >
-                  <svg
-                    className="
-                      w-6 h-6 text-[#36A5DD]
-                      transition-all duration-300
-                      group-hover:text-white
-                      group-hover:-rotate-45
-                    "
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2.5}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 12h14m-5-5 5 5-5 5"
-                    />
-                  </svg>
-                </span>
+            {card2Img && (
+              <div
+                ref={card2.ref}
+                style={{ transitionDelay: card2.visible ? '300ms' : '0ms' }}
+                className={`transition-all duration-700 ease-out ${
+                  card2.visible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8 md:-translate-x-16'
+                }`}
+              >
+                <a href={card2Data.link} className="group relative w-full h-[160px] sm:h-[180px] rounded-xl overflow-hidden cursor-pointer block">
+                  <Image
+                    src={card2Img}
+                    alt={card2Data.title}
+                    fill
+                    unoptimized
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-black/20" />
+                  <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                    <p className="text-white font-bold text-lg leading-tight transition-all duration-300 group-hover:translate-x-1" style={{ whiteSpace: 'pre-line' }}>
+                      {card2Data.title}
+                    </p>
+                    <span className="flex h-8 w-12 items-center justify-center rounded-full bg-white/90 shrink-0 transition-all duration-300 group-hover:bg-[#36A5DD]">
+                      <svg className="w-6 h-6 text-[#36A5DD] transition-all duration-300 group-hover:text-white group-hover:-rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-5-5 5 5-5 5" />
+                      </svg>
+                    </span>
+                  </div>
+                </a>
               </div>
-            </div>
+            )}
           </div>
 
           {/* MANDATORY EQUIPMENT */}
-          <div className="w-full md:w-1/3 md:border-r md:border-cyan-200 md:pr-8">
+          <div
+            ref={mandatory.ref}
+            style={{ transitionDelay: mandatory.visible ? '150ms' : '0ms' }}
+            className={`w-full md:w-1/3 md:border-r md:border-cyan-200 md:pr-8 transition-all duration-700 ease-out ${
+              mandatory.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6 md:translate-y-8'
+            }`}
+          >
             <div className="flex items-center gap-2 md:justify-between md:items-start mb-2 md:w-full">
-              <Image
-                src={checkIcon}
-                alt="check"
-                width={36}
-                height={36}
-                className="order-first md:order-last w-6 h-6 md:w-10 md:h-10"
-              />
+              <Image src={checkIcon} alt="check" width={36} height={36} className="order-first md:order-last w-6 h-6 md:w-10 md:h-10" />
               <h3 className="font-extrabold text-lg text-[#36A5DD] leading-snug">
-                Mandatory<span className="md:hidden"> </span><br className="hidden md:inline" />Equipment
+                {d.mandatoryTitle}
               </h3>
             </div>
-            <p className="font-[600] text-gray-600 text-sm mb-4">
-              All gear listed below must be<br />carried throughout the event.
+            <p className="font-[600] text-gray-600 text-sm mb-4" style={{ whiteSpace: 'pre-line' }}>
+              {d.mandatoryDesc}
             </p>
-
             <div className="flex flex-col">
-              {mandatoryItems.map((item, index) => (
-                <div key={item.id}>
-                  <div
-                    className="
-                      group
-                      flex items-center gap-4 py-4
-                      transition-all duration-300
-                      hover:translate-x-2
-                    "
-                  >
-                    <Image
-                      src={item.icon}
-                      alt={item.title}
-                      width={32}
-                      height={32}
-                      className="
-                        transition-all duration-300
-                        group-hover:scale-110
-                        group-hover:rotate-3
-                      "
-                    />
-
+              {d.mandatoryItems.map((item, index) => (
+                <div key={index}>
+                  <div className="group flex items-center gap-4 py-4 transition-all duration-300 hover:translate-x-2">
+                    <i className={`${item.icon} text-2xl text-[#36A5DD] w-8 text-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-3`} />
                     <div>
-                      <p
-                        className="
-                          md:hidden
-                          font-semibold
-                          text-[#36A5DD]
-                          text-base
-                          leading-tight
-                          transition-all duration-300
-                          group-hover:text-[#1d8cc5]
-                        "
-                      >
-                        {item.title.replace('\n', ' ')}
+                   <p className="md:hidden font-semibold text-[#36A5DD] text-base leading-tight transition-all duration-300 group-hover:text-black">
+                        {item.label.replace(/\\n|\n/g, ' ')}
                       </p>
-
-                      <p
-                        className="
-                          hidden md:block
-                          font-semibold
-                          text-[#36A5DD]
-                          text-base
-                          leading-tight
-                          transition-all duration-300
-                          group-hover:text-[#1d8cc5]
-                        "
-                        style={{ whiteSpace: 'pre-line' }}
-                      >
-                        {item.title}
+                      <p className="hidden md:block font-semibold text-[#36A5DD] text-base leading-tight transition-all duration-300 group-hover:text-black" style={{ whiteSpace: 'pre-line' }}>
+                        {item.label.replace(/\\n/g, '\n')}
                       </p>
                     </div>
                   </div>
-
-                  {index < mandatoryItems.length - 1 && (
+                  {index < d.mandatoryItems.length - 1 && (
                     <div className="h-px w-full bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
                   )}
                 </div>
@@ -239,79 +220,37 @@ export default function GearUpSection() {
           </div>
 
           {/* RECOMMENDED EQUIPMENT */}
-          <div className="w-full md:w-1/3">
+          <div
+            ref={recommended.ref}
+            style={{ transitionDelay: recommended.visible ? '300ms' : '0ms' }}
+            className={`w-full md:w-1/3 transition-all duration-700 ease-out ${
+              recommended.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6 md:translate-y-8'
+            }`}
+          >
             <div className="flex items-center gap-2 md:justify-between md:items-start mb-2 md:w-full">
-              <Image
-                src={shieldIcon}
-                alt="shield"
-                width={36}
-                height={36}
-                className="order-first md:order-last w-6 h-6 md:w-10 md:h-10"
-              />
+              <Image src={shieldIcon} alt="shield" width={36} height={36} className="order-first md:order-last w-6 h-6 md:w-10 md:h-10" />
               <h3 className="font-extrabold text-lg text-[#0d2a4a] leading-snug">
-                Recommended<span className="md:hidden"> </span><br className="hidden md:inline" />Equipment
+                {d.recommendedTitle}
               </h3>
             </div>
-            <p className="font-[600] text-gray-600 text-sm mb-4">
-              The gear listed below can help<br />improve your experience.
+            <p className="font-[600] text-gray-600 text-sm mb-4" style={{ whiteSpace: 'pre-line' }}>
+              {d.recommendedDesc}
             </p>
-
             <div className="flex flex-col">
-              {mandatoryItems.map((item, index) => (
-                <div key={item.id}>
-                  <div
-                    className="
-                      group
-                      flex items-center gap-4 py-4
-                      transition-all duration-300
-                      hover:translate-x-2
-                    "
-                  >
-                    <Image
-                      src={item.icon}
-                      alt={item.title}
-                      width={32}
-                      height={32}
-                      className="
-                        transition-all duration-300
-                        group-hover:scale-110
-                        group-hover:rotate-3
-                      "
-                    />
-
+              {d.recommendedItems.map((item, index) => (
+                <div key={index}>
+                  <div className="group flex items-center gap-4 py-4 transition-all duration-300 hover:translate-x-2">
+                    <i className={`${item.icon} text-2xl text-[#0d2a4a] w-8 text-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-3`} />
                     <div>
-                      <p
-                        className="
-    md:hidden
-    font-semibold
-    text-[#0d2a4a]
-    text-base
-    leading-tight
-    transition-all duration-300
-    group-hover:text-[#36A5DD]
-  "
-                      >
-                        {item.title.replace('\n', ' ')}
+                      <p className="md:hidden font-semibold text-[#0d2a4a] text-base leading-tight transition-all duration-300 group-hover:text-[#36A5DD]">
+                        {item.label.replace(/\\n|\n/g, ' ')}
                       </p>
-
-                      <p
-                        className="
-    hidden md:block
-    font-semibold
-    text-[#0d2a4a]
-    text-base
-    leading-tight
-    transition-all duration-300
-    group-hover:text-[#36A5DD]
-  "
-                        style={{ whiteSpace: 'pre-line' }}
-                      >
-                        {item.title}
+                      <p className="hidden md:block font-semibold text-[#0d2a4a] text-base leading-tight transition-all duration-300 group-hover:text-[#36A5DD]" style={{ whiteSpace: 'pre-line' }}>
+                        {item.label.replace(/\\n/g, '\n')}
                       </p>
                     </div>
                   </div>
-
-                  {index < mandatoryItems.length - 1 && (
+                  {index < d.recommendedItems.length - 1 && (
                     <div className="h-px w-full bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
                   )}
                 </div>
