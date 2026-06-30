@@ -117,7 +117,7 @@ export default function InfoSectionEvent({ info }: Props) {
 
           {/* Tagline */}
           <ScrollInLeft delay={100}>
-            <p className="font-playlist text-[28px] md:text-[40px] text-sky-500 -mb-6 transition-all duration-300 hover:translate-x-1">
+           <p className="font-playlist text-[28px] md:text-[40px] text-sky-500 -mb-4 transition-all duration-300 hover:translate-x-1">
               {info.tagline}
             </p>
           </ScrollInLeft>

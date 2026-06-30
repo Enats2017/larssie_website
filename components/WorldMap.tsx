@@ -267,7 +267,7 @@ export default function WorldMap(): React.ReactElement {
          CALENDAR
         </h2>
 
-        <p className="font-playlist text-[28px] md:text-[40px] text-sky-500">
+        <p className="font-playlist text-[28px] md:text-[40px] text-sky-500 -mt-4">
           Find Your Next Event
         </p>
 

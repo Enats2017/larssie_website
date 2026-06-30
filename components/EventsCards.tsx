@@ -23,9 +23,13 @@ const responsiveStyles = `
     align-items: center;
     gap: 12px;
   }
+
+  /* ── Filter button: white slides in from left, text turns sky-blue ── */
   .filter-btn {
+    position: relative;
+    overflow: hidden;
     border-radius: 9999px;
-    background: #0284c7;
+    background: #36A5DD;
     width: 200px;
     padding: 18px 0;
     display: flex;
@@ -34,15 +38,29 @@ const responsiveStyles = `
     gap: 10px;
     border: none;
     cursor: pointer;
-    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
     color: white;
     font-weight: 700;
     font-size: 17px;
     letter-spacing: 0.08em;
     box-shadow: 0 4px 14px rgba(2,132,199,0.25);
+    transition: color 0.6s ease-in-out, transform 0.2s, box-shadow 0.2s;
   }
-.filter-btn:hover { background: #0369a1 !important; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(2,132,199,0.35); }
-.filter-btn.active-filter { background: #0369a1; }
+  .filter-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: white;
+    border-radius: 9999px;
+    transform: translateX(-110%);
+    transition: transform 0.6s ease-in-out;
+    z-index: 1;
+  }
+  .filter-btn:hover::before,
+  .filter-btn.active-filter::before { transform: translateX(0); }
+  .filter-btn:hover,
+  .filter-btn.active-filter { color: #36A5DD; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(54,165,221,0.35); }
+  .filter-btn span, .filter-btn svg { position: relative; z-index: 2; }
+
   .reset-btn {
     display: flex;
     align-items: center;
@@ -59,6 +77,7 @@ const responsiveStyles = `
     white-space: nowrap;
   }
   .reset-btn:hover { color: #38bdf8; }
+
   .cards-grid {
     max-width: 1152px;
     margin: 0 auto;
@@ -71,27 +90,46 @@ const responsiveStyles = `
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
   }
+
+  /* ── Option button: white slides in from left, text turns sky-blue ── */
   .option-btn {
+    position: relative;
+    overflow: hidden;
     clip-path: polygon(6% 0%, 100% 0%, 94% 100%, 0% 100%);
-    background: #f0f9ff;
+    background: #36A5DD;
     min-height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0 20px;
     font-size: 17px;
-    font-weight: 500;
-    color: #0284c7;
-    transition: background 0.3s;
+    font-weight: 600;
+    color: white;
     cursor: pointer;
-    border: 1px solid #bae6fd;
-    width: 100%;
+    border: none;
+    transition: color 0.6s ease-in-out;
   }
-  .option-btn:hover { background: #e0f2fe !important; }
-  .option-btn.selected { background: #bae6fd; }
-.region-btn {
+  .option-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: white;
+    transform: translateX(-110%);
+    transition: transform 0.6s ease-in-out;
+    z-index: 1;
+  }
+  .option-btn:hover::before,
+  .option-btn.selected::before { transform: translateX(0); }
+  .option-btn:hover,
+  .option-btn.selected { color: #36A5DD; }
+  .option-btn span { position: relative; z-index: 2; }
+
+  /* ── Region button: same sliding white effect ── */
+  .region-btn {
+    position: relative;
+    overflow: hidden;
     clip-path: polygon(6% 0%, 100% 0%, 94% 100%, 0% 100%);
-    background: #f0f9ff;
+    background: #36A5DD;
     min-height: 90px;
     display: flex;
     align-items: center;
@@ -100,14 +138,57 @@ const responsiveStyles = `
     gap: 14px;
     font-size: 20px;
     font-weight: 600;
-    color: #0284c7;
-    transition: background 0.3s;
+    color: white;
     cursor: pointer;
-    border: 1px solid #bae6fd;
-    width: 100%;
+    border: none;
+    transition: color 0.6s ease-in-out;
   }
-  .region-btn:hover { background: #e0f2fe !important; }
-  .region-btn.selected { background: #bae6fd; }
+  .region-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: white;
+    transform: translateX(-110%);
+    transition: transform 0.6s ease-in-out;
+    z-index: 1;
+  }
+  .region-btn:hover::before,
+  .region-btn.selected::before { transform: translateX(0); }
+  .region-btn:hover,
+  .region-btn.selected { color: #36A5DD; }
+  .region-btn span,
+  .region-btn svg { position: relative; z-index: 2; }
+  /* SVG fill also flips on hover/selected via currentColor */
+  .region-btn svg { fill: currentColor; }
+
+  /* ── Load More / Load Less button ── */
+  .load-btn {
+    position: relative;
+    overflow: hidden;
+    border-radius: 9999px;
+    background: #36A5DD;
+    padding: 16px 40px;
+    color: white;
+    font-weight: 700;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(54,165,221,0.25);
+    transition: color 0.6s ease-in-out, transform 0.2s, box-shadow 0.2s;
+  }
+  .load-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: white;
+    border-radius: 9999px;
+    transform: translateX(-110%);
+    transition: transform 0.6s ease-in-out;
+    z-index: 1;
+  }
+  .load-btn:hover::before { transform: translateX(0); }
+  .load-btn:hover { color: #36A5DD; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(54,165,221,0.35); }
+  .load-btn span { position: relative; z-index: 2; }
 
   @media (max-width: 860px) {
     .filter-outer-row {
@@ -152,7 +233,7 @@ interface Card {
 
 const ContinentIcons: Record<Region, JSX.Element> = {
   Asia: (
-    <svg width="58" height="50" viewBox="0 0 100 90" fill="#0284c7" xmlns="http://www.w3.org/2000/svg">
+    <svg width="58" height="50" viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg">
       <path d="M 38,2 L 44,1 L 50,4 L 55,2 L 60,5 L 63,3 L 68,6 L 72,5 L 76,8 L 78,12 L 75,14 L 78,17 L 80,22 L 78,26 L 80,30 L 78,34 L 74,36 L 72,40 L 68,42 L 64,40 L 60,42 L 56,44 L 52,46 L 48,48 L 44,50 L 40,52 L 36,50 L 32,48 L 28,46 L 24,44 L 20,42 L 18,38 L 16,34 L 14,30 L 16,26 L 14,22 L 12,18 L 14,14 L 12,10 L 15,7 L 18,4 L 22,3 L 26,5 L 30,3 Z M 60,10 L 64,12 L 66,16 L 63,19 L 59,17 L 58,13 Z M 44,20 L 48,22 L 46,26 L 42,24 Z M 66,24 L 70,26 L 68,30 L 64,28 Z M 34,30 L 38,32 L 36,36 L 32,34 Z M 52,30 L 56,32 L 54,36 L 50,34 Z" />
       <ellipse cx="82" cy="18" rx="3" ry="5" transform="rotate(-30 82 18)" />
       <ellipse cx="86" cy="24" rx="2" ry="4" transform="rotate(-20 86 24)" />
@@ -162,7 +243,7 @@ const ContinentIcons: Record<Region, JSX.Element> = {
     </svg>
   ),
   Europe: (
-    <svg width="52" height="48" viewBox="0 0 90 85" fill="#0284c7" xmlns="http://www.w3.org/2000/svg">
+    <svg width="52" height="48" viewBox="0 0 90 85" xmlns="http://www.w3.org/2000/svg">
       <path d="M 30,5 L 36,3 L 42,4 L 48,2 L 54,4 L 58,8 L 62,7 L 66,10 L 68,14 L 65,18 L 68,21 L 66,25 L 62,27 L 64,31 L 62,35 L 58,37 L 54,39 L 50,41 L 46,39 L 42,37 L 38,39 L 34,38 L 30,36 L 26,33 L 22,30 L 20,26 L 18,22 L 20,18 L 18,14 L 20,10 L 24,7 Z M 46,9 L 50,11 L 48,14 L 44,12 Z M 56,14 L 60,16 L 58,20 L 54,18 Z M 34,18 L 38,20 L 36,24 L 32,22 Z M 48,22 L 52,24 L 50,28 L 46,26 Z" />
       <path d="M 44,2 L 48,0 L 52,2 L 54,6 L 50,4 L 46,5 Z" />
       <path d="M 16,12 L 20,10 L 22,14 L 18,16 Z" />
@@ -173,13 +254,13 @@ const ContinentIcons: Record<Region, JSX.Element> = {
     </svg>
   ),
   Africa: (
-    <svg width="44" height="56" viewBox="0 0 70 95" fill="#0284c7" xmlns="http://www.w3.org/2000/svg">
+    <svg width="44" height="56" viewBox="0 0 70 95" xmlns="http://www.w3.org/2000/svg">
       <path d="M 18,4 L 24,2 L 30,3 L 36,2 L 42,4 L 48,3 L 52,6 L 56,10 L 58,15 L 56,20 L 58,25 L 57,31 L 54,37 L 50,43 L 46,50 L 42,57 L 38,64 L 35,70 L 32,76 L 30,82 L 28,78 L 26,72 L 24,66 L 20,59 L 16,52 L 12,45 L 9,38 L 8,31 L 9,24 L 8,18 L 10,12 L 14,7 Z M 30,10 L 34,12 L 33,17 L 28,15 Z M 44,18 L 48,20 L 46,25 L 42,23 Z M 20,22 L 24,24 L 22,28 L 18,26 Z M 36,30 L 40,32 L 38,37 L 34,35 Z" />
       <path d="M 60,36 L 64,34 L 66,38 L 65,44 L 63,50 L 60,52 L 58,48 L 59,42 L 58,38 Z" />
     </svg>
   ),
   Oceania: (
-    <svg width="64" height="46" viewBox="0 0 110 80" fill="#0284c7" xmlns="http://www.w3.org/2000/svg">
+    <svg width="64" height="46" viewBox="0 0 110 80" xmlns="http://www.w3.org/2000/svg">
       <path d="M 10,22 L 16,18 L 22,16 L 28,16 L 34,14 L 40,15 L 46,14 L 52,16 L 56,14 L 60,16 L 62,20 L 60,24 L 62,28 L 60,33 L 56,37 L 52,40 L 48,43 L 44,46 L 40,47 L 36,46 L 32,44 L 28,42 L 24,44 L 20,43 L 16,40 L 12,36 L 9,31 L 8,26 Z M 52,20 L 56,22 L 54,26 L 50,24 Z M 22,24 L 26,26 L 24,30 L 20,28 Z M 38,28 L 42,30 L 40,34 L 36,32 Z" />
       <path d="M 56,14 L 60,10 L 62,14 L 60,18 L 58,16 Z" />
       <path d="M 84,30 L 88,28 L 92,30 L 94,34 L 92,38 L 88,40 L 84,38 L 82,34 Z" />
@@ -192,7 +273,7 @@ const ContinentIcons: Record<Region, JSX.Element> = {
     </svg>
   ),
   America: (
-    <svg width="48" height="58" viewBox="0 0 80 100" fill="#0284c7" xmlns="http://www.w3.org/2000/svg">
+    <svg width="48" height="58" viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
       <path d="M 32,2 L 38,2 L 44,4 L 50,3 L 55,6 L 58,10 L 56,14 L 60,17 L 58,21 L 54,24 L 56,28 L 52,30 L 48,28 L 44,30 L 40,32 L 36,30 L 32,32 L 28,30 L 24,28 L 20,26 L 16,22 L 14,18 L 16,14 L 14,10 L 16,6 L 20,3 L 26,2 Z M 42,8 L 46,10 L 44,14 L 40,12 Z M 28,12 L 32,14 L 30,18 L 26,16 Z M 48,16 L 52,18 L 50,22 L 46,20 Z" />
       <path d="M 48,30 L 52,28 L 54,32 L 52,37 L 50,35 L 48,33 Z" />
       <path d="M 14,22 L 18,20 L 20,24 L 19,30 L 16,32 L 14,28 Z" />
@@ -235,8 +316,8 @@ const FilterButton = ({ filterKey, label, selectedValue, activeFilter, setActive
     >
       <span>{selectedValue ? selectedValue.toUpperCase() : label}</span>
       {isActive
-        ? <ChevronUp size={16} style={{ color: "white", flexShrink: 0 }} />
-        : <ChevronDown size={16} style={{ color: "white", flexShrink: 0 }} />
+        ? <ChevronUp size={16} style={{ flexShrink: 0 }} />
+        : <ChevronDown size={16} style={{ flexShrink: 0 }} />
       }
     </button>
   );
@@ -247,7 +328,7 @@ const OptionButton = ({ item, selected, onSelect, setActiveFilter }: OptionButto
     className={`option-btn${selected === item ? " selected" : ""}`}
     onClick={() => { onSelect(item); setActiveFilter(""); }}
   >
-    {item}
+    <span>{item}</span>
   </button>
 );
 
@@ -296,20 +377,18 @@ export default function EventsCards(): JSX.Element {
 
   return (
     <>
-      <style>{responsiveStyles}</style>
+      <style suppressHydrationWarning>{responsiveStyles}</style>
       <section style={{ background: "#ffffff", padding: "20px 24px 80px", color: "#0d2a4a" }}>
 
-
         {/* Section heading */}
-     <div style={{ textAlign: "center", marginBottom: "48px" }}>
+        <div style={{ textAlign: "center", marginBottom: "48px" }}>
           <h2 className="font-black tracking-wide" style={{ color: "#111827", fontSize: "clamp(28px, 4vw, 36px)", marginBottom: "0" }}>
             Upcoming Events
           </h2>
-          <p className="font-playlist" style={{ color: "#0ea5e9", fontSize: "clamp(28px, 4vw, 40px)", marginBottom: "0" }}>
+          <p className="font-playlist" style={{ color: "#0ea5e9", fontSize: "clamp(28px, 4vw, 40px)", marginTop: "-16px", marginBottom: "0" }}>
             Find Your Next Race
           </p>
         </div>
-
 
         <div className="filters-wrapper">
           <div className="filter-outer-row">
@@ -365,8 +444,8 @@ export default function EventsCards(): JSX.Element {
             <div key={card.id} style={{ background: "white", borderRadius: "16px", overflow: "hidden", border: "none", boxShadow: "0 8px 30px rgba(13,42,74,0.12)" }}>
               <img src={card.image} alt={card.title} style={{ width: "100%", height: "220px", objectFit: "cover" }} />
               <div style={{ padding: "20px" }}>
-
-                <h2 style={{ fontSize: "20px", fontWeight: "700", color: "#0284c7", marginBottom: "10px" }}>{card.title}</h2>                <div style={{ display: "flex", gap: "12px", color: "#0d2a4a", marginBottom: "14px", fontWeight: "500" }}>
+                <h2 style={{ fontSize: "20px", fontWeight: "700", color: "#0284c7", marginBottom: "10px" }}>{card.title}</h2>
+                <div style={{ display: "flex", gap: "12px", color: "#0d2a4a", marginBottom: "14px", fontWeight: "500" }}>
                   <span>📅 {card.month}</span>
                   <span>📍 {card.country}</span>
                 </div>
@@ -375,9 +454,8 @@ export default function EventsCards(): JSX.Element {
                   <span style={{ background: "#f1f5f9", color: "#475569", padding: "4px 14px", borderRadius: "9999px", fontSize: "12px", fontWeight: "600" }}>{card.region}</span>
                   <span style={{ background: "#0284c7", color: "white", padding: "4px 14px", borderRadius: "9999px", fontSize: "12px", fontWeight: "600" }}>{card.category}</span>
                 </div>
-   <a 
-  
-    href="#"
+                <a
+                  href="#"
                   className="relative overflow-hidden inline-flex items-center justify-center bg-[#36A5DD] text-white font-bold text-sm px-6 py-2.5 sm:py-3 rounded-full w-full sm:w-auto
                     before:absolute before:inset-0 before:bg-white before:rounded-full
                     before:-translate-x-[110%] hover:before:translate-x-0
@@ -386,8 +464,6 @@ export default function EventsCards(): JSX.Element {
                 >
                   <span className="relative z-10">Register Now</span>
                 </a>
-
-
               </div>
             </div>
           ))}
@@ -402,25 +478,14 @@ export default function EventsCards(): JSX.Element {
         {filteredCards.length > 4 && (
           <div style={{ display: "flex", justifyContent: "center", marginTop: "64px" }}>
             {visibleCards < filteredCards.length ? (
-              <button
-                onClick={() => setVisibleCards((prev) => prev + 2)}
-                style={{ borderRadius: "9999px", background: "#0284c7", padding: "16px 40px", color: "white", fontWeight: "700", fontSize: "18px", border: "none", cursor: "pointer", transition: "background 0.2s, transform 0.2s, box-shadow 0.2s", boxShadow: "0 4px 14px rgba(2,132,199,0.25)" }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = "#0369a1"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = "#0284c7"; e.currentTarget.style.transform = "translateY(0)"; }}
-              >
-                Load More
+              <button className="load-btn" onClick={() => setVisibleCards((prev) => prev + 2)}>
+                <span>Load More</span>
               </button>
             ) : (
-              <button
-                onClick={() => setVisibleCards(4)}
-                style={{ borderRadius: "9999px", background: "#0284c7", padding: "16px 40px", color: "white", fontWeight: "700", fontSize: "18px", border: "none", cursor: "pointer", transition: "background 0.2s, transform 0.2s, box-shadow 0.2s", boxShadow: "0 4px 14px rgba(2,132,199,0.25)" }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = "#0369a1"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = "#0284c7"; e.currentTarget.style.transform = "translateY(0)"; }}
-              >
-                Load Less
+              <button className="load-btn" onClick={() => setVisibleCards(4)}>
+                <span>Load Less</span>
               </button>
             )}
-
           </div>
         )}
       </section>

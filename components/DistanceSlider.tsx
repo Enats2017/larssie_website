@@ -157,7 +157,7 @@ export default function DistanceSlider({ distances }: Props) {
                 {/* Heading */}
                 <ScrollFadeUp delay={0}>
                     <div className="mb-10 xl:pl-16">
-                        <p className="font-playlist text-[28px] md:text-[40px] text-sky-500 -mb-6 transition-all duration-300 hover:translate-x-1">
+                      <p className="font-playlist text-[28px] md:text-[40px] text-sky-500 -mb-4 transition-all duration-300 hover:translate-x-1">
                             Choose your favorite
                         </p>
                         <h2 className="font-black text-3xl md:text-4xl text-gray-900 tracking-wide mb-0">
