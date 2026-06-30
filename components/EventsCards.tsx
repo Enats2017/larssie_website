@@ -21,13 +21,13 @@ const responsiveStyles = `
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
-    gap: 0px;
+    gap: 12px;
   }
   .filter-btn {
-    clip-path: polygon(6% 0%, 100% 0%, 94% 100%, 0% 100%);
+    border-radius: 9999px;
     background: #0284c7;
     width: 200px;
-    padding: 22px 0;
+    padding: 18px 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -39,9 +39,9 @@ const responsiveStyles = `
     font-weight: 700;
     font-size: 17px;
     letter-spacing: 0.08em;
-    margin: 0 -4px;
+    box-shadow: 0 4px 14px rgba(2,132,199,0.25);
   }
-.filter-btn:hover { background: #0369a1 !important; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(2,132,199,0.35); }
+.filter-btn:hover { background: #0369a1 !important; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(2,132,199,0.35); }
 .filter-btn.active-filter { background: #0369a1; }
   .reset-btn {
     display: flex;
@@ -117,7 +117,7 @@ const responsiveStyles = `
     }
     .filter-btn {
       width: 100%;
-      clip-path: polygon(3% 0%, 100% 0%, 97% 100%, 0% 100%);
+      border-radius: 9999px;
       margin: 0;
     }
     .filter-row {
@@ -301,15 +301,15 @@ export default function EventsCards(): JSX.Element {
 
 
         {/* Section heading */}
-        <div style={{ textAlign: "center", marginBottom: "48px" }}>
-          <p style={{ color: "#0284c7", fontSize: "13px", fontWeight: "700", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "12px" }}>
+     <div style={{ textAlign: "center", marginBottom: "48px" }}>
+          <h2 className="font-black tracking-wide" style={{ color: "#111827", fontSize: "clamp(28px, 4vw, 36px)", marginBottom: "0" }}>
             Upcoming Events
-          </p>
-          <h2 style={{ color: "#000000e0", fontSize: "clamp(28px, 4vw, 42px)", fontWeight: "800", marginBottom: "16px" }}>
-            Find Your Next Race
           </h2>
-          <div style={{ width: "64px", height: "4px", background: "#38bdf8", borderRadius: "9999px", margin: "0 auto" }} />
+          <p className="font-playlist" style={{ color: "#0ea5e9", fontSize: "clamp(28px, 4vw, 40px)", marginBottom: "0" }}>
+            Find Your Next Race
+          </p>
         </div>
+
 
         <div className="filters-wrapper">
           <div className="filter-outer-row">
@@ -375,13 +375,19 @@ export default function EventsCards(): JSX.Element {
                   <span style={{ background: "#f1f5f9", color: "#475569", padding: "4px 14px", borderRadius: "9999px", fontSize: "12px", fontWeight: "600" }}>{card.region}</span>
                   <span style={{ background: "#0284c7", color: "white", padding: "4px 14px", borderRadius: "9999px", fontSize: "12px", fontWeight: "600" }}>{card.category}</span>
                 </div>
-                <button
-                  style={{ background: "#0284c7", color: "white", padding: "12px 24px", borderRadius: "8px", border: "none", cursor: "pointer", fontWeight: "600", fontSize: "15px", transition: "background 0.2s" }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "#0369a1")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "#0284c7")}
+   <a 
+  
+    href="#"
+                  className="relative overflow-hidden inline-flex items-center justify-center bg-[#36A5DD] text-white font-bold text-sm px-6 py-2.5 sm:py-3 rounded-full w-full sm:w-auto
+                    before:absolute before:inset-0 before:bg-white before:rounded-full
+                    before:-translate-x-[110%] hover:before:translate-x-0
+                    before:transition-transform before:duration-[600ms] before:ease-in-out
+                    transition-colors duration-[600ms] hover:text-[#36A5DD]"
                 >
-                  Register now
-                </button>
+                  <span className="relative z-10">Register Now</span>
+                </a>
+
+
               </div>
             </div>
           ))}
@@ -398,22 +404,23 @@ export default function EventsCards(): JSX.Element {
             {visibleCards < filteredCards.length ? (
               <button
                 onClick={() => setVisibleCards((prev) => prev + 2)}
-                style={{ clipPath: "polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%)", background: "#0284c7", padding: "16px 40px", color: "white", fontWeight: "700", fontSize: "18px", border: "none", cursor: "pointer", transition: "background 0.2s" }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "#0369a1")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "#0284c7")}
+                style={{ borderRadius: "9999px", background: "#0284c7", padding: "16px 40px", color: "white", fontWeight: "700", fontSize: "18px", border: "none", cursor: "pointer", transition: "background 0.2s, transform 0.2s, box-shadow 0.2s", boxShadow: "0 4px 14px rgba(2,132,199,0.25)" }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = "#0369a1"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "#0284c7"; e.currentTarget.style.transform = "translateY(0)"; }}
               >
                 Load More
               </button>
             ) : (
               <button
                 onClick={() => setVisibleCards(4)}
-                style={{ clipPath: "polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%)", background: "#0284c7", padding: "16px 40px", color: "white", fontWeight: "700", fontSize: "18px", border: "none", cursor: "pointer", transition: "background 0.2s" }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "#0369a1")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "#0284c7")}
+                style={{ borderRadius: "9999px", background: "#0284c7", padding: "16px 40px", color: "white", fontWeight: "700", fontSize: "18px", border: "none", cursor: "pointer", transition: "background 0.2s, transform 0.2s, box-shadow 0.2s", boxShadow: "0 4px 14px rgba(2,132,199,0.25)" }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = "#0369a1"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "#0284c7"; e.currentTarget.style.transform = "translateY(0)"; }}
               >
                 Load Less
               </button>
             )}
+
           </div>
         )}
       </section>

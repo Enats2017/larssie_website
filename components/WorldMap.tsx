@@ -263,13 +263,13 @@ export default function WorldMap(): React.ReactElement {
 
       
 
-        <h2 className="text-4xl md:text-5xl font-bold leading-tight mb-4 text-[#0d2a4a]">
-         Calendar
+        <h2 className="font-black text-3xl md:text-4xl text-gray-900 tracking-wide mb-0">
+         CALENDAR
         </h2>
 
-        <div className="w-16 h-1 bg-sky-400 mx-auto mb-8 rounded-full" />
-
-        
+        <p className="font-playlist text-[28px] md:text-[40px] text-sky-500">
+          Find Your Next Event
+        </p>
 
       </div>
 
