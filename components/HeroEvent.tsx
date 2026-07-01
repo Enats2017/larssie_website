@@ -28,6 +28,7 @@ type HeroProps = {
   sidebar_stats:   unknown
   cta_buttons:     unknown
   bottom_stats:    unknown
+  tagline?:        string | null
 }
 
 type MenuProps = {
@@ -329,7 +330,7 @@ export default function HeroSectionEvent({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Desktop */}
-          <div className="hidden lg:grid lg:grid-cols-4">
+          <div className={`hidden lg:flex ${bottomStats.length < 4 ? 'justify-center gap-10 xl:gap-16' : 'lg:grid lg:grid-cols-4'}`}>
             {bottomStats.map((stat, index, arr) => {
               const label    = stat.title ?? stat.label ?? ''
               const iconInfo = resolveBottomIcon(label, stat.icon)
@@ -377,7 +378,7 @@ export default function HeroSectionEvent({
                     pagination={{ clickable: true }} className="statsSwiper">
               {groupedStats.map((grp, slideIndex) => (
                 <SwiperSlide key={slideIndex}>
-                  <div className="grid grid-cols-2 bg-white">
+                  <div className={`grid bg-white ${grp.length === 1 ? 'grid-cols-1 justify-items-center' : 'grid-cols-2'}`}>
                     {grp.map((stat, index) => {
                       const label    = stat.title ?? stat.label ?? ''
                       const iconInfo = resolveBottomIcon(label, stat.icon)
@@ -405,10 +406,18 @@ export default function HeroSectionEvent({
                       )
                     })}
                   </div>
-                </SwiperSlide>
+</SwiperSlide>
               ))}
             </Swiper>
           </div>
+
+          {/* Tagline below bottom stats */}
+          {hero.tagline && (
+            <p className="text-center text-[#0A2A4A] text-base md:text-lg font-semibold italic mx-auto pt-6 pb-8">
+              {hero.tagline}
+            </p>
+          )}
+
            </div>
       </div>
     </>

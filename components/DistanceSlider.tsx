@@ -85,7 +85,7 @@ function DistanceCard({ d }: { d: DistanceItem }) {
             </div>
 
             {/* Body */}
-            <div className="px-5 py-4 flex flex-col gap-2 items-center text-center">  {/* ← items-center + text-center */}
+            <div className="px-5 py-4 flex flex-col gap-2 items-center text-center min-h-[280px] justify-between">{/* ← items-center + text-center */}
 
                 {/* Date + time row */}
                 <div className="flex items-center gap-1.5 text-[#4B6B94] text-[13px] font-medium">
@@ -102,8 +102,8 @@ function DistanceCard({ d }: { d: DistanceItem }) {
 
                 {/* Distance */}
                 <h3
-                    className="font-black leading-none"
-                    style={{ color: '#0D2A4A', fontSize: 'clamp(36px, 10vw, 52px)' }}
+                    className="font-black leading-tight text-center"
+                    style={{ color: '#0D2A4A', fontSize: 'clamp(28px, 6vw, 42px)' }}
                 >
                     {d.distance}
                 </h3>
@@ -157,7 +157,7 @@ export default function DistanceSlider({ distances }: Props) {
                 {/* Heading */}
                 <ScrollFadeUp delay={0}>
                     <div className="mb-10 xl:pl-16">
-                      <p className="font-playlist text-[28px] md:text-[40px] text-sky-500 -mb-4 transition-all duration-300 hover:translate-x-1">
+                        <p className="font-playlist text-[28px] md:text-[40px] text-sky-500 -mb-4 transition-all duration-300 hover:translate-x-1">
                             Choose your favorite
                         </p>
                         <h2 className="font-black text-3xl md:text-4xl text-gray-900 tracking-wide mb-0">

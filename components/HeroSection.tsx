@@ -550,7 +550,7 @@ export default function HeroSection({ menu, hero, activeColor = '#36A5DD' }: Pro
           {/* Desktop stats (lg and up) */}
           {/* ADDED: ScrollFadeUp delay=0 wrapping the entire desktop stats row */}
           <ScrollFadeUp delay={0}>
-            <div className="hidden lg:grid lg:grid-cols-4">
+            <div className={`hidden lg:flex ${bottomStats.length < 4 ? 'justify-center gap-10 xl:gap-16' : 'lg:grid lg:grid-cols-4'}`}>
               {bottomStats.map((stat, index, arr) => {
                 const label = stat.title ?? stat.label ?? ''
                 const iconInfo = resolveBottomIcon(label, stat.icon)
@@ -635,7 +635,7 @@ export default function HeroSection({ menu, hero, activeColor = '#36A5DD' }: Pro
               >
                 {groupedStats.map((group, slideIndex) => (
                   <SwiperSlide key={slideIndex}>
-                    <div className="grid grid-cols-2 bg-white">
+                    <div className={`grid bg-white ${group.length === 1 ? 'grid-cols-1 justify-items-center' : 'grid-cols-2'}`}>
                       {group.map((stat, index) => {
                         const label = stat.title ?? stat.label ?? '';
                         const iconInfo = resolveBottomIcon(label, stat.icon);
@@ -678,11 +678,20 @@ export default function HeroSection({ menu, hero, activeColor = '#36A5DD' }: Pro
                         );
                       })}
                     </div>
-                  </SwiperSlide>
+                 </SwiperSlide>
                 ))}
               </Swiper>
             </div>
           </ScrollFadeUp>
+
+          {/* Tagline below bottom stats */}
+          {hero.tagline && (
+            <ScrollFadeUp delay={0}>
+              <p className="text-center text-[#0A2A4A] text-base md:text-lg font-semibold italic mx-auto pt-6 pb-8 mt-7">
+                {hero.tagline}
+              </p>
+            </ScrollFadeUp>
+          )}
 
         </div>
       </div>

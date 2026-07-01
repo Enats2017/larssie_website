@@ -105,7 +105,7 @@ export default async function EventPage({
     return <div>No hero found</div>
   }
 
-  const hero = {
+ const hero = {
     bg_desktop: imgUrl(heroRow.bg_desktop),
     bg_mobile: imgUrl(heroRow.bg_mobile),
     overlay_opacity: heroRow.overlay_opacity ?? 40,
@@ -116,6 +116,7 @@ export default async function EventPage({
     sidebar_stats: heroRow.sidebar_stats,
     cta_buttons: heroRow.cta_buttons,
     bottom_stats: heroRow.bottom_stats,
+    tagline: heroRow.tagline ?? '',
   }
 
   // ───────────────────────────────────────────────────────────────
