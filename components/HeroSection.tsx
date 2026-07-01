@@ -311,10 +311,10 @@ export default function HeroSection({ menu, hero, activeColor = '#36A5DD' }: Pro
                 {/* Distance + Elevation heading */}
                 {/* ADDED: ScrollInLeft delay=150 */}
                 <ScrollInLeft delay={150}>
-                  <h1 className="font-black leading-none" style={{ color: hero.dist_color ?? '#FFFFFF' }}>
+                  <h1 className="font-black leading-tight" style={{ color: hero.dist_color ?? '#FFFFFF' }}>
                     <span
                       className="block"
-                      style={{ fontSize: 'clamp(48px, 14vw, 96px)' }}
+                      style={{ fontSize: 'clamp(30px, 8vw, 56px)' }}
                     >
                       {hero.distance ?? '50 KM'}
                     </span>
