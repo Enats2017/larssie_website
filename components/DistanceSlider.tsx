@@ -101,9 +101,10 @@ function DistanceCard({ d }: { d: DistanceItem }) {
                 </div>
 
                 {/* Distance */}
+              
                 <h3
-                    className="font-black leading-tight text-center"
-                    style={{ color: '#0D2A4A', fontSize: 'clamp(28px, 6vw, 42px)' }}
+                    className="font-black leading-tight text-center px-1"
+                    style={{ color: '#0D2A4A', fontSize: 'clamp(16px, 3.2vw, 22px)' }}
                 >
                     {d.distance}
                 </h3>
