@@ -330,7 +330,10 @@ export default function HeroSectionEvent({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Desktop */}
-          <div className={`hidden lg:flex ${bottomStats.length < 4 ? 'justify-center gap-10 xl:gap-16' : 'lg:grid lg:grid-cols-4'}`}>
+          <div className={`relative hidden lg:flex ${bottomStats.length < 4 ? 'justify-center gap-10 xl:gap-16' : 'lg:grid lg:grid-cols-4'}`}>
+            {bottomStats.length === 2 && (
+              <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-[#8ED9EE]" />
+            )}
             {bottomStats.map((stat, index, arr) => {
               const label    = stat.title ?? stat.label ?? ''
               const iconInfo = resolveBottomIcon(label, stat.icon)
@@ -339,6 +342,7 @@ export default function HeroSectionEvent({
               return (
                 <div key={index}
                   className={`group flex items-center justify-between gap-3 transition-all duration-300 ${
+                    bottomStats.length === 2 ? '' :
                     isFirst ? 'pr-6 xl:pr-10 border-r border-[#8ED9EE]'
                     : isLast ? 'pl-6 xl:pl-10'
                     : 'px-6 xl:px-10 border-r border-[#8ED9EE]'
