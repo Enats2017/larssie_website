@@ -70,6 +70,7 @@ type HeroBuilder = {
 type Props = {
   menu: Menu
   hero: HeroBuilder
+  activeColor?: string
 }
 
 // ── JSON types ─────────────────────────────────────────────────────────────
@@ -214,7 +215,7 @@ function ScrollFadeUp({ children, delay = 0 }: { children: React.ReactNode; dela
 
 // ── Component ──────────────────────────────────────────────────────────────
 
-export default function HeroSection({ menu, hero }: Props) {
+export default function HeroSection({ menu, hero, activeColor = '#36A5DD' }: Props) {
 
   const sidebarStats = parseJson<SidebarStat[]>(hero.sidebar_stats, [])
   const ctaButtons = parseJson<CtaButton[]>(hero.cta_buttons, [])
@@ -238,6 +239,8 @@ export default function HeroSection({ menu, hero }: Props) {
     groupedStats.push(bottomStats.slice(i, i + 2));
   }
 
+  const cssVars = { '--active-color': activeColor } as React.CSSProperties
+
   return (
     <>
       {/* Font Awesome */}
@@ -253,6 +256,7 @@ export default function HeroSection({ menu, hero }: Props) {
           lg:max-h-[900px]
           overflow-hidden
         "
+        style={cssVars}
       >
 
         {/* Background image — NO animation wrapper (it's a bg, not a content element) */}
@@ -344,14 +348,14 @@ export default function HeroSection({ menu, hero }: Props) {
                           key={i}
                           href={href}
                           className={`relative overflow-hidden inline-flex items-center justify-center font-bold px-6 py-3 rounded-full whitespace-nowrap ${isPrimary
-                            ? 'bg-[#36A5DD] text-white'
+                            ? 'bg-[var(--active-color)] text-white'
                             : 'border border-white/60 text-white'
                             }
                           before:absolute before:inset-0 before:bg-white before:rounded-full
                           before:-translate-x-[110%] hover:before:translate-x-0
                           before:transition-transform before:duration-[600ms] before:ease-in-out
                           transition-colors duration-[600ms]
-                          hover:text-[#36A5DD]
+                          hover:[color:var(--active-color)]
                           `}
                         >
                           <span className="relative z-10">
@@ -366,7 +370,7 @@ export default function HeroSection({ menu, hero }: Props) {
                           className="
                             group
                             flex items-center justify-between gap-3
-                            bg-[#36A5DD]
+                            bg-[var(--active-color)]
                             text-white
                             font-bold
                             text-sm
@@ -375,15 +379,15 @@ export default function HeroSection({ menu, hero }: Props) {
                             w-full sm:w-auto
                             max-w-[260px] sm:max-w-none
                             transition-all duration-300
-                            active:bg-white active:text-[#36A5DD]
-                            sm:hover:bg-white sm:hover:text-[#36A5DD]
+                            active:bg-white active:[color:var(--active-color)]
+                            sm:hover:bg-white sm:hover:[color:var(--active-color)]
                           "
                         >
                           <span className="transition-all duration-300 group-active:translate-x-1 sm:group-hover:translate-x-1">
                             Register Now
                           </span>
-                          <span className="flex h-7 w-10 sm:h-8 sm:w-12 items-center justify-center rounded-full bg-white transition-all duration-300 group-active:bg-[#36A5DD] sm:group-hover:bg-[#36A5DD]">
-                            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[#36A5DD] transition-all duration-300 group-active:text-white group-active:-rotate-45 sm:group-hover:text-white sm:group-hover:-rotate-45"
+                          <span className="flex h-7 w-10 sm:h-8 sm:w-12 items-center justify-center rounded-full bg-white transition-all duration-300 group-active:[background-color:var(--active-color)] sm:group-hover:[background-color:var(--active-color)]">
+                            <svg className="w-5 h-5 sm:w-6 sm:h-6 [color:var(--active-color)] transition-all duration-300 group-active:text-white group-active:-rotate-45 sm:group-hover:text-white sm:group-hover:-rotate-45"
                               fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-5-5 5 5-5 5" />
                             </svg>
@@ -404,15 +408,15 @@ export default function HeroSection({ menu, hero }: Props) {
                             w-full sm:w-auto
                             max-w-[260px] sm:max-w-none
                             transition-all duration-300
-                            active:bg-white active:text-[#36A5DD]
-                            sm:hover:bg-white sm:hover:text-[#36A5DD]
+                            active:bg-white active:[color:var(--active-color)]
+                            sm:hover:bg-white sm:hover:[color:var(--active-color)]
                           "
                         >
                           <span className="transition-all duration-300 group-active:translate-x-1 sm:group-hover:translate-x-1">
                             Download Race Guide
                           </span>
-                          <span className="flex h-7 w-10 sm:h-8 sm:w-12 items-center justify-center rounded-full bg-[#36A5DD] transition-all duration-300 group-active:bg-white sm:group-hover:bg-white">
-                            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white transition-all duration-300 group-active:text-[#36A5DD] group-active:-rotate-45 sm:group-hover:text-[#36A5DD] sm:group-hover:-rotate-45"
+                          <span className="flex h-7 w-10 sm:h-8 sm:w-12 items-center justify-center rounded-full bg-[var(--active-color)] transition-all duration-300 group-active:bg-white sm:group-hover:bg-white">
+                            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white transition-all duration-300 group-active:[color:var(--active-color)] group-active:-rotate-45 sm:group-hover:[color:var(--active-color)] sm:group-hover:-rotate-45"
                               fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-5-5 5 5-5 5" />
                             </svg>
@@ -472,7 +476,7 @@ export default function HeroSection({ menu, hero }: Props) {
         bg-white
         flex-shrink-0
         transition-all duration-300
-        group-hover:bg-[#36A5DD]
+        group-hover:[background-color:var(--active-color)]
         group-hover:scale-110
       "
                         >
@@ -480,7 +484,7 @@ export default function HeroSection({ menu, hero }: Props) {
                             className={`
           ${icon}
           text-lg
-          text-[#36A5DD]
+          [color:var(--active-color)]
           transition-all duration-300
           group-hover:text-white
         `}
@@ -489,8 +493,8 @@ export default function HeroSection({ menu, hero }: Props) {
 
                         <div className="rounded-xl bg-white border border-white/40 px-4 py-2 flex-1 transition-all duration-300 group-hover:bg-blue-50">
                           {show_star_rating && <StarRating value={value} />}
-                          <p className="text-[#36A5DD] font-bold text-xl leading-tight">{value}</p>
-                          <p className="text-[#36A5DD] text-sm transition-colors duration-300">{label}</p>
+                          <p className="font-bold text-xl leading-tight [color:var(--active-color)]">{value}</p>
+                          <p className="text-sm transition-colors duration-300 [color:var(--active-color)]">{label}</p>
                         </div>
                       </div>
                     ))}
@@ -540,7 +544,7 @@ export default function HeroSection({ menu, hero }: Props) {
       </section>
 
       {/* ── Stats Bar ── */}
-      <div className="bg-white pt-6 pb-0 overflow-hidden select-none">
+      <div className="bg-white pt-6 pb-0 overflow-hidden select-none" style={cssVars}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Desktop stats (lg and up) */}
@@ -556,21 +560,21 @@ export default function HeroSection({ menu, hero }: Props) {
                 return (
                   <div
                     key={index}
-                    className={`group flex items-center justify-between gap-3 transition-all duration-300 ${isFirst
-                      ? 'pr-6 xl:pr-10 border-r border-[#8ED9EE]'
+                    className={`group flex items-center justify-between gap-3 transition-all duration-300 [border-color:var(--active-color)] ${isFirst
+                      ? 'pr-6 xl:pr-10 border-r'
                       : isLast
                         ? 'pl-6 xl:pl-10'
-                        : 'px-6 xl:px-10 border-r border-[#8ED9EE]'
+                        : 'px-6 xl:px-10 border-r'
                       }`}
                   >
                     <div className="min-w-0 flex-1">
-                      <h4 className="text-[#0A2A4A] text-sm xl:text-[18px] font-extrabold uppercase whitespace-nowrap transition-colors duration-300 group-hover:text-[#8ED9EE]">
+                      <h4 className="text-[#0A2A4A] text-sm xl:text-[18px] font-extrabold uppercase whitespace-nowrap transition-colors duration-300 group-hover:[color:var(--active-color)]">
                         {label}
                       </h4>
                       <h2 className="text-[#0A2A4A] text-4xl xl:text-[54px] font-black leading-none mt-1 transition-transform duration-300 group-hover:translate-x-1">
                         {stat.value}
                       </h2>
-                      <div className="w-[80px] xl:w-[110px] h-[2px] bg-[#8AA0BC] mt-2 mb-2 transition-all duration-300 group-hover:w-[140px] group-hover:bg-[#8ED9EE]" />
+                      <div className="w-[80px] xl:w-[110px] h-[2px] bg-[#8AA0BC] mt-2 mb-2 transition-all duration-300 group-hover:w-[140px] group-hover:[background-color:var(--active-color)]" />
                       <p className="text-[#0A2A4A] text-sm xl:text-[16px] whitespace-nowrap font-medium">
                         {stat.sub}
                       </p>
@@ -639,13 +643,13 @@ export default function HeroSection({ menu, hero }: Props) {
                         return (
                           <div
                             key={index}
-                            className={`group px-4 transition-all duration-200 active:bg-slate-50/50 rounded-lg ${index === 0 ? 'border-r border-[#8ED9EE]' : ''
+                            className={`group px-4 transition-all duration-200 active:bg-slate-50/50 rounded-lg [border-color:var(--active-color)] ${index === 0 ? 'border-r' : ''
                               }`}
                           >
                             <div className="flex items-center gap-2 mb-2">
                               <div className="flex-shrink-0 transition-all duration-300 group-active:scale-110 group-active:rotate-3">
                                 {iconInfo.type === 'fa' ? (
-                                  <i className={`${iconInfo.src} text-[#5E7391] text-sm transition-colors duration-300 group-active:text-[#8ED9EE]`} />
+                                  <i className={`${iconInfo.src} text-[#5E7391] text-sm transition-colors duration-300 group-active:[color:var(--active-color)]`} />
                                 ) : (
                                   <Image
                                     src={iconInfo.src}
@@ -656,7 +660,7 @@ export default function HeroSection({ menu, hero }: Props) {
                                   />
                                 )}
                               </div>
-                              <span className="text-[#5E7391] text-sm font-medium uppercase transition-colors duration-300 group-active:text-[#8ED9EE]">
+                              <span className="text-[#5E7391] text-sm font-medium uppercase transition-colors duration-300 group-active:[color:var(--active-color)]">
                                 {label}
                               </span>
                             </div>
@@ -665,7 +669,7 @@ export default function HeroSection({ menu, hero }: Props) {
                               {stat.value}
                             </h2>
 
-                            <div className="w-full h-px bg-[#8AA0BC] my-2 transition-all duration-300 ease-out group-active:bg-[#8ED9EE] group-active:h-[2px]" />
+                            <div className="w-full h-px bg-[#8AA0BC] my-2 transition-all duration-300 ease-out group-active:[background-color:var(--active-color)] group-active:h-[2px]" />
 
                             <p className="text-[#0A2A4A] text-sm font-medium">
                               {stat.sub}

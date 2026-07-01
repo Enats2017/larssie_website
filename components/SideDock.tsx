@@ -15,9 +15,11 @@ const items = [
 function CurveBottomNav({
   items,
   pathname,
+  activeColor,
 }: {
   items: { icon: string; href: string; label: string }[]
   pathname: string
+  activeColor: string
 }) {
   const total = items.length
   const activeIndex = Math.max(items.findIndex((i) => i.href === pathname), 0)
@@ -73,10 +75,10 @@ function CurveBottomNav({
         />
       </svg>
 
-      {/* Floating violet bubble — slides left/right */}
+      {/* Floating bubble — slides left/right */}
       <span
         aria-hidden="true"
-        className="absolute z-10 flex items-center justify-center rounded-full bg-blue-100 pointer-events-none"
+        className="absolute z-10 flex items-center justify-center rounded-full pointer-events-none"
         style={{
           width: BUBBLE_SIZE,
           height: BUBBLE_SIZE,
@@ -84,9 +86,13 @@ function CurveBottomNav({
           left: `${cx}%`,
           transform: 'translateX(-50%)',
           transition: 'left 0.35s cubic-bezier(.4,0,.2,1)',
+          backgroundColor: `${activeColor}1A`, // ~10% opacity tint, mirrors the old bg-blue-100
         }}
       >
-        <i className={`${items[activeIndex].icon} text-blue-500 text-lg`}></i>
+        <i
+          className={`${items[activeIndex].icon} text-lg`}
+          style={{ color: activeColor }}
+        ></i>
       </span>
 
       {/* Tappable items — sit inside the grey bar area */}
@@ -108,8 +114,8 @@ function CurveBottomNav({
                   }`}
               ></i>
               <span
-                className={`text-[11px] font-medium leading-none transition-colors duration-200 ${active ? 'text-blue-500' : 'text-slate-400'
-                  }`}
+                className={`text-[11px] font-medium leading-none transition-colors duration-200 ${active ? '' : 'text-slate-400'}`}
+                style={active ? { color: activeColor } : undefined}
               >
                 {label}
               </span>
@@ -122,7 +128,11 @@ function CurveBottomNav({
 }
 
 // ── Main export ───────────────────────────────────────────────────────────────
-export default function SideDock() {
+type SideDockProps = {
+  activeColor?: string
+}
+
+export default function SideDock({ activeColor = '#3b82f6' }: SideDockProps) {
   const visible = useScrollDirection(10)
   const pathname = usePathname()
 
@@ -153,7 +163,10 @@ export default function SideDock() {
               "
             >
               <div className="w-14 h-14 flex items-center justify-center shrink-0">
-                <i className={`${icon} text-lg ${active ? 'text-blue-500' : 'text-slate-400'}`}></i>
+                <i
+                  className={`${icon} text-lg ${active ? '' : 'text-slate-400'}`}
+                  style={active ? { color: activeColor } : undefined}
+                ></i>
               </div>
               <span className="whitespace-nowrap text-slate-700 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                 {label}
@@ -164,7 +177,7 @@ export default function SideDock() {
       </div>
 
       {/* ── Mobile bottom bar with curve selected state ── */}
-      <CurveBottomNav items={items} pathname={pathname} />
+      <CurveBottomNav items={items} pathname={pathname} activeColor={activeColor} />
     </>
   )
 }

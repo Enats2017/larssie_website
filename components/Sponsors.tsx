@@ -1,17 +1,10 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-
-
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Pagination } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
-
-
-
-
-
 
 function ScrollInLeft({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -71,14 +64,15 @@ type Props = {
   variant?: 'territory' | 'info'
   sponsors?: SponsorLogo[]
   titleWord?: string
+  activeColor?: string
 }
 
-export default function Sponsors({ variant = 'territory', sponsors = [], titleWord = 'Proudly Supported By' }: Props) {
+export default function Sponsors({ variant = 'territory', sponsors = [], titleWord = 'Proudly Supported By', activeColor = '#36A5DD' }: Props) {
   const isInfo = variant === 'info'
   if (!sponsors || sponsors.length === 0) return null
 
   return (
-    <div className={`relative z-10 ${isInfo ? 'pt-12 md:pt-20 pb-2 md:pb-4' : 'pb-12 md:pb-16'}`}>
+    <div className={`relative z-10 ${isInfo ? 'pt-12 md:pt-20 pb-2 md:pb-4' : 'pb-12 md:pb-16'}`} style={{ '--active-color': activeColor } as React.CSSProperties}>
       <ScrollFadeUp delay={0}>
         <div className="flex items-center justify-center gap-3 md:gap-8 px-4 md:px-8">
           <div className={`h-px flex-1 ${isInfo ? 'bg-white/20 md:bg-gray-200' : 'bg-white/20'}`} />
@@ -90,32 +84,44 @@ export default function Sponsors({ variant = 'territory', sponsors = [], titleWo
       </ScrollFadeUp>
 
       <div className="mt-8 md:mt-10">
-        <style jsx global>{`
-          .sponsorSwiper { padding-bottom: 28px; }
-          .sponsorSwiper .swiper-pagination { position: static; margin-top: 16px; }
-          .sponsorSwiper .swiper-pagination-bullet {
-            background: #8AA0BC; opacity: 0.3;
-            width: 10px; height: 10px; margin: 0 6px !important;
-            transition: all 0.3s ease; cursor: pointer;
-            position: relative; display: inline-block;
-          }
-          .sponsorSwiper .swiper-pagination-bullet::before {
-            content: ''; position: absolute;
-            top: 50%; left: 50%;
-            width: 44px; height: 44px;
-            transform: translate(-50%, -50%);
-          }
-          .sponsorSwiper-territory .swiper-pagination-bullet-active {
-            background: #ffffff !important; opacity: 1 !important;
-            width: 28px !important; height: 10px !important;
-            border-radius: 4px !important;
-          }
-          .sponsorSwiper-info .swiper-pagination-bullet-active {
-            background: #8AA0BC !important; opacity: 1 !important;
-            width: 28px !important; height: 10px !important;
-            border-radius: 4px !important;
-          }
-        `}</style>
+      <style jsx global>{`
+        .sponsorSwiper { padding-bottom: 28px; }
+
+        .sponsorSwiper .swiper-pagination {
+          position: static;
+          margin-top: 16px;
+        }
+
+        .sponsorSwiper .swiper-pagination-bullet {
+          background: #8AA0BC;
+          opacity: 0.3;
+          width: 10px;
+          height: 10px;
+          margin: 0 6px !important;
+          transition: all 0.3s ease;
+          cursor: pointer;
+          position: relative;
+          display: inline-block;
+        }
+
+        .sponsorSwiper .swiper-pagination-bullet::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 44px;
+          height: 44px;
+          transform: translate(-50%, -50%);
+        }
+
+        .sponsorSwiper .swiper-pagination-bullet-active {
+          background: var(--active-color) !important;
+          opacity: 1 !important;
+          width: 28px !important;
+          height: 10px !important;
+          border-radius: 4px !important;
+        }
+      `}</style>
 
         <Swiper
           modules={[Pagination]}

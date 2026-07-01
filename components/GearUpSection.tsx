@@ -69,7 +69,7 @@ function useScrollVisible() {
   return { ref, visible }
 }
 
-export default function GearUpSection({ data }: { data: GearUpData | null }) {
+export default function GearUpSection({ data, activeColor = '#36A5DD' }: { data: GearUpData | null; activeColor?: string }) {
   const d = data ?? DEFAULT_DATA
   const leftCol = useScrollVisible()
   const heading = useScrollVisible()
@@ -84,8 +84,10 @@ export default function GearUpSection({ data }: { data: GearUpData | null }) {
   const card1Img = resolveImg(card1Data.img)
   const card2Img = resolveImg(card2Data.img)
 
+  const cssVars = { '--active-color': activeColor } as React.CSSProperties
+
   return (
-    <section className="w-full bg-white py-10 px-6 md:px-10">
+    <section className="w-full bg-white py-10 px-6 md:px-10" style={cssVars}>
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row gap-8 xl:pl-16">
 
@@ -107,7 +109,7 @@ export default function GearUpSection({ data }: { data: GearUpData | null }) {
                 {d.titleWord}
               </h2>
               <p
-                className="font-playlist text-[#36A5DD] leading-none transition-all duration-300 hover:translate-x-1"
+                className="font-playlist leading-none transition-all duration-300 hover:translate-x-1 [color:var(--active-color)]"
                 style={{ fontSize: 'clamp(26px,4vw,40px)', marginTop: '-4px' }}
               >
                 {d.titleScript}
@@ -137,8 +139,8 @@ export default function GearUpSection({ data }: { data: GearUpData | null }) {
                     <p className="text-white font-bold text-lg leading-tight transition-all duration-300 group-hover:translate-x-1" style={{ whiteSpace: 'pre-line' }}>
                       {card1Data.title}
                     </p>
-                    <span className="flex h-8 w-12 items-center justify-center rounded-full bg-white/90 shrink-0 transition-all duration-300 group-hover:bg-[#36A5DD]">
-                      <svg className="w-6 h-6 text-[#36A5DD] transition-all duration-300 group-hover:text-white group-hover:-rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <span className="flex h-8 w-12 items-center justify-center rounded-full bg-white/90 shrink-0 transition-all duration-300 group-hover:[background-color:var(--active-color)]">
+                      <svg className="w-6 h-6 transition-all duration-300 group-hover:text-white group-hover:-rotate-45 [color:var(--active-color)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-5-5 5 5-5 5" />
                       </svg>
                     </span>
@@ -169,8 +171,8 @@ export default function GearUpSection({ data }: { data: GearUpData | null }) {
                     <p className="text-white font-bold text-lg leading-tight transition-all duration-300 group-hover:translate-x-1" style={{ whiteSpace: 'pre-line' }}>
                       {card2Data.title}
                     </p>
-                    <span className="flex h-8 w-12 items-center justify-center rounded-full bg-white/90 shrink-0 transition-all duration-300 group-hover:bg-[#36A5DD]">
-                      <svg className="w-6 h-6 text-[#36A5DD] transition-all duration-300 group-hover:text-white group-hover:-rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <span className="flex h-8 w-12 items-center justify-center rounded-full bg-white/90 shrink-0 transition-all duration-300 group-hover:[background-color:var(--active-color)]">
+                      <svg className="w-6 h-6 transition-all duration-300 group-hover:text-white group-hover:-rotate-45 [color:var(--active-color)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-5-5 5 5-5 5" />
                       </svg>
                     </span>
@@ -183,14 +185,29 @@ export default function GearUpSection({ data }: { data: GearUpData | null }) {
           {/* MANDATORY EQUIPMENT */}
           <div
             ref={mandatory.ref}
-            style={{ transitionDelay: mandatory.visible ? '150ms' : '0ms' }}
-            className={`w-full md:w-1/3 md:border-r md:border-cyan-200 md:pr-8 transition-all duration-700 ease-out ${
+            style={{ transitionDelay: mandatory.visible ? '150ms' : '0ms', borderColor: 'color-mix(in srgb, var(--active-color) 40%, transparent)' }}
+            className={`w-full md:w-1/3 md:border-r md:pr-8 transition-all duration-700 ease-out ${
               mandatory.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6 md:translate-y-8'
             }`}
           >
             <div className="flex items-center gap-2 md:justify-between md:items-start mb-2 md:w-full">
-              <Image src={checkIcon} alt="check" width={36} height={36} className="order-first md:order-last w-6 h-6 md:w-10 md:h-10" />
-              <h3 className="font-extrabold text-lg text-[#36A5DD] leading-snug">
+              <span
+                aria-label="check"
+                role="img"
+                className="order-first md:order-last w-6 h-6 md:w-10 md:h-10 shrink-0 inline-block"
+                style={{
+                  backgroundColor: activeColor,
+                  WebkitMaskImage: `url(${checkIcon.src})`,
+                  maskImage: `url(${checkIcon.src})`,
+                  WebkitMaskSize: 'contain',
+                  maskSize: 'contain',
+                  WebkitMaskRepeat: 'no-repeat',
+                  maskRepeat: 'no-repeat',
+                  WebkitMaskPosition: 'center',
+                  maskPosition: 'center',
+                }}
+              />
+              <h3 className="font-extrabold text-lg leading-snug [color:var(--active-color)]">
                 {d.mandatoryTitle}
               </h3>
             </div>
@@ -201,12 +218,12 @@ export default function GearUpSection({ data }: { data: GearUpData | null }) {
               {d.mandatoryItems.map((item, index) => (
                 <div key={index}>
                   <div className="group flex items-center gap-4 py-4 transition-all duration-300 hover:translate-x-2">
-                    <i className={`${item.icon} text-2xl text-[#36A5DD] w-8 text-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-3`} />
+                    <i className={`${item.icon} text-2xl w-8 text-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 [color:var(--active-color)]`} />
                     <div>
-                   <p className="md:hidden font-semibold text-[#36A5DD] text-base leading-tight transition-all duration-300 group-hover:text-black">
+                      <p className="md:hidden font-semibold text-base leading-tight transition-all duration-300 group-hover:text-black [color:var(--active-color)]">
                         {item.label.replace(/\\n|\n/g, ' ')}
                       </p>
-                      <p className="hidden md:block font-semibold text-[#36A5DD] text-base leading-tight transition-all duration-300 group-hover:text-black" style={{ whiteSpace: 'pre-line' }}>
+                      <p className="hidden md:block font-semibold text-base leading-tight transition-all duration-300 group-hover:text-black [color:var(--active-color)]" style={{ whiteSpace: 'pre-line' }}>
                         {item.label.replace(/\\n/g, '\n')}
                       </p>
                     </div>
@@ -228,7 +245,22 @@ export default function GearUpSection({ data }: { data: GearUpData | null }) {
             }`}
           >
             <div className="flex items-center gap-2 md:justify-between md:items-start mb-2 md:w-full">
-              <Image src={shieldIcon} alt="shield" width={36} height={36} className="order-first md:order-last w-6 h-6 md:w-10 md:h-10" />
+              <span
+                aria-label="shield"
+                role="img"
+                className="order-first md:order-last w-6 h-6 md:w-10 md:h-10 shrink-0 inline-block"
+                style={{
+                  backgroundColor: activeColor,
+                  WebkitMaskImage: `url(${shieldIcon.src})`,
+                  maskImage: `url(${shieldIcon.src})`,
+                  WebkitMaskSize: 'contain',
+                  maskSize: 'contain',
+                  WebkitMaskRepeat: 'no-repeat',
+                  maskRepeat: 'no-repeat',
+                  WebkitMaskPosition: 'center',
+                  maskPosition: 'center',
+                }}
+              />
               <h3 className="font-extrabold text-lg text-[#0d2a4a] leading-snug">
                 {d.recommendedTitle}
               </h3>
@@ -242,10 +274,10 @@ export default function GearUpSection({ data }: { data: GearUpData | null }) {
                   <div className="group flex items-center gap-4 py-4 transition-all duration-300 hover:translate-x-2">
                     <i className={`${item.icon} text-2xl text-[#0d2a4a] w-8 text-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-3`} />
                     <div>
-                      <p className="md:hidden font-semibold text-[#0d2a4a] text-base leading-tight transition-all duration-300 group-hover:text-[#36A5DD]">
+                      <p className="md:hidden font-semibold text-[#0d2a4a] text-base leading-tight transition-all duration-300 group-hover:[color:var(--active-color)]">
                         {item.label.replace(/\\n|\n/g, ' ')}
                       </p>
-                      <p className="hidden md:block font-semibold text-[#0d2a4a] text-base leading-tight transition-all duration-300 group-hover:text-[#36A5DD]" style={{ whiteSpace: 'pre-line' }}>
+                      <p className="hidden md:block font-semibold text-[#0d2a4a] text-base leading-tight transition-all duration-300 group-hover:[color:var(--active-color)]" style={{ whiteSpace: 'pre-line' }}>
                         {item.label.replace(/\\n/g, '\n')}
                       </p>
                     </div>

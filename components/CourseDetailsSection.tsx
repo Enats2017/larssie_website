@@ -109,12 +109,15 @@ type Props = {
   course?: CourseData
   linkCards?: LinkCard[]
   lang?: string
+  activeColor?: string
 }
 
-export default function CourseDetailsSection({ course, linkCards = [], lang = 'en' }: Props) {
+export default function CourseDetailsSection({ course, linkCards = [], lang = 'en', activeColor = '#36A5DD' }: Props) {
   const [cardIndex, setCardIndex] = useState(0)
   const prevCard = () => setCardIndex((i) => (i - 1 + displayCards.length) % displayCards.length)
   const nextCard = () => setCardIndex((i) => (i + 1) % displayCards.length)
+
+  const cssVars = { '--active-color': activeColor } as React.CSSProperties
 
   const L = <T,>(en: T, nl?: T | null, fr?: T | null): T =>
     (lang === 'nl' ? nl : lang === 'fr' ? fr : null) ?? en
@@ -148,9 +151,9 @@ export default function CourseDetailsSection({ course, linkCards = [], lang = 'e
     ]
 
   return (
-    <div className="relative z-0 w-full min-h-[560px] text-white bg-[#061831] -mt-px md:[margin-top:max(-15vw,-206.55px)]">
+    <div className="relative z-0 w-full min-h-[560px] text-white bg-[#061831] -mt-px md:[margin-top:max(-15vw,-206.55px)]" style={cssVars}>
 
-      <div className="hidden md:block absolute -top-0 left-0 w-full pointer-events-none" style={{ zIndex: 20, height: '8.55px', backgroundColor: '#35a8eb' }} />
+      <div className="hidden md:block absolute -top-0 left-0 w-full pointer-events-none [background-color:var(--active-color)]" style={{ zIndex: 20, height: '8.55px' }} />
 
       <div className="absolute inset-0 z-0 overflow-hidden">
         <img src={rectangle.src} alt="Mountain Background" className="w-full h-full object-cover opacity-35" />
@@ -165,7 +168,7 @@ export default function CourseDetailsSection({ course, linkCards = [], lang = 'e
             <ScrollInLeft delay={0}>
               <h2 className="leading-[0.85]">
                 <span className="block text-[32px] md:text-[51px] font-black uppercase text-white">{titleWord}</span>
-                <span className="inline-block font-playlist text-[28px] md:text-[40px] text-sky-500 -mb-6 ml-10 md:ml-16 transition-all duration-300 hover:translate-x-1">
+                <span className="inline-block font-playlist text-[28px] md:text-[40px] -mb-6 ml-10 md:ml-16 transition-all duration-300 hover:translate-x-1 [color:var(--active-color)]">
                   {titleScript}
                 </span>
               </h2>
@@ -185,7 +188,7 @@ export default function CourseDetailsSection({ course, linkCards = [], lang = 'e
               <div className="flex items-start gap-3 md:gap-4">
                 <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-white flex items-center justify-center shrink-0 overflow-hidden [&:hover>span]:translate-y-0">
                   <span className="absolute inset-0 rounded-full bg-white translate-y-full transition-transform duration-300 ease-out" />
-                  <i className={`${course?.tech_icon || 'fa-solid fa-mountain'} text-[#2ea9ec] text-lg relative z-10`}></i>
+                  <i className={`${course?.tech_icon || 'fa-solid fa-mountain'} text-lg relative z-10 [color:var(--active-color)]`}></i>
                 </div>
                 <div>
                   <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase">{techName}</h4>
@@ -204,7 +207,7 @@ export default function CourseDetailsSection({ course, linkCards = [], lang = 'e
               <div className="flex items-start gap-3 md:gap-4">
                 <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-white flex items-center justify-center shrink-0 overflow-hidden [&:hover>span]:translate-y-0">
                   <span className="absolute inset-0 rounded-full bg-white translate-y-full transition-transform duration-300 ease-out" />
-                  <i className={`${course?.terrain_icon || 'fa-solid fa-shield-halved'} text-[#2ea9ec] text-lg relative z-10`}></i>
+                  <i className={`${course?.terrain_icon || 'fa-solid fa-shield-halved'} text-lg relative z-10 [color:var(--active-color)]`}></i>
                 </div>
                 <div>
                   <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase">{terrainName}</h4>
@@ -220,7 +223,7 @@ export default function CourseDetailsSection({ course, linkCards = [], lang = 'e
                 <div className="flex items-start gap-3 md:gap-4">
                   <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-white flex items-center justify-center shrink-0 overflow-hidden [&:hover>span]:translate-y-0">
                     <span className="absolute inset-0 rounded-full bg-white translate-y-full transition-transform duration-300 ease-out" />
-                    <i className={`${m.icon} text-[#2ea9ec] text-lg relative z-10`}></i>
+                    <i className={`${m.icon} text-lg relative z-10 [color:var(--active-color)]`}></i>
                   </div>
                   <div>
                     <h4 className="text-white font-bold text-[12px] md:text-[15px] uppercase leading-tight">
@@ -228,7 +231,7 @@ export default function CourseDetailsSection({ course, linkCards = [], lang = 'e
                         <span key={j}>{line}{j < arr.length - 1 && <br />}</span>
                       ))}
                     </h4>
-                    <p className="text-[#2ea9ec] text-[26px] md:text-[42px] font-black leading-none mt-2">{m.value}</p>
+                    <p className="text-[26px] md:text-[42px] font-black leading-none mt-2 [color:var(--active-color)]">{m.value}</p>
                   </div>
                 </div>
               </ScrollInLeft>
@@ -245,8 +248,8 @@ export default function CourseDetailsSection({ course, linkCards = [], lang = 'e
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
                 <div className="absolute inset-x-0 bottom-5 px-6 flex items-end justify-between">
                   <h3 className="text-[18px] leading-[1.05] font-bold text-white max-w-[75%]">{card.title}</h3>
-                  <span className="flex h-8 w-12 items-center justify-center rounded-full bg-white/90 shrink-0 transition-colors duration-300 group-hover:bg-[#36A5DD]">
-                    <svg className="w-6 h-6 text-[#36A5DD] transition-all duration-300 group-hover:-rotate-45 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <span className="flex h-8 w-12 items-center justify-center rounded-full bg-white/90 shrink-0 transition-colors duration-300 group-hover:[background-color:var(--active-color)]">
+                    <svg className="w-6 h-6 transition-all duration-300 group-hover:-rotate-45 group-hover:text-white [color:var(--active-color)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-5-5 5 5-5 5" />
                     </svg>
                   </span>
@@ -272,7 +275,7 @@ export default function CourseDetailsSection({ course, linkCards = [], lang = 'e
                   <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
                 </svg>
               </button>
-              <button onClick={nextCard} className="w-10 h-10 rounded-full bg-[#2ea9ec] flex items-center justify-center">
+              <button onClick={nextCard} className="w-10 h-10 rounded-full flex items-center justify-center [background-color:var(--active-color)]">
                 <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                 </svg>

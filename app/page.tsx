@@ -252,7 +252,7 @@ console.log('=== PAGE PARAMS ===', {
 
   return (
     <div>
-      <SideDock />
+      <SideDock activeColor={navbarBg} />
       <Navbar
         tabs={tabs}
         brand_logo={menu.brand_logo ?? hero.brand_logo_img}
@@ -269,6 +269,7 @@ console.log('=== PAGE PARAMS ===', {
       <HeroSection
         menu={menu}
         hero={hero}
+        activeColor={navbarBg}
       />
 
       {info?.layout_type === 'background' && (
@@ -284,15 +285,16 @@ console.log('=== PAGE PARAMS ===', {
           info={info}
           sponsorLogos={sponsorLogos}
           sponsorTitle={sponsorTitle}
+          activeColor={navbarBg}
         />
       )}
-      <GearUpSection data={gearupData} />
-      <AidStations data={aidStationData} />
+      <GearUpSection data={gearupData} activeColor={navbarBg}/>
+      <AidStations data={aidStationData} activeColor={navbarBg}/>
 
-      <TimelineSection data={timelineData} lang={lang} />
-      <CourseDetailsSection course={course} linkCards={courseLinkCards} lang={lang} />
+      <TimelineSection data={timelineData} lang={lang} activeColor={navbarBg}/>
+      <CourseDetailsSection course={course} linkCards={courseLinkCards} lang={lang} activeColor={navbarBg}/>
 
-      <Footer footer={footer} brandLogo={menu.brand_logo} lang={lang} />
+      <Footer footer={footer} brandLogo={menu.brand_logo} lang={lang} activeColor={navbarBg}/>
     </div>
   )
 }

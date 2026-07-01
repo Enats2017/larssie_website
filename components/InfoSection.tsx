@@ -12,7 +12,6 @@ type Brand = {
   sort_order: number
 }
 
-// ADD this after the Brand type definition:
 type InfoEntry = {
   tagline: string | null
   title: string | null
@@ -89,11 +88,14 @@ type Props = {
   info: InfoEntry
   sponsorLogos?: SponsorLogo[]
   sponsorTitle?: string
+  activeColor?: string
 }
 
-export default function InfoSection({ brands, info, sponsorLogos = [], sponsorTitle = 'Proudly Supported By' }: Props) {
+export default function InfoSection({ brands, info, sponsorLogos = [], sponsorTitle = 'Proudly Supported By', activeColor = '#36A5DD' }: Props) {
+  const cssVars = { '--active-color': activeColor } as React.CSSProperties
+
   return (
-    <section className="w-full bg-[#0d2a4a] md:bg-white py-10 px-6 md:px-10">
+    <section className="w-full bg-[#0d2a4a] md:bg-white py-10 px-6 md:px-10" style={cssVars}>
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-8 xl:pl-16 mt-10">
 
         {/* Left Image */}
@@ -124,7 +126,7 @@ export default function InfoSection({ brands, info, sponsorLogos = [], sponsorTi
         <div className="w-full md:w-1/2 flex flex-col justify-center items-center md:items-start gap-1 p-2 md:p-4 text-center md:text-left">
 
           <ScrollInLeft delay={100}>
-            <p className="font-playlist text-[28px] md:text-[40px] text-sky-500 -mb-4 transition-all duration-300 hover:translate-x-1">
+            <p className="font-playlist text-[28px] md:text-[40px] -mb-4 transition-all duration-300 hover:translate-x-1 [color:var(--active-color)]">
               {info.tagline || 'The Territory'}
             </p>
           </ScrollInLeft>
@@ -161,74 +163,16 @@ export default function InfoSection({ brands, info, sponsorLogos = [], sponsorTi
           <ScrollInLeft delay={500}>
             <div className="flex flex-wrap gap-3 justify-center md:justify-start">
               {/* Explore */}
-              {/* 
-                href="/territory"
-                className="
-                  group
-                  relative overflow-hidden
-                  flex items-center justify-between
-                  w-full sm:w-[264px]
-                  h-[52px]
-                  rounded-full
-                  bg-[#36A5DD]
-                  px-6
-                  text-white text-sm font-bold
-
-                  before:absolute before:inset-0
-                  before:bg-white before:rounded-full
-                  before:-translate-x-[110%]
-                  hover:before:translate-x-0
-                  before:transition-transform
-                  before:duration-[600ms]
-                  before:ease-in-out
-
-                  transition-colors duration-[600ms]
-                  hover:text-[#36A5DD]
-                "
-              >
-                <span className="relative z-10">
-                  Explore The Territory
-                </span>
-
-                <span
-                  className="
-                    relative z-10
-                    flex h-8 w-12 items-center justify-center
-                    rounded-full bg-white shrink-0
-                    transition-all duration-300
-                    group-hover:bg-[#36A5DD]
-                  "
-                >
-                  <svg
-                    className="
-                      w-6 h-6 text-[#36A5DD]
-                      transition-all duration-300
-                      group-hover:text-white
-                      group-hover:-rotate-45
-                    "
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2.5}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 12h14m-5-5 5 5-5 5"
-                    />
-                  </svg>
-                </span>
-              </a> */}
               <a
-                  href={info.cta_link || '/territory'}
+                href={info.cta_link || '/territory'}
                 className="
                   relative overflow-hidden
                   flex items-center justify-center
                   w-full sm:w-[264px]
                   h-[52px]
                   rounded-full
-                  bg-[#36A5DD]
-                  border-2 border-[#36A5DD]
+                  bg-[var(--active-color)]
+                  border-2 border-[var(--active-color)]
                   px-6
                   text-white text-sm font-bold
 
@@ -241,7 +185,7 @@ export default function InfoSection({ brands, info, sponsorLogos = [], sponsorTi
                   before:ease-in-out
 
                   transition-colors duration-[600ms]
-                  hover:text-[#36A5DD]
+                  hover:[color:var(--active-color)]
                 "
               >
                  <span className="relative z-10">{info.cta_text || 'Explore The Territory'}</span>
@@ -249,7 +193,7 @@ export default function InfoSection({ brands, info, sponsorLogos = [], sponsorTi
 
               {/* FAQ */}
               <a
-                  href={info.faq_link || '/faq'}
+                href={info.faq_link || '/faq'}
                 className="
                   relative overflow-hidden
                   flex items-center justify-center
@@ -257,13 +201,13 @@ export default function InfoSection({ brands, info, sponsorLogos = [], sponsorTi
                   h-[52px]
                   rounded-full
                   bg-white
-                  border-2 border-[#36A5DD]
+                  border-2 border-[var(--active-color)]
                   px-6
-                  text-[#36A5DD]
                   text-sm font-bold
+                  [color:var(--active-color)]
 
                   before:absolute before:inset-0
-                  before:bg-[#36A5DD]
+                  before:bg-[var(--active-color)]
                   before:rounded-full
                   before:-translate-x-[110%]
                   hover:before:translate-x-0
@@ -286,10 +230,11 @@ export default function InfoSection({ brands, info, sponsorLogos = [], sponsorTi
 
       {/* Sponsors */}
     <Sponsors
-  variant="info"
-  sponsors={sponsorLogos}
-  titleWord={sponsorTitle}
-/>
+      variant="info"
+      sponsors={sponsorLogos}
+      titleWord={sponsorTitle}
+      activeColor={activeColor}
+    />
 
     </section>
   )

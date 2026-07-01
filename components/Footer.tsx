@@ -54,6 +54,7 @@ interface FooterProps {
     footer: any
     brandLogo: string
     lang: string
+    activeColor?: string
 }
 
 // Icon class → inline SVG map (only the 4 social icons used)
@@ -61,18 +62,19 @@ const ICON_SVG = (iconClass: string): React.ReactNode => (
     <i className={iconClass} style={{ fontSize: '18px' }} />
 )
 
-// TikTok is highlighted (blue bg), rest are navy
-const ICON_HIGHLIGHT_CLASS: Record<string, string> = {
-    'fa-brands fa-tiktok': 'bg-[#36A5DD]',
-}
 const DEFAULT_ICON_BG = 'bg-[#002248]'
 
-const Footer = ({ footer, brandLogo, lang }: FooterProps) => {
+const Footer = ({ footer, brandLogo, lang, activeColor = '#36A5DD' }: FooterProps) => {
     const [openSection, setOpenSection] = useState<string | null>("distance");
     const toggle = (key: string) => setOpenSection(prev => (prev === key ? null : key));
 
     const L = lang
     const f = footer
+
+    // TikTok is highlighted with the active color, rest stay navy
+    const ICON_HIGHLIGHT_STYLE: Record<string, React.CSSProperties> = {
+        'fa-brands fa-tiktok': { backgroundColor: activeColor },
+    }
 
     // ── Lang-aware values with fallbacks ──
     const distHeading = (L === 'nl' ? f?.distance_heading_nl : L === 'fr' ? f?.distance_heading_fr : null) || f?.distance_heading || 'Choose Your Distance'
@@ -128,7 +130,8 @@ const Footer = ({ footer, brandLogo, lang }: FooterProps) => {
                                 <div className="flex flex-row items-center gap-3">
                                     {socialIcons.map((s, i) => (
                                         <a key={i} href={s.link || '#'} aria-label={s.icon}
-                                            className={`w-[43px] h-[43px] rounded-full ${ICON_HIGHLIGHT_CLASS[s.icon] || DEFAULT_ICON_BG} flex items-center justify-center text-white hover:opacity-80 transition-opacity shrink-0`}>
+                                            className={`w-[43px] h-[43px] rounded-full ${ICON_HIGHLIGHT_STYLE[s.icon] ? '' : DEFAULT_ICON_BG} flex items-center justify-center text-white hover:opacity-80 transition-opacity shrink-0`}
+                                            style={ICON_HIGHLIGHT_STYLE[s.icon]}>
                                             {ICON_SVG(s.icon)}
                                         </a>
                                     ))}
@@ -141,24 +144,40 @@ const Footer = ({ footer, brandLogo, lang }: FooterProps) => {
                         {/* Choose Your Distance */}
                         <ScrollInLeft delay={100}>
                             <div className="flex flex-col gap-3 items-start">
-                                <h3 className="text-[#36A5DD] font-bold text-[17px] leading-none">{distHeading}</h3>
+                                <h3 className="font-bold text-[17px] leading-none" style={{ color: activeColor }}>{distHeading}</h3>
                                 <ul className="flex flex-col gap-[10px] items-start">
                                     {distanceItems.map((item, i) => (
-                                        <li key={i}><a href="#" className="text-[#002248] hover:text-[#36A5DD] transition-colors text-[14px] font-semibold leading-none">{item.label} / {item.value}</a></li>
+                                        <li key={i}>
+                                            <a
+                                                href="#"
+                                                className="text-[#002248] transition-colors text-[14px] font-semibold leading-none hover:[color:var(--active-color)]"
+                                                style={{ '--active-color': activeColor } as React.CSSProperties}
+                                            >
+                                                {item.label} / {item.value}
+                                            </a>
+                                        </li>
                                     ))}
                                 </ul>
                             </div>
                         </ScrollInLeft>
 
-                        <div className="hidden lg:block w-px bg-[#36A5DD]/40 self-stretch" />
+                        <div className="hidden lg:block w-px self-stretch" style={{ backgroundColor: `${activeColor}66` }} />
 
                         {/* Quick Links */}
                         <ScrollInLeft delay={200}>
                             <div className="flex flex-col gap-3 items-start">
-                                <h3 className="text-[#36A5DD] font-bold text-[17px] leading-none">{quickHeading}</h3>
+                                <h3 className="font-bold text-[17px] leading-none" style={{ color: activeColor }}>{quickHeading}</h3>
                                 <ul className="flex flex-col gap-[10px] items-start">
                                     {quickItems.map((item, i) => (
-                                        <li key={i}><a href={item.link || '#'} className="text-[#002248] hover:text-[#36A5DD] transition-colors text-[14px] font-semibold leading-none">{item.label}</a></li>
+                                        <li key={i}>
+                                            <a
+                                                href={item.link || '#'}
+                                                className="text-[#002248] transition-colors text-[14px] font-semibold leading-none hover:[color:var(--active-color)]"
+                                                style={{ '--active-color': activeColor } as React.CSSProperties}
+                                            >
+                                                {item.label}
+                                            </a>
+                                        </li>
                                     ))}
                                 </ul>
                             </div>
@@ -168,18 +187,34 @@ const Footer = ({ footer, brandLogo, lang }: FooterProps) => {
                         <ScrollInLeft delay={300}>
                             <div className="flex flex-col gap-8 items-start">
                                 <div className="flex flex-col gap-3 items-start w-full">
-                                    <h3 className="text-[#36A5DD] font-bold text-[17px] leading-none">{engageHeading}</h3>
+                                    <h3 className="font-bold text-[17px] leading-none" style={{ color: activeColor }}>{engageHeading}</h3>
                                     <ul className="flex flex-col gap-[10px] items-start">
                                         {engageItems.map((item, i) => (
-                                            <li key={i}><a href={item.link || '#'} className="text-[#002248] hover:text-[#36A5DD] transition-colors text-[14px] font-semibold leading-none">{item.label}</a></li>
+                                            <li key={i}>
+                                                <a
+                                                    href={item.link || '#'}
+                                                    className="text-[#002248] transition-colors text-[14px] font-semibold leading-none hover:[color:var(--active-color)]"
+                                                    style={{ '--active-color': activeColor } as React.CSSProperties}
+                                                >
+                                                    {item.label}
+                                                </a>
+                                            </li>
                                         ))}
                                     </ul>
                                 </div>
                                 <div className="flex flex-col gap-3 items-start w-full">
-                                    <h3 className="text-[#36A5DD] font-bold text-[17px] leading-none">{exploreHeading}</h3>
+                                    <h3 className="font-bold text-[17px] leading-none" style={{ color: activeColor }}>{exploreHeading}</h3>
                                     <ul className="flex flex-col gap-[10px] items-start">
                                         {exploreItems.map((item, i) => (
-                                            <li key={i}><a href={item.link || '#'} className="text-[#002248] hover:text-[#36A5DD] transition-colors text-[14px] font-semibold leading-none">{item.label}</a></li>
+                                            <li key={i}>
+                                                <a
+                                                    href={item.link || '#'}
+                                                    className="text-[#002248] transition-colors text-[14px] font-semibold leading-none hover:[color:var(--active-color)]"
+                                                    style={{ '--active-color': activeColor } as React.CSSProperties}
+                                                >
+                                                    {item.label}
+                                                </a>
+                                            </li>
                                         ))}
                                     </ul>
                                 </div>
@@ -205,7 +240,8 @@ const Footer = ({ footer, brandLogo, lang }: FooterProps) => {
                                 <div className="flex flex-row items-center gap-3">
                                     {socialIcons.map((s, i) => (
                                         <a key={i} href={s.link || '#'} aria-label={s.icon}
-                                            className={`w-[43px] h-[43px] rounded-full ${ICON_HIGHLIGHT_CLASS[s.icon] || DEFAULT_ICON_BG} flex items-center justify-center text-white hover:opacity-80 transition-opacity shrink-0`}>
+                                            className={`w-[43px] h-[43px] rounded-full ${ICON_HIGHLIGHT_STYLE[s.icon] ? '' : DEFAULT_ICON_BG} flex items-center justify-center text-white hover:opacity-80 transition-opacity shrink-0`}
+                                            style={ICON_HIGHLIGHT_STYLE[s.icon]}>
                                             {ICON_SVG(s.icon)}
                                         </a>
                                     ))}
@@ -222,8 +258,8 @@ const Footer = ({ footer, brandLogo, lang }: FooterProps) => {
                                         onClick={() => toggle(key)}
                                         aria-expanded={openSection === key}
                                     >
-                                        <h3 className="text-[#36A5DD] font-bold text-[17px] leading-none">{label}</h3>
-                                        <span className="text-[#36A5DD]">
+                                        <h3 className="font-bold text-[17px] leading-none" style={{ color: activeColor }}>{label}</h3>
+                                        <span style={{ color: activeColor }}>
                                             {openSection === key ? <ChevronUp /> : <ChevronDown />}
                                         </span>
                                     </button>
@@ -231,7 +267,11 @@ const Footer = ({ footer, brandLogo, lang }: FooterProps) => {
                                         <ul className="flex flex-col gap-[10px] items-start pb-4">
                                             {items.map((item, i) => (
                                                 <li key={i}>
-                                                    <a href={item.link || '#'} className="text-[#002248] hover:text-[#36A5DD] transition-colors text-[14px] font-semibold leading-none">
+                                                    <a
+                                                        href={item.link || '#'}
+                                                        className="text-[#002248] transition-colors text-[14px] font-semibold leading-none hover:[color:var(--active-color)]"
+                                                        style={{ '--active-color': activeColor } as React.CSSProperties}
+                                                    >
                                                         {item.label}
                                                     </a>
                                                 </li>
@@ -247,13 +287,19 @@ const Footer = ({ footer, brandLogo, lang }: FooterProps) => {
             </div>
 
             {/* ── CTA BAR ── */}
-            <div className="bg-[#36A5DD] lg:bg-white lg:border-t lg:border-gray-200 py-6 mx-4 lg:mx-0 rounded-2xl lg:rounded-none mb-4 lg:mb-0 xl:pl-16">
+            <div
+                className="lg:bg-white lg:border-t lg:border-gray-200 py-6 mx-4 lg:mx-0 rounded-2xl lg:rounded-none mb-4 lg:mb-0 xl:pl-16 bg-[var(--cta-bg)]"
+                style={{ '--cta-bg': activeColor } as React.CSSProperties}
+            >
                 <div className="max-w-[1280px] mx-auto px-6 md:px-10">
                     <ScrollFadeUp delay={0}>
                         <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_auto] items-center gap-5 lg:gap-12">
 
                             {/* Left Text */}
-                            <p className="text-white lg:text-[#36A5DD] font-black uppercase leading-tight text-[clamp(22px,3vw,36px)] text-left">
+                            <p
+                                className="text-white lg:[color:var(--active-color)] font-black uppercase leading-tight text-[clamp(22px,3vw,36px)] text-left"
+                                style={{ '--active-color': activeColor } as React.CSSProperties}
+                            >
                                 {ctaLine1}
                                 <br />
                                 {ctaLine2}
@@ -267,20 +313,25 @@ const Footer = ({ footer, brandLogo, lang }: FooterProps) => {
                                     <a
                                         href={registerLink}
                                         className="
-                                            relative overflow-hidden
+                                            group relative overflow-hidden
                                             inline-flex items-center justify-center
-                                            bg-white lg:bg-[#36A5DD]
-                                            text-[#36A5DD] lg:text-white
-                                            border-2 border-[#36A5DD]
+                                            bg-white
                                             font-bold rounded-full px-8 py-4 text-[17px] whitespace-nowrap
-                                            before:absolute before:inset-0 before:bg-[#36A5DD] lg:before:bg-white
-                                            before:rounded-full before:-translate-x-[110%]
-                                            hover:before:translate-x-0 before:transition-transform
-                                            before:duration-[600ms] before:ease-in-out
+                                            border-2
                                             transition-colors duration-[600ms]
-                                            hover:text-white lg:hover:text-[#36A5DD]
                                         "
+                                        style={{
+                                            color: activeColor,
+                                            borderColor: activeColor,
+                                        }}
+                                        onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#ffffff' }}
+                                        onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = activeColor }}
                                     >
+                                        <span
+                                            className="absolute inset-0 rounded-full -translate-x-[110%] group-hover:translate-x-0 transition-transform duration-[600ms] ease-in-out"
+                                            style={{ backgroundColor: activeColor }}
+                                            aria-hidden="true"
+                                        />
                                         <span className="relative z-10">{registerText}</span>
                                     </a>
 
@@ -324,7 +375,8 @@ const Footer = ({ footer, brandLogo, lang }: FooterProps) => {
                                         {mailEmail && (
                                             <a
                                                 href={`mailto:${mailEmail}`}
-                                                className="text-white lg:text-[#36A5DD] font-medium text-[12px] lg:text-[14px] leading-tight hover:underline"
+                                                className="text-white lg:[color:var(--active-color)] font-medium text-[12px] lg:text-[14px] leading-tight hover:underline"
+                                                style={{ '--active-color': activeColor } as React.CSSProperties}
                                             >
                                                 {mailEmail}
                                             </a>

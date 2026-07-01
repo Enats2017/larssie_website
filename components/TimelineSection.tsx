@@ -1,5 +1,46 @@
 'use client'
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, useMemo } from 'react'
+
+// ── Color helpers ─────────────────────────────────────────────────────────────
+
+/**
+ * Mixes a hex color with white at a given percentage.
+ * percent = 0   -> original color
+ * percent = 100 -> pure white
+ * Works reliably inside SVG <stop> elements (unlike CSS color-mix()).
+ */
+function mixWithWhite(hex: string, percent: number): string {
+  const clean = hex.replace('#', '')
+  const full =
+    clean.length === 3
+      ? clean.split('').map((c) => c + c).join('')
+      : clean
+
+  const r = parseInt(full.substring(0, 2), 16)
+  const g = parseInt(full.substring(2, 4), 16)
+  const b = parseInt(full.substring(4, 6), 16)
+
+  const ratio = Math.min(100, Math.max(0, percent)) / 100
+
+  const mix = (channel: number) => Math.round(channel + (255 - channel) * ratio)
+
+  const rr = mix(r).toString(16).padStart(2, '0')
+  const gg = mix(g).toString(16).padStart(2, '0')
+  const bb = mix(b).toString(16).padStart(2, '0')
+
+  return `#${rr}${gg}${bb}`
+}
+
+/** Derives the full light-wash palette used throughout this component from a single activeColor. */
+function deriveTints(activeColor: string) {
+  return {
+    // background gradient stops (top -> bottom), light washes of activeColor
+    bgTop: mixWithWhite(activeColor, 80),     // was #d7edf8
+    bgBottom: mixWithWhite(activeColor, 91),  // was #edf7fd
+    // mobile vertical connector line + desktop tick lines, a slightly stronger tint
+    lineTint: mixWithWhite(activeColor, 45),  // was #6ca9d6
+  }
+}
 
 // ── Animation helpers ────────────────────────────────────────────────────────
 
@@ -73,9 +114,10 @@ interface TimelineSectionProps {
     items: TimelineItem[]
   }
   lang?: string
+  activeColor?: string
 }
 
-// ── Wave / curve math (unchanged from original) ──────────────────────────────
+// ── Wave / curve math (UNCHANGED) ────────────────────────────────────────────
 
 const EDGE_Y = 390
 
@@ -161,7 +203,7 @@ function toReversedCommands(segments: Segment[]) {
     .join(' ')
 }
 
-// ── Fixed wave anchor points (same as original — only dots move with data) ──
+// ── Fixed wave anchor points (UNCHANGED — only dots move with data) ─────────
 
 const WAVE_ANCHORS: Point[] = [
   { x: 0, y: EDGE_Y },
@@ -178,7 +220,7 @@ const curveSegments = buildSmoothSegments(WAVE_ANCHORS)
 const CURVE_PATH = toPath(curveSegments)
 const CURVE_PATH_REVERSED_COMMANDS = toReversedCommands(curveSegments)
 
-// ── Dot Y positions on the wave (same fixed positions as original) ────────────
+// ── Dot Y positions on the wave (UNCHANGED) ──────────────────────────────────
 
 const DOT_Y_POSITIONS = [425, 503, 468, 422, 437, 480]
 const TEXT_Y_POSITIONS = [215, 295, 260, 210, 225, 270]
@@ -198,10 +240,20 @@ function DesktopTimeline({
   titleWord,
   titleScript,
   items,
+  activeColor,
+  gradientId,
+  bgTop,
+  bgBottom,
+  lineTint,
 }: {
   titleWord: string
   titleScript: string
   items: TimelineItem[]
+  activeColor: string
+  gradientId: string
+  bgTop: string
+  bgBottom: string
+  lineTint: string
 }) {
   const chunks = chunkArray(items, 6)
   const isScrollable = chunks.length > 1
@@ -211,7 +263,7 @@ function DesktopTimeline({
       <div
         className={
           isScrollable
-            ? 'flex overflow-x-auto snap-x snap-mandatory scroll-smooth [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:bg-[#35a8eb] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-[#d7edf8]'
+            ? 'flex overflow-x-auto snap-x snap-mandatory scroll-smooth [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:[background-color:var(--active-color)] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:[background-color:var(--bg-top)]'
             : ''
         }
       >
@@ -225,16 +277,21 @@ function DesktopTimeline({
               titleScript={titleScript}
               items={chunkItems}
               showHeader={chunkIndex === 0}
+              activeColor={activeColor}
+              gradientId={gradientId}
+              bgTop={bgTop}
+              bgBottom={bgBottom}
+              lineTint={lineTint}
             />
           </div>
         ))}
       </div>
 
       {isScrollable && (
-        <div className="absolute top-16 right-2 text-[#23a8f2] text-xs font-semibold flex items-center gap-1 animate-pulse">
+        <div className="absolute top-16 right-2 text-xs font-semibold flex items-center gap-1 animate-pulse [color:var(--active-color)]">
           <span>Scroll to see more</span>
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-            <path d="M4 8H12M12 8L8 4M12 8L8 12" stroke="#23a8f2" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M4 8H12M12 8L8 4M12 8L8 12" stroke={activeColor} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
       )}
@@ -247,11 +304,21 @@ function TimelinePage({
   titleScript,
   items,
   showHeader,
+  activeColor,
+  gradientId,
+  bgTop,
+  bgBottom,
+  lineTint,
 }: {
   titleWord: string
   titleScript: string
   items: TimelineItem[]
   showHeader: boolean
+  activeColor: string
+  gradientId: string
+  bgTop: string
+  bgBottom: string
+  lineTint: string
 }) {
   const svgRef = useRef<SVGSVGElement>(null)
   const [visible, setVisible] = useState(false)
@@ -280,13 +347,13 @@ function TimelinePage({
       }}
     >
       <defs>
-        <linearGradient id="bgGradient" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#d7edf8" />
-          <stop offset="100%" stopColor="#edf7fd" />
+        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={bgTop} />
+          <stop offset="100%" stopColor={bgBottom} />
         </linearGradient>
       </defs>
 
-      {/* Background fill above wave */}
+      {/* Background fill above wave — UNCHANGED shape, color now derived from activeColor */}
       <path
         d={`
           M 0,0
@@ -295,7 +362,7 @@ function TimelinePage({
           ${CURVE_PATH_REVERSED_COMMANDS}
           Z
         `}
-        fill="url(#bgGradient)"
+        fill={`url(#${gradientId})`}
       />
 
       {/* Header — only on first page */}
@@ -305,7 +372,7 @@ function TimelinePage({
             {titleWord}
           </text>
           <text
-            x="600" y="108" textAnchor="middle" fontSize="30" fill="#23a8f2"
+            x="600" y="108" textAnchor="middle" fontSize="30" fill={activeColor}
             style={{ fontFamily: 'var(--font-playlist-script), cursive' }}
           >
             {titleScript}
@@ -313,10 +380,10 @@ function TimelinePage({
         </>
       )}
 
-      {/* Wave line */}
-      <path d={CURVE_PATH} fill="none" stroke="#35a8eb" strokeWidth="7" strokeLinecap="round" />
+      {/* Wave line — UNCHANGED geometry */}
+      <path d={CURVE_PATH} fill="none" stroke={activeColor} strokeWidth="7" strokeLinecap="round" />
 
-      {/* Timeline dots + labels — positions cycle through fixed slots */}
+      {/* Timeline dots + labels — positions cycle through fixed slots (UNCHANGED) */}
       {items.map((item, index) => {
         const slot = index % X_POSITIONS.length
         const x = X_POSITIONS[slot]
@@ -334,14 +401,14 @@ function TimelinePage({
             <line
               x1={x} y1={textY + 38}
               x2={x} y2={dotY - 12}
-              stroke="#6ca9d6" strokeWidth="1.5"
+              stroke={lineTint} strokeWidth="1.5"
             />
-            <circle cx={x} cy={dotY} r="11" fill="#fff" stroke="#35a8eb" strokeWidth="4" />
-            <circle cx={x} cy={dotY} r="4" fill="#35a8eb" />
+            <circle cx={x} cy={dotY} r="11" fill="#fff" stroke={activeColor} strokeWidth="4" />
+            <circle cx={x} cy={dotY} r="4" fill={activeColor} />
             <text x={x} y={textY} fontSize="20" fontWeight="800" fill="#08264a">{item.day}</text>
             <text x={x} y={textY + 26} fontSize="20" fontWeight="800" fill="#08264a">{item.time}</text>
             <text x={x + 20} y={textY + 56} fontSize="15" fontWeight="700" fill="#08264a">{item.title}</text>
-            <text x={x + 20} y={textY + 76} fontSize="15" fontWeight="700" fill="#23a8f2">{item.subtitle}</text>
+            <text x={x + 20} y={textY + 76} fontSize="15" fontWeight="700" fill={activeColor}>{item.subtitle}</text>
           </g>
         )
       })}
@@ -358,13 +425,29 @@ function TimelinePage({
 
 // ── Main export ──────────────────────────────────────────────────────────────
 
-export default function TimelineSection({ data, lang = 'en' }: TimelineSectionProps) {
+export default function TimelineSection({ data, lang = 'en', activeColor = '#36A5DD' }: TimelineSectionProps) {
   const { titleWord, titleScript, items } = data
+
+  const { bgTop, bgBottom, lineTint } = useMemo(() => deriveTints(activeColor), [activeColor])
+
+  // Unique gradient id per activeColor/instance to avoid collisions if multiple
+  // TimelineSections with different colors are rendered on the same page.
+  const gradientId = useMemo(
+    () => `bgGradient-${activeColor.replace('#', '')}`,
+    [activeColor]
+  )
+
+  const cssVars = {
+    '--active-color': activeColor,
+    '--bg-top': bgTop,
+    '--bg-bottom': bgBottom,
+    '--line-tint': lineTint,
+  } as React.CSSProperties
 
   return (
     <section
       className="relative w-full overflow-hidden"
-      style={{ background: 'linear-gradient(to bottom, #d7edf8 0%, #edf7fd 100%)' }}
+      style={{ background: `linear-gradient(to bottom, ${bgTop} 0%, ${bgBottom} 100%)`, ...cssVars }}
     >
 
       {/* ============ DESKTOP TIMELINE ============ */}
@@ -373,6 +456,11 @@ export default function TimelineSection({ data, lang = 'en' }: TimelineSectionPr
           titleWord={titleWord}
           titleScript={titleScript}
           items={items}
+          activeColor={activeColor}
+          gradientId={gradientId}
+          bgTop={bgTop}
+          bgBottom={bgBottom}
+          lineTint={lineTint}
         />
       </div>
 
@@ -381,14 +469,14 @@ export default function TimelineSection({ data, lang = 'en' }: TimelineSectionPr
         <ScrollFadeUp delay={0}>
           <div className="text-center pt-12 pb-8 px-6">
             <h2 className="text-[34px] font-black text-[#08264a] tracking-[4px]">{titleWord}</h2>
-            <p className="font-playlist text-[#23a8f2] -mt-5" style={{ fontSize: '28px' }}>
+            <p className="font-playlist -mt-5 [color:var(--active-color)]" style={{ fontSize: '28px' }}>
               {titleScript}
             </p>
           </div>
         </ScrollFadeUp>
 
         <div className="relative px-6 pb-14">
-          <div className="absolute left-1/2 top-2 bottom-2 w-[2px] bg-[#6ca9d6] -translate-x-1/2 z-0" />
+          <div className="absolute left-1/2 top-2 bottom-2 w-[2px] [background-color:var(--line-tint)] -translate-x-1/2 z-0" />
 
           {items.map((item, index) => {
             const isRight = index % 2 === 0
@@ -397,7 +485,7 @@ export default function TimelineSection({ data, lang = 'en' }: TimelineSectionPr
                 <div className="font-extrabold text-[#08264a] text-[17px] leading-tight">{item.day}</div>
                 <div className="font-extrabold text-[#08264a] text-[17px] leading-tight mb-2">{item.time}</div>
                 <div className="font-bold text-[#08264a] text-[14px] leading-snug">{item.title}</div>
-                <div className="font-bold text-[#23a8f2] text-[14px] leading-snug">{item.subtitle}</div>
+                <div className="font-bold text-[14px] leading-snug [color:var(--active-color)]">{item.subtitle}</div>
               </>
             )
 
@@ -410,14 +498,17 @@ export default function TimelineSection({ data, lang = 'en' }: TimelineSectionPr
                   <div>
                     {isRight && content}
                   </div>
-                  <div className="absolute left-1/2 top-0 -translate-x-1/2 w-5 h-5 rounded-full bg-white border-[4px] border-[#35a8eb] z-10" />
+                  <div
+                    className="absolute left-1/2 top-0 -translate-x-1/2 w-5 h-5 rounded-full bg-white z-10"
+                    style={{ borderWidth: 4, borderStyle: 'solid', borderColor: activeColor }}
+                  />
                 </div>
               </ScrollInLeft>
             )
           })}
         </div>
 
-        {/* decorative wave cap — exactly as original */}
+        {/* decorative wave cap — intentionally left as solid dark navy, not part of the light wash */}
         <svg viewBox="0 0 400 60" preserveAspectRatio="none" className="block w-full" style={{ height: '40px' }}>
           <path d="M0,30 C100,55 200,5 400,30 L400,60 L0,60 Z" fill="#061831" />
         </svg>

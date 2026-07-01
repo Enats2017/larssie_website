@@ -32,7 +32,7 @@ function resolveImg(path?: string) {
 
 const CheckIcon = ({ blue }: { blue?: boolean }) => (
     <svg
-        className={`w-5 h-5 mx-auto ${blue ? "text-[#36A5DD]" : "text-white/80"}`}
+        className={`w-5 h-5 mx-auto ${blue ? "[color:var(--active-color)]" : "text-white/80"}`}
         fill="none"
         stroke="currentColor"
         strokeWidth="2.5"
@@ -58,7 +58,7 @@ function useScrollVisible() {
     return { ref, visible };
 }
 
-const AidStations = ({ data }: { data: AidStationData | null }) => {
+const AidStations = ({ data, activeColor = "#36A5DD" }: { data: AidStationData | null; activeColor?: string }) => {
     if (!data) return null;
     const d = data;
     const stations = d.rows;
@@ -72,6 +72,17 @@ const AidStations = ({ data }: { data: AidStationData | null }) => {
     const bgImgUrl = resolveImg(d.bgImg);
     const o = (d.overlayOpacity ?? 40) / 100;
     const ratio = o / 0.4; // keeps default (40) visually identical to original gradient
+
+    // Parse activeColor (hex) into r,g,b for rgba() usage in dots/lines
+    const hexToRgb = (hex: string) => {
+        const clean = hex.replace('#', '')
+        const full = clean.length === 3 ? clean.split('').map(c => c + c).join('') : clean
+        const num = parseInt(full, 16)
+        if (isNaN(num)) return { r: 54, g: 165, b: 221 } // fallback to original blue
+        return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 }
+    }
+    const { r, g, b } = hexToRgb(activeColor)
+    const rgb = `${r},${g},${b}`
 
     useEffect(() => {
         const el = scrollRef.current;
@@ -104,6 +115,7 @@ const AidStations = ({ data }: { data: AidStationData | null }) => {
                 backgroundImage: `url(${bgImgUrl || aidBg.src})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center top",
+                ['--active-color' as any]: activeColor,
             }}
         >
             <div
@@ -126,7 +138,7 @@ const AidStations = ({ data }: { data: AidStationData | null }) => {
                         </p>
 
                         <p
-                            className="font-playlist text-[#36A5DD] leading-none transition-all duration-300 hover:translate-x-1"
+                            className="font-playlist leading-none transition-all duration-300 hover:translate-x-1 [color:var(--active-color)]"
                             style={{ fontSize: "clamp(28px,4vw,40px)", marginTop: "-3px" }}
                         >
                             {d.titleScript}
@@ -187,7 +199,7 @@ const AidStations = ({ data }: { data: AidStationData | null }) => {
                                                             {index > 0 && (
                                                                 <div
                                                                     className="w-[2px] flex-1"
-                                                                    style={{ backgroundColor: `rgba(54,165,221,${lineOpacity + 0.1})` }}
+                                                                    style={{ backgroundColor: `rgba(${rgb},${lineOpacity + 0.1})` }}
                                                                 />
                                                             )}
                                                             {index === 0 && <div className="flex-1" />}
@@ -195,22 +207,25 @@ const AidStations = ({ data }: { data: AidStationData | null }) => {
                                                             <div
                                                                 className="w-[10px] h-[10px] rounded-full shrink-0 z-10"
                                                                 style={{
-                                                                    backgroundColor: station.dotColor ?? `rgba(54,165,221,${dotOpacity})`,
-                                                                    boxShadow: index === 0 ? `0 0 8px rgba(54,165,221,0.8)` : "none",
+                                                                    backgroundColor: `rgba(${rgb},${dotOpacity})`,
+                                                                    boxShadow: index === 0 ? `0 0 8px rgba(${rgb},0.8)` : "none",
                                                                 }}
                                                             />
 
                                                             {index < totalStations - 1 && (
                                                                 <div
                                                                     className="w-[2px] flex-1"
-                                                                    style={{ backgroundColor: `rgba(54,165,221,${lineOpacity})` }}
+                                                                    style={{ backgroundColor: `rgba(${rgb},${lineOpacity})` }}
                                                                 />
                                                             )}
                                                             {index === totalStations - 1 && <div className="flex-1" />}
                                                         </div>
 
                                                         <div className={`flex-1 flex items-center py-3 ${index < totalStations - 1 ? "border-b border-white/[0.08]" : ""}`}>
-                                                            <span className={`text-[13px] font-bold tracking-wide ${station.finish ? "text-[#36A5DD]" : "text-white"}`}>
+                                                            <span
+                                                                className="text-[13px] font-bold tracking-wide"
+                                                                style={{ color: station.finish ? activeColor : '#ffffff' }}
+                                                            >
                                                                 {station.name}
                                                             </span>
                                                         </div>
@@ -234,7 +249,7 @@ const AidStations = ({ data }: { data: AidStationData | null }) => {
                                                         return (
                                                             <td key={colIndex} className={`py-3 px-2 text-center align-middle ${cellBorder}`}>
                                                                 {isYes ? (
-                                                                    <span className="text-[#36A5DD] font-bold text-[13px]">YES</span>
+                                                                    <span className="font-bold text-[13px] [color:var(--active-color)]">YES</span>
                                                                 ) : (
                                                                     <span className="text-white/60 text-[13px]">{val || "No"}</span>
                                                                 )}
@@ -244,8 +259,9 @@ const AidStations = ({ data }: { data: AidStationData | null }) => {
                                                     return (
                                                         <td
                                                             key={colIndex}
-                                                            className={`py-3 px-2 text-center text-[14px] font-semibold align-middle ${cellBorder} ${station.finish ? "text-[#36A5DD]" : !val ? "text-white/40" : "text-white/80"
+                                                            className={`py-3 px-2 text-center text-[14px] font-semibold align-middle ${cellBorder} ${!val && !station.finish ? "text-white/40" : !station.finish ? "text-white/80" : ""
                                                                 }`}
+                                                            style={station.finish ? { color: activeColor } : undefined}
                                                         >
                                                             {val || "--"}
                                                         </td>
@@ -258,11 +274,19 @@ const AidStations = ({ data }: { data: AidStationData | null }) => {
                             </table>
                         </div>
 
-                        <div className="block md:hidden mt-3 mx-1 h-[6px] rounded-full bg-[rgba(54,165,221,0.15)] border border-[rgba(54,165,221,0.3)] relative overflow-hidden">
+                        <div
+                            className="block md:hidden mt-3 mx-1 h-[6px] rounded-full relative overflow-hidden"
+                            style={{
+                                backgroundColor: `rgba(${rgb},0.15)`,
+                                borderWidth: 1,
+                                borderStyle: 'solid',
+                                borderColor: `rgba(${rgb},0.3)`,
+                            }}
+                        >
                             <div
                                 ref={thumbRef}
                                 className="absolute top-0 left-0 h-full rounded-full"
-                                style={{ background: "linear-gradient(to right, #36A5DD, #5bc4f5)", width: "40px" }}
+                                style={{ background: `linear-gradient(to right, ${activeColor}, ${activeColor})`, width: "40px" }}
                             />
                         </div>
 
@@ -283,7 +307,7 @@ const AidStations = ({ data }: { data: AidStationData | null }) => {
                                     className="
                     relative overflow-hidden
                     inline-flex items-center justify-center
-                    bg-[#36A5DD]
+                    bg-[var(--active-color)]
                     text-white font-bold
                     rounded-full
                     px-7 py-3
@@ -297,7 +321,7 @@ const AidStations = ({ data }: { data: AidStationData | null }) => {
                     before:duration-[600ms]
                     before:ease-in-out
                     transition-colors duration-[600ms]
-                    hover:text-[#36A5DD]
+                    hover:[color:var(--active-color)]
                   "
                                 >
                                     <span className="relative z-10">{d.ctaLabel}</span>
@@ -310,7 +334,7 @@ const AidStations = ({ data }: { data: AidStationData | null }) => {
 
             <div className="relative w-full h-0">
                 <svg width="46" height="23" viewBox="0 0 46 23" xmlns="http://www.w3.org/2000/svg" className="absolute left-1/2 -translate-x-1/2 -top-px">
-                    <path d="M0,0 Q11.5,0 23,23 Q34.5,0 46,0 Z" fill="#002248" />
+                    <path d="M0,0 Q11.5,0 23,23 Q34.5,0 46,0 Z" fill={activeColor} />
                 </svg>
             </div>
         </section >
