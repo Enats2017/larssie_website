@@ -677,6 +677,7 @@ model HeroEventBuilder {
   race_title      String    @db.VarChar(255)
   race_date       DateTime? @db.Date
   description     String?   @db.Text
+  tagline         String?   @db.Text
   sidebar_stats   Json?
   cta_buttons     Json?
   bottom_stats    Json?
@@ -687,7 +688,6 @@ model HeroEventBuilder {
   @@index([event_id])
   @@map("hero_event_builder")
 }
-
 
 model FooterBuilder {
   footer_id           Int    @id @default(autoincrement()) @db.UnsignedInt

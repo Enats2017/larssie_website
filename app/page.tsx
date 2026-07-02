@@ -10,7 +10,16 @@ import TimelineSection from '@/components/TimelineSection'
 import CourseDetailsSection from '@/components/CourseDetailsSection'
 import Footer from '@/components/Footer'
 import Sponsors from '@/components/Sponsors'
+import dynamic from 'next/dynamic'
 
+const TrailMap = dynamic(() => import('@/components/ExploreMap'), {
+    ssr: false,
+    loading: () => (
+        <div className="w-full h-[550px] flex items-center justify-center bg-gray-100 rounded-3xl">
+            <p className="text-gray-400">Loading map…</p>
+        </div>
+    ),
+})
 
 interface PageProps {
   searchParams: Promise<{
@@ -289,6 +298,7 @@ console.log('=== PAGE PARAMS ===', {
         />
       )}
       <GearUpSection data={gearupData} activeColor={navbarBg}/>
+      <TrailMap />
       <AidStations data={aidStationData} activeColor={navbarBg}/>
 
       <TimelineSection data={timelineData} lang={lang} activeColor={navbarBg}/>
