@@ -159,7 +159,7 @@ export default function Social({ social }: Props) {
   const slots = hardcodedImages
 
   return (
-    <section className="relative w-full bg-white py-14 md:py-20 px-5 md:px-10">
+    <section className="relative w-full bg-white py-14 md:py-20 pl-28 pr-5 md:pl-36 md:pr-10">
       <div className="max-w-[1400px] mx-auto">
 
         {/* Header row: icons + tagline + title (left)  |  description (right) */}
