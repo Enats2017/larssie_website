@@ -4,6 +4,7 @@ import HeroSectionEvent from '@/components/HeroEvent'
 import DistanceSlider from '@/components/DistanceSlider'
 import InfoSectionEvent from '@/components/InfoSec'
 import SideDock from '@/components/SideDock'
+import Social from '@/components/Social'
 
 
 
@@ -222,6 +223,23 @@ export default async function EventPage({
       {info && (
         <InfoSectionEvent info={info} />
       )}
+      <Social
+  social={{
+    tagline: "Volg ons",
+    title: "#WANTTOSKI",
+    description: "Vind ons op Instagram, TikTok of zelfs Facebook: we delen een stukje van ons dagelijks leven met je!",
+    facebook_url: "...",
+    instagram_url: "...",
+    youtube_url: "...",
+    tiktok_url: "...",
+  }}
+  images={[
+    { image_path: "/uploads/social1.jpg" },
+    { image_path: "/uploads/social2.jpg" },
+    { image_path: "/uploads/social3.jpg" },
+    { image_path: "/uploads/social4.jpg" },
+  ]}
+/>
     </div>
   )
 }
