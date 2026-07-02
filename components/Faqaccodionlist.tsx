@@ -141,7 +141,7 @@ export default function FaqAccordionList({
                                         onClick={() => toggle(item.id)}
                                         aria-expanded={isOpen}
                                     >
-                                        <span className="faq-event-item-q">{item.question}</span>
+                                        <span className="faq-event-item-q">{stripHtml(item.question)}</span>
                                         <span className={`faq-event-icon ${isOpen ? 'is-open' : ''}`}>
                                             {isOpen ? (
                                                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
