@@ -11,14 +11,15 @@ import CourseDetailsSection from '@/components/CourseDetailsSection'
 import Footer from '@/components/Footer'
 import Sponsors from '@/components/Sponsors'
 import dynamic from 'next/dynamic'
+import FaqDistanceSection from '@/components/FaqDistanceSection'
 
 const TrailMap = dynamic(() => import('@/components/ExploreMap'), {
-    ssr: false,
-    loading: () => (
-        <div className="w-full h-[550px] flex items-center justify-center bg-gray-100 rounded-3xl">
-            <p className="text-gray-400">Loading map…</p>
-        </div>
-    ),
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[550px] flex items-center justify-center bg-gray-100 rounded-3xl">
+      <p className="text-gray-400">Loading map…</p>
+    </div>
+  ),
 })
 
 interface PageProps {
@@ -42,15 +43,15 @@ export default async function Page({ searchParams }: PageProps) {
   const lang = params.lang || 'en'
   const menuId = Number(params.menu_id || 0)  // 👈 add this
 
-// REPLACE your existing console.log with this:
-console.log('=== PAGE PARAMS ===', {
-  brandId,
-  eventId,
-  distanceId,
-  lang,
-  menuId,
-  raw_menu_id: params.menu_id,
-})
+  // REPLACE your existing console.log with this:
+  console.log('=== PAGE PARAMS ===', {
+    brandId,
+    eventId,
+    distanceId,
+    lang,
+    menuId,
+    raw_menu_id: params.menu_id,
+  })
 
   const [brands] = await Promise.all([
     prisma.brand.findMany({
@@ -93,21 +94,21 @@ console.log('=== PAGE PARAMS ===', {
   const activeLangId = langIdMap[lang] ?? 1
 
   const allFields = await prisma.menuField.findMany({
-  where: {
-    menu_id: menu.menu_id,
-    tab_id: { in: tabIds },
-    nav_type: menu.tabs[0]?.nav_type ?? 'event',
-    OR: [
-      { language_id: activeLangId },
-      { language_id: null },
-      { type: 'image' },
-      { type: 'icon' },
-      { extra_type: 'social' },
-      { extra_type: 'text_block' },
-    ],
-  },
-  orderBy: [{ column: 'asc' }, { sort_order: 'asc' }],
-})
+    where: {
+      menu_id: menu.menu_id,
+      tab_id: { in: tabIds },
+      nav_type: menu.tabs[0]?.nav_type ?? 'event',
+      OR: [
+        { language_id: activeLangId },
+        { language_id: null },
+        { type: 'image' },
+        { type: 'icon' },
+        { extra_type: 'social' },
+        { extra_type: 'text_block' },
+      ],
+    },
+    orderBy: [{ column: 'asc' }, { sort_order: 'asc' }],
+  })
 
   const tabs = menu.tabs.map(tab => ({
     ...tab,
@@ -251,7 +252,33 @@ console.log('=== PAGE PARAMS ===', {
     })),
   }
   // ────────────────────────────────────────────────────────────────────
+  // ── FAQ DISTANCE ────────────────────────────────────────────────────
+  const faqDistanceRow = await prisma.faqDistanceBuilder.findFirst({
+    where: {
+      brand_id: brandId,
+      event_id: eventId,
+      distance_id: distanceId,
+    },
+  })
 
+  const faqDistanceItemsRaw = faqDistanceRow
+    ? await prisma.faqDistanceBuilderItem.findMany({
+      where: { faq_distance_builder_id: faqDistanceRow.faq_distance_builder_id },
+      orderBy: { sort_order: 'asc' },
+    })
+    : []
+
+  const faqDistanceItems = faqDistanceItemsRaw
+    .filter((f) => f.is_active)
+    .map((f) => ({
+      faqDistanceItemId: f.faq_distance_item_id,
+      question:
+        (lang === 'nl' ? f.question_nl : lang === 'fr' ? f.question_fr : null) || f.question || '',
+      answer:
+        (lang === 'nl' ? f.answer_nl : lang === 'fr' ? f.answer_fr : null) || f.answer || '',
+      images: f.images ? JSON.parse(f.images) : [],
+    }))
+  // ────────────────────────────────────────────────────────────────────
   // ── FOOTER ──────────────────────────────────────────────────────────
   const footer = await prisma.footerBuilder.findFirst({
     where: { brand_id: brandId, event_id: eventId, distance_id: distanceId },
@@ -297,14 +324,19 @@ console.log('=== PAGE PARAMS ===', {
           activeColor={navbarBg}
         />
       )}
-      <GearUpSection data={gearupData} activeColor={navbarBg}/>
+      <GearUpSection data={gearupData} activeColor={navbarBg} />
       <TrailMap />
-      <AidStations data={aidStationData} activeColor={navbarBg}/>
+      <AidStations data={aidStationData} activeColor={navbarBg} />
 
-      <TimelineSection data={timelineData} lang={lang} activeColor={navbarBg}/>
-      <CourseDetailsSection course={course} linkCards={courseLinkCards} lang={lang} activeColor={navbarBg}/>
-
-      <Footer footer={footer} brandLogo={menu.brand_logo} lang={lang} activeColor={navbarBg}/>
+      <TimelineSection data={timelineData} lang={lang} activeColor={navbarBg} />
+      <CourseDetailsSection course={course} linkCards={courseLinkCards} lang={lang} activeColor={navbarBg} />
+      {faqDistanceItems.length > 0 && (
+        <FaqDistanceSection
+          items={faqDistanceItems}
+          distanceName={faqDistanceRow?.distance_name ?? undefined}
+        />
+      )}
+      <Footer footer={footer} brandLogo={menu.brand_logo} lang={lang} activeColor={navbarBg} />
     </div>
   )
 }

@@ -198,7 +198,8 @@ export default async function EventPage({
     }
     : null
 
-    const faqRow = await prisma.faqEventBuilder.findFirst({
+
+      const faqRow = await prisma.faqEventBuilder.findFirst({
     where: {
       brand_id: BRAND_ID,
       event_id: EVENT_ID,
@@ -220,7 +221,6 @@ export default async function EventPage({
       answer: f.answer ?? '',
       images: f.images ? JSON.parse(f.images) : [],
     }))
-
   // ───────────────────────────────────────────────────────────────
   // Render
   // ───────────────────────────────────────────────────────────────
@@ -247,11 +247,28 @@ export default async function EventPage({
       {info && (
         <InfoSectionEvent info={info} />
       )}
+      <Social
+  social={{
+    tagline: "Volg ons",
+    title: "#WANTTOSKI",
+    description: "Vind ons op Instagram, TikTok of zelfs Facebook: we delen een stukje van ons dagelijks leven met je!",
+    facebook_url: "...",
+    instagram_url: "...",
+    youtube_url: "...",
+    tiktok_url: "...",
+  }}
+  images={[
+    { image_path: "/uploads/social1.jpg" },
+    { image_path: "/uploads/social2.jpg" },
+    { image_path: "/uploads/social3.jpg" },
+    { image_path: "/uploads/social4.jpg" },
+  ]}
 
-        {faqItems.length > 0 && (
+  
+/>
+ {faqItems.length > 0 && (
         <FaqEventSection items={faqItems} />
       )}
-  
     </div>
   )
 }
