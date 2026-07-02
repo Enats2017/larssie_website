@@ -5,6 +5,7 @@ import DistanceSlider from '@/components/DistanceSlider'
 import InfoSectionEvent from '@/components/InfoSec'
 import SideDock from '@/components/SideDock'
 import Social from '@/components/Social'
+import FaqEventSection from '@/components/FaqEventSection'
 
 
 
@@ -239,7 +240,10 @@ export default async function EventPage({
     { image_path: "/uploads/social3.jpg" },
     { image_path: "/uploads/social4.jpg" },
   ]}
+
+  
 />
+<FaqEventSection brandId={BRAND_ID} eventId={EVENT_ID} locale="en" />
     </div>
   )
 }
