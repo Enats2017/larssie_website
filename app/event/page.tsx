@@ -198,6 +198,29 @@ export default async function EventPage({
     }
     : null
 
+    const faqRow = await prisma.faqEventBuilder.findFirst({
+    where: {
+      brand_id: BRAND_ID,
+      event_id: EVENT_ID,
+    },
+  })
+
+  const faqItemsRaw = faqRow
+    ? await prisma.faqEventBuilderItem.findMany({
+        where: { faq_event_builder_id: faqRow.faq_event_builder_id },
+        orderBy: { sort_order: 'asc' },
+      })
+    : []
+
+  const faqItems = faqItemsRaw
+    .filter((f) => f.is_active)
+    .map((f) => ({
+      faqEventItemId: f.faq_event_item_id,
+      question: f.question ?? '',
+      answer: f.answer ?? '',
+      images: f.images ? JSON.parse(f.images) : [],
+    }))
+
   // ───────────────────────────────────────────────────────────────
   // Render
   // ───────────────────────────────────────────────────────────────
@@ -224,26 +247,11 @@ export default async function EventPage({
       {info && (
         <InfoSectionEvent info={info} />
       )}
-      <Social
-  social={{
-    tagline: "Volg ons",
-    title: "#WANTTOSKI",
-    description: "Vind ons op Instagram, TikTok of zelfs Facebook: we delen een stukje van ons dagelijks leven met je!",
-    facebook_url: "...",
-    instagram_url: "...",
-    youtube_url: "...",
-    tiktok_url: "...",
-  }}
-  images={[
-    { image_path: "/uploads/social1.jpg" },
-    { image_path: "/uploads/social2.jpg" },
-    { image_path: "/uploads/social3.jpg" },
-    { image_path: "/uploads/social4.jpg" },
-  ]}
 
+        {faqItems.length > 0 && (
+        <FaqEventSection items={faqItems} />
+      )}
   
-/>
-<FaqEventSection brandId={BRAND_ID} eventId={EVENT_ID} locale="en" />
     </div>
   )
 }
